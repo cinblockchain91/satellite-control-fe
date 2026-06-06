@@ -1,0 +1,25 @@
+{
+  "name": "@satellite-control/infra",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    "./http": "./http/client.ts",
+    "./http/auth": "./http/auth.http-adapter.ts",
+    "./mock/handlers": "./mock/auth.handlers.ts",
+    "./mock/auth": "./mock/auth.mock-adapter.ts",
+    "./cache": "./cache/query-client.ts",
+    "./cache/keys": "./cache/keys.ts"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "^5.28.0",
+    "msw": "^2.2.0",
+    "zod": "^3.22.0"
+  },
+  "devDependencies": {
+    "@satellite-control/tsconfig": "workspace:*",
+    "@satellite-control/shared": "workspace:*",
+    "@satellite-control/entity-account": "workspace:*",
+    "@satellite-control/feature-account-auth": "workspace:*",
+    "typescript": "^5.4.0"
+  }
+}

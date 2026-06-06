@@ -1,0 +1,17 @@
+{
+  "name": "@satellite-control/feature-account-auth",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    ".": "./index.ts"
+  },
+  "dependencies": {
+    "zustand": "^4.5.0"
+  },
+  "devDependencies": {
+    "@satellite-control/tsconfig": "workspace:*",
+    "@satellite-control/shared": "workspace:*",
+    "@satellite-control/entity-account": "workspace:*",
+    "typescript": "^5.4.0"
+  }
+}

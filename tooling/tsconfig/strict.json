@@ -1,0 +1,8 @@
+{
+  "$schema": "https://www.schemastore.org/jsconfig",
+  "extends": "./base.json",
+  "compilerOptions": {
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
+  }
+}

@@ -1,0 +1,7 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+  - "packages/features/*"
+  - "packages/entities/*"
+  - "tooling/*"
+  - "infra"

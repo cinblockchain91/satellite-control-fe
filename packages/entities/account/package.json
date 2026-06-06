@@ -1,0 +1,16 @@
+{
+  "name": "@satellite-control/entity-account",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    ".": "./index.ts"
+  },
+  "dependencies": {
+    "zod": "^3.22.0"
+  },
+  "devDependencies": {
+    "@satellite-control/tsconfig": "workspace:*",
+    "@satellite-control/shared": "workspace:*",
+    "typescript": "^5.4.0"
+  }
+}
