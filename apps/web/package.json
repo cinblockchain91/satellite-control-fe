@@ -1,0 +1,52 @@
+{
+  "name": "@satellite-control/web",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "type-check": "tsc --noEmit",
+    "clean": "rm -rf .next"
+  },
+  "dependencies": {
+    "@base-ui/react": "^1.5.0",
+    "@satellite-control/entity-account": "workspace:*",
+    "@satellite-control/feature-account-auth": "workspace:*",
+    "@satellite-control/infra": "workspace:*",
+    "@satellite-control/shared": "workspace:*",
+    "@tanstack/react-query": "^5.28.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.0",
+    "cmdk": "^1.1.1",
+    "date-fns": "^4.4.0",
+    "embla-carousel-react": "^8.6.0",
+    "input-otp": "^1.4.2",
+    "lucide-react": "^1.17.0",
+    "next": "^15.0.0",
+    "next-themes": "^0.4.6",
+    "radix-ui": "^1.5.0",
+    "react": "^19.0.0",
+    "react-day-picker": "^10.0.1",
+    "react-dom": "^19.0.0",
+    "react-resizable-panels": "^4.11.2",
+    "recharts": "3.8.0",
+    "shadcn": "^4.10.0",
+    "sonner": "^2.0.7",
+    "tailwind-merge": "^2.2.0",
+    "tw-animate-css": "^1.4.0",
+    "vaul": "^1.1.2"
+  },
+  "devDependencies": {
+    "@satellite-control/eslint-config": "workspace:*",
+    "@satellite-control/tsconfig": "workspace:*",
+    "@tailwindcss/postcss": "^4.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "autoprefixer": "^10.4.0",
+    "postcss": "^8.4.0",
+    "tailwindcss": "^4.0.0",
+    "typescript": "^5.4.0"
+  }
+}
