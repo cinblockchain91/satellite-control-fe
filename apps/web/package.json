@@ -16,6 +16,7 @@
     "@satellite-control/feature-account-auth": "workspace:*",
     "@satellite-control/infra": "workspace:*",
     "@satellite-control/shared": "workspace:*",
+    "@sentry/nextjs": "10",
     "@tanstack/react-query": "^5.28.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.0",
