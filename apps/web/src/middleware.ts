@@ -7,10 +7,12 @@ const DEFAULT_LOCALE = "en";
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const token = request.cookies.get("access_token")?.value;
-  console.log("[MW]", pathname);
-
   // Không có locale prefix → redirect thêm /en vào đầu
+  // Ngoại trừ: API routes
   if (!LOCALE_REGEX.test(pathname)) {
+    if (pathname.startsWith("/api")) {
+      return NextResponse.next();
+    }
     const target = pathname === "/" ? "/login" : pathname;
     return NextResponse.redirect(
       new URL(`/${DEFAULT_LOCALE}${target}`, request.url),
