@@ -1,1 +1,9 @@
+branch=$(git rev-parse --abbrev-ref HEAD)
+if ! echo "$branch" | grep -qE '^(main|develop|SC-[0-9]+_.+)$'; then
+  echo "❌ Branch name '$branch' không đúng format."
+  echo "   Format yêu cầu: SC-{số}_{mô-tả}"
+  echo "   Ví dụ: SC-4_setup-husky"
+  exit 1
+fi
+
 pnpm lint && pnpm type-check

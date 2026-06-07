@@ -6,7 +6,7 @@ module.exports = {
       "always",
       ["feat", "fix", "chore", "refactor", "docs", "test", "ci", "hotfix"],
     ],
-    "subject-min-length": [2, "always", 10],
+    "subject-min-length": [2, "always", 4],
     "subject-case": [0],
   },
 };
