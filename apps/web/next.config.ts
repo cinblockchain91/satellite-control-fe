@@ -1,4 +1,6 @@
 import type { NextConfig } from "next";
+import createNextIntlPlugin from "next-intl/plugin";
+const withNextIntl = createNextIntlPlugin();
 
 const nextConfig: NextConfig = {
   transpilePackages: [
@@ -7,9 +9,7 @@ const nextConfig: NextConfig = {
     "@satellite-control/feature-account-auth",
     "@satellite-control/infra",
   ],
-  experimental: {
-    typedRoutes: true,
-  },
+  typedRoutes: true,
 };
 
-export default nextConfig;
+export default withNextIntl(nextConfig);

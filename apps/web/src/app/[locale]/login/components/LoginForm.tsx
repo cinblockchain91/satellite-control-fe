@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { Button } from "@/ui-toolkit/ui/button";
 import { Input } from "@/ui-toolkit/ui/input";
 import { Label } from "@/ui-toolkit/ui/label";
@@ -21,16 +22,17 @@ interface LoginFormProps {
 }
 
 export function LoginForm({ onSuccess }: LoginFormProps) {
+  const t = useTranslations("auth");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { isLoading, error, setLoading, setError, setAccount } = useAuthStore();
   const router = useRouter();
 
-  async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.SyntheticEvent<HTMLFormElement>) {
     e.preventDefault();
     e.stopPropagation();
     if (!username || !password) {
-      setError("Please enter username and password");
+      setError(t("errorRequired"));
       return;
     }
 
@@ -42,7 +44,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
       onSuccess?.();
       router.push("/dashboard");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Login failed");
+      setError(err instanceof Error ? err.message : t("errorFailed"));
     } finally {
       setLoading(false);
     }
@@ -51,8 +53,8 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
   return (
     <Card className="w-full max-w-sm rounded-[8px] p-[16px]">
       <CardHeader>
-        <CardTitle className="text-2xl">Satellite Control</CardTitle>
-        <CardDescription>Sign in to your account</CardDescription>
+        <CardTitle className="text-2xl">{t("title")}</CardTitle>
+        <CardDescription>{t("subtitle")}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <form onSubmit={handleSubmit}>
@@ -62,24 +64,24 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
             </p>
           )}
           <div className="space-y-1 mb-4">
-            <Label htmlFor="username">Username</Label>
+            <Label htmlFor="username">{t("username")}</Label>
             <Input
               className="h-[40px]"
               id="username"
               type="text"
-              placeholder="Enter username"
+              placeholder={t("usernamePlaceholder")}
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               disabled={isLoading}
             />
           </div>
           <div className="space-y-1 mb-4">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password">{t("password")}</Label>
             <Input
               id="password"
               className="h-[40px]"
               type="password"
-              placeholder="Enter password"
+              placeholder={t("passwordPlaceholder")}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               disabled={isLoading}
@@ -88,10 +90,10 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
           <Button className="w-full h-[40px]" disabled={isLoading}>
             {isLoading ? (
               <>
-                <Loader2 className="animate-spin" /> Loading...
+                <Loader2 className="animate-spin" /> {t("loading")}
               </>
             ) : (
-              "Sign in"
+              t("signIn")
             )}
           </Button>
         </form>

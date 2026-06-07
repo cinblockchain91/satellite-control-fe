@@ -1,0 +1,14 @@
+{
+  "auth": {
+    "title": "Satellite Control",
+    "subtitle": "Sign in to your account",
+    "username": "Username",
+    "password": "Password",
+    "usernamePlaceholder": "Enter username",
+    "passwordPlaceholder": "Enter password",
+    "signIn": "Sign in",
+    "loading": "Loading...",
+    "errorRequired": "Please enter username and password",
+    "errorFailed": "Login failed"
+  }
+}
