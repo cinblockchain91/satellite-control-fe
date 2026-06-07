@@ -10,7 +10,11 @@ export function middleware(request: NextRequest) {
   console.log("[MW]", pathname);
 
   // Không có locale prefix → redirect thêm /en vào đầu
+  // Ngoại trừ: API routes và Sentry tunnel (/monitoring)
   if (!LOCALE_REGEX.test(pathname)) {
+    if (pathname.startsWith("/api") || pathname.startsWith("/monitoring")) {
+      return NextResponse.next();
+    }
     const target = pathname === "/" ? "/login" : pathname;
     return NextResponse.redirect(
       new URL(`/${DEFAULT_LOCALE}${target}`, request.url),
