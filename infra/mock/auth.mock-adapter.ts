@@ -17,6 +17,7 @@ export const authMockAdapter: AuthPort<Account> = {
     await new Promise((res) => setTimeout(res, 500));
 
     if (username === "admin" && password === "admin123") {
+      document.cookie = "access_token=mock-token; path=/";
       return mockAccount;
     }
 
@@ -25,6 +26,7 @@ export const authMockAdapter: AuthPort<Account> = {
 
   async logout() {
     await new Promise((res) => setTimeout(res, 200));
+    document.cookie = "access_token=; path=/; max-age=0";
   },
 
   async getMe() {
