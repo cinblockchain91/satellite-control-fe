@@ -80,7 +80,9 @@
     "zod": "^3.22.0"
   },
   "devDependencies": {
-    "@satellite-control/tsconfig": "workspace:*"
+    "@satellite-control/tsconfig": "workspace:*",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0"
   },
   "peerDependencies": {
     "react": "^19.0.0",
