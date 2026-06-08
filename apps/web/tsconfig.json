@@ -33,7 +33,7 @@
   ],
   "exclude": [
     "node_modules",
-    "src/ui-toolkit",
+    "src/shared/ui",
     "**/*.test.ts",
     "**/*.test.tsx",
     "vitest.config.ts",
