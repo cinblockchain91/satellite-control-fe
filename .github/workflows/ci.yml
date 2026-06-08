@@ -60,6 +60,9 @@ jobs:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
+      - name: Build workspace packages
+        run: pnpm turbo run build --filter=@satellite-control/web^...
+
       - name: Build
         run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
         env:
@@ -113,6 +116,9 @@ jobs:
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+      - name: Build workspace packages
+        run: pnpm turbo run build --filter=@satellite-control/web^...
 
       - name: Build
         run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
