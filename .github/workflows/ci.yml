@@ -30,6 +30,8 @@ jobs:
       - name: Lint
         run: pnpm lint
 
+      - name: Test
+        run: pnpm test
   deploy-preview:
     needs: ci
     runs-on: ubuntu-latest
