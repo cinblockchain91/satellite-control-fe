@@ -1,0 +1,22 @@
+{
+  "name": "@satellite-control/ds-icons",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsx scripts/build.ts",
+    "dev": "tsx scripts/build.ts"
+  },
+  "devDependencies": {
+    "@svgr/core": "^8.1.0",
+    "@svgr/plugin-jsx": "^8.1.0",
+    "@svgr/plugin-svgo": "^8.1.0",
+    "sharp": "^0.34.5",
+    "tsx": "^4.22.4"
+  },
+  "exports": {
+    "./react": "./dist/react/index.ts",
+    "./rn": "./dist/rn/index.ts",
+    "./desktop": "./dist/react/index.ts"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "color": {
+    "brand": {
+      "primary": { "value": "{color.primitive.blue.500}", "type": "color" },
+      "primary-hover": {
+        "value": "{color.primitive.blue.600}",
+        "type": "color"
+      },
+      "subtle": { "value": "{color.primitive.blue.50}", "type": "color" }
+    },
+    "text": {
+      "default": { "value": "{color.primitive.gray.900}", "type": "color" },
+      "muted": { "value": "{color.primitive.gray.100}", "type": "color" }
+    },
+    "feedback": {
+      "danger": { "value": "{color.primitive.red.500}", "type": "color" },
+      "success": { "value": "{color.primitive.green.500}", "type": "color" },
+      "warning": { "value": "{color.primitive.amber.500}", "type": "color" }
+    }
+  }
+}
