@@ -1,4 +1,18 @@
 {
+  "nav": {
+    "platform": "Nền tảng",
+    "dashboard": "Bảng điều khiển",
+    "satellites": "Vệ tinh",
+    "active": "Đang hoạt động",
+    "idle": "Chờ",
+    "schedule": "Lịch trình",
+    "operations": "Vận hành",
+    "telemetry": "Đo từ xa",
+    "commands": "Lệnh",
+    "system": "Hệ thống",
+    "settings": "Cài đặt",
+    "signOut": "Đăng xuất"
+  },
   "auth": {
     "title": "Satellite Control",
     "subtitle": "Đăng nhập vào tài khoản",
