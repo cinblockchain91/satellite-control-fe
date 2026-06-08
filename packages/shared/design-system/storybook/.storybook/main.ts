@@ -22,6 +22,7 @@ const config: StorybookConfig = {
     return mergeConfig(cfg, {
       plugins: [react(), tailwindcss()],
       resolve: {
+        dedupe: ["react", "react-dom", "react/jsx-runtime"],
         alias: {
           "@satellite-control/ds-tokens/css": resolve(
             DS_ROOT,
