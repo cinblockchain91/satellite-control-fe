@@ -1,0 +1,13 @@
+{
+  "name": "@satellite-control/vitest-config",
+  "version": "0.0.0",
+  "private": true,
+  "files": [
+    "base.ts",
+    "react.ts"
+  ],
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.0.2",
+    "vitest": "^4.0.0"
+  }
+}

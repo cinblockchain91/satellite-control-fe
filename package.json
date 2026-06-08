@@ -8,16 +8,20 @@
     "test": "turbo run test",
     "type-check": "turbo run type-check",
     "clean": "turbo run clean",
-    "prepare": "husky"
+    "prepare": "husky",
+    "coverage": "turbo run coverage"
   },
   "devDependencies": {
     "@commitlint/cli": "^21.0.2",
     "@commitlint/config-conventional": "^21.0.2",
+    "@vitest/coverage-v8": "^4.1.8",
+    "@vitest/ui": "^4.1.8",
     "eslint": "^9.0.0",
     "husky": "^9.1.7",
     "prettier": "^3.2.0",
     "turbo": "^2.0.0",
-    "typescript": "^5.4.0"
+    "typescript": "^5.4.0",
+    "vitest": "^4.1.8"
   },
   "pnpm": {
     "overrides": {
