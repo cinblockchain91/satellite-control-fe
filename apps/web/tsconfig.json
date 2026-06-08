@@ -31,5 +31,13 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules", "src/ui-toolkit"]
+  "exclude": [
+    "node_modules",
+    "src/ui-toolkit",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "vitest.config.ts",
+    "vitest.setup.ts",
+    "e2e-test"
+  ]
 }

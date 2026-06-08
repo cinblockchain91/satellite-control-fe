@@ -2,6 +2,17 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { LoginForm } from "./LoginForm";
+import type { Account } from "@satellite-control/entity-account";
+
+const mockAccount = {
+  id: "550e8400-e29b-41d4-a716-446655440000",
+  username: "admin",
+  email: "admin@example.com",
+  role: "admin",
+  fullName: "Admin User",
+  lastLoginAt: "2024-01-01T00:00:00Z",
+  createdAt: "2024-01-01T00:00:00Z",
+} as Account;
 
 const mockPush = vi.fn();
 const mockSetLoading = vi.fn();
@@ -51,7 +62,7 @@ describe("LoginForm", () => {
   });
 
   it("calls authAdapter.login with entered credentials", async () => {
-    vi.mocked(authAdapter.login).mockResolvedValue({} as any);
+    vi.mocked(authAdapter.login).mockResolvedValue(mockAccount);
     render(<LoginForm />);
 
     await userEvent.type(screen.getByLabelText("username"), "admin");
@@ -62,7 +73,7 @@ describe("LoginForm", () => {
   });
 
   it("redirects to /dashboard on successful login", async () => {
-    vi.mocked(authAdapter.login).mockResolvedValue({} as any);
+    vi.mocked(authAdapter.login).mockResolvedValue(mockAccount);
     render(<LoginForm />);
 
     await userEvent.type(screen.getByLabelText("username"), "admin");

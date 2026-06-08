@@ -48,6 +48,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.0.0",
+    "@playwright/test": "^1.60.0",
     "@satellite-control/eslint-config": "workspace:*",
     "@satellite-control/tsconfig": "workspace:*",
     "@satellite-control/vitest-config": "workspace:*",
@@ -55,6 +56,7 @@
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",
+    "@types/node": "^20.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "autoprefixer": "^10.4.0",
