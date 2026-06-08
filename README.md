@@ -96,7 +96,8 @@ pnpm dev
 
 The app will be available at [http://localhost:3000](http://localhost:3000).  
 
-The production preview will be available at [satellitecontrol.com](https://web-xi-orpin-46.vercel.app/login). with testing credentials admin/admin123
+The production preview will be available at [satellitecontrol.com](https://web-xi-orpin-46.vercel.app/login).  
+with testing credentials: admin/admin123
 
 
 
