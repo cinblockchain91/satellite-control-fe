@@ -3,16 +3,16 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { Button } from "@/shared/ui/ui/button";
-import { Input } from "@/shared/ui/ui/input";
-import { Label } from "@/shared/ui/ui/label";
+import { Button } from "@/shared/components/ui/button";
+import { Input } from "@/shared/components/ui/input";
+import { Label } from "@/shared/components/ui/label";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
   CardDescription,
-} from "@/shared/ui/ui/card";
+} from "@/shared/components/ui/card";
 import { useAuthStore } from "@satellite-control/feature-account-auth";
 import { authAdapter } from "@/shared/config/adapters";
 import { Loader2 } from "lucide-react";

@@ -19,19 +19,19 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
   SidebarRail,
-} from "@/shared/ui/ui/sidebar";
+} from "@/shared/components/ui/sidebar";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "@/shared/ui/ui/collapsible";
-import { Avatar, AvatarFallback } from "@/shared/ui/ui/avatar";
+} from "@/shared/components/ui/collapsible";
+import { Avatar, AvatarFallback } from "@/shared/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/shared/ui/ui/dropdown-menu";
+} from "@/shared/components/ui/dropdown-menu";
 import {
   LayoutDashboard,
   Satellite,

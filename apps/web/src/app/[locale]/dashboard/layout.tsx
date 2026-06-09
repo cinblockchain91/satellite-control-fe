@@ -1,5 +1,5 @@
-import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/shared/ui/ui/sidebar";
-import { Separator } from "@/shared/ui/ui/separator";
+import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/shared/components/ui/sidebar";
+import { Separator } from "@/shared/components/ui/separator";
 import { AppSidebar } from "@/widgets/app-sidebar";
 
 export default function DashboardLayout({
