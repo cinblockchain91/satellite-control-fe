@@ -1,14 +1,23 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { verifyToken } from "@/shared/lib/jwt";
 
 const PUBLIC_PATHS = ["/login"];
 const LOCALE_REGEX = /^\/(en|vi)(\/|$)/;
 const DEFAULT_LOCALE = "en";
 
-export function middleware(request: NextRequest) {
+function clearTokenAndRedirect(url: URL): NextResponse {
+  const response = NextResponse.redirect(url);
+  response.cookies.set("access_token", "", {
+    httpOnly: true,
+    path: "/",
+    maxAge: 0,
+  });
+  return response;
+}
+
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const token = request.cookies.get("access_token")?.value;
-  // Không có locale prefix → redirect thêm /en vào đầu
-  // Ngoại trừ: API routes
+
   if (!LOCALE_REGEX.test(pathname)) {
     if (pathname.startsWith("/api")) {
       return NextResponse.next();
@@ -27,12 +36,29 @@ export function middleware(request: NextRequest) {
       pathnameWithoutLocale === p || pathnameWithoutLocale.startsWith(p + "/"),
   );
 
-  if (isPublic && token) {
-    return NextResponse.redirect(new URL(`/${locale}/dashboard`, request.url));
+  const rawToken = request.cookies.get("access_token")?.value;
+
+  if (!rawToken) {
+    if (isPublic) return NextResponse.next();
+    return NextResponse.redirect(new URL(`/${locale}/login`, request.url));
   }
 
-  if (!isPublic && !token) {
-    return NextResponse.redirect(new URL(`/${locale}/login`, request.url));
+  // Verify JWT signature — expired or tampered tokens are rejected
+  let isValidToken = false;
+  try {
+    await verifyToken(rawToken);
+    isValidToken = true;
+  } catch {
+    isValidToken = false;
+  }
+
+  if (!isValidToken) {
+    const loginUrl = new URL(`/${locale}/login`, request.url);
+    return clearTokenAndRedirect(loginUrl);
+  }
+
+  if (isPublic) {
+    return NextResponse.redirect(new URL(`/${locale}/dashboard`, request.url));
   }
 
   return NextResponse.next();
