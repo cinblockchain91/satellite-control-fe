@@ -16,18 +16,11 @@ test.describe("Login flow", () => {
     ).toBeVisible();
   });
 
-  test("authenticated user is redirected away from login", async ({
-    page,
-    context,
-  }) => {
-    await context.addCookies([
-      {
-        name: "access_token",
-        value: "mock-token",
-        domain: "localhost",
-        path: "/",
-      },
-    ]);
+  test("authenticated user is redirected away from login", async ({ page }) => {
+    // Login via API — cookie is stored in page's browser context automatically
+    await page.request.post("/api/auth/login", {
+      data: { username: "admin", password: "admin123" },
+    });
     await page.goto("/en/login");
     await expect(page).toHaveURL(/.*dashboard/);
   });
