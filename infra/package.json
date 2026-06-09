@@ -9,8 +9,6 @@
   "exports": {
     "./http": "./http/client.ts",
     "./http/auth": "./http/auth.http-adapter.ts",
-    "./mock/handlers": "./mock/auth.handlers.ts",
-    "./mock/auth": "./mock/auth.mock-adapter.ts",
     "./cache": "./cache/query-client.ts",
     "./cache/keys": "./cache/keys.ts"
   },
