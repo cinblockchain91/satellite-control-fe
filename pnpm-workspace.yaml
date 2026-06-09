@@ -5,4 +5,4 @@ packages:
   - "packages/features/*"
   - "packages/entities/*"
   - "tooling/*"
-  - "infra"
+  - "packages/infra/*"

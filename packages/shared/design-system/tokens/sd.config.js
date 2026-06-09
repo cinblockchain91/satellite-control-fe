@@ -2,22 +2,6 @@ export default {
   source: ["src/**/*.json"],
 
   platforms: {
-    css: {
-      transformGroup: "css",
-      prefix: "st",
-      buildPath: "build/css/",
-      files: [
-        {
-          destination: "tokens.css",
-          format: "css/variables",
-          options: {
-            selector: ":root",
-            outputReferences: true,
-          },
-        },
-      ],
-    },
-
     js: {
       transformGroup: "js",
       buildPath: "build/js/",
@@ -25,6 +9,10 @@ export default {
         {
           destination: "tokens.js",
           format: "javascript/es6",
+        },
+        {
+          destination: "tokens.d.ts",
+          format: "typescript/es6-declarations",
         },
       ],
     },
