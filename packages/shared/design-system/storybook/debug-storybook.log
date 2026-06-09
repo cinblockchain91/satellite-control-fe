@@ -1,0 +1,23 @@
+[00:18:54.836] [INFO] storybook v10.4.2
+[00:18:55.238] [DEBUG] Command "yarn.cmd" not found, trying next variation...
+[00:18:55.265] [DEBUG] Command "yarn.exe" not found, trying next variation...
+[00:18:55.294] [DEBUG] Command "yarn.ps1" not found, trying next variation...
+[00:18:55.748] [DEBUG] Getting package.json info for C:/WORK/satellite/satellite-control-fe/packages/shared/design-system/storybook/package.json...
+[00:18:56.230] [INFO] Starting...
+[00:18:56.379] [DEBUG] Starting preview..
+[00:18:56.458] [DEBUG] Using tsconfig paths for react-docgen
+[00:18:56.545] [INFO] [43mVite[49m Re-optimizing dependencies because vite config has changed
+[00:18:56.558] [ERROR] Failed to build the preview
+[00:18:56.560] [ERROR] [38;2;241;97;97mError: "." is not exported under the conditions ["storybook", "stories", "test", "module", "browser", "development", "import"] from package C:/WORK/satellite/satellite-control-fe/packages/shared/design-system/storybook\node_modules\@satellite-control\ds-ui-web (see exports field in C:/WORK/satellite/satellite-control-fe/packages/shared/design-system/storybook\node_modules\@satellite-control\ds-ui-web\package.json)[39m
+    at async EnvironmentPluginContainer.resolveId (file:///C:/WORK/satellite/satellite-control-fe/node_modules/.pnpm/vite@8.0.16_@types+node@25.9.2_esbuild@0.28.0_jiti@2.7.0_terser@5.48.0_tsx@4.22.4_yaml@2.9.0/node_modules/vite/dist/node/chunks/node.js:30303:19)
+    at async resolve (file:///C:/WORK/satellite/satellite-control-fe/node_modules/.pnpm/vite@8.0.16_@types+node@25.9.2_esbuild@0.28.0_jiti@2.7.0_terser@5.48.0_tsx@4.22.4_yaml@2.9.0/node_modules/vite/dist/node/chunks/node.js:20235:10)
+    at async file:///C:/WORK/satellite/satellite-control-fe/node_modules/.pnpm/vite@8.0.16_@types+node@25.9.2_esbuild@0.28.0_jiti@2.7.0_terser@5.48.0_tsx@4.22.4_yaml@2.9.0/node_modules/vite/dist/node/chunks/node.js:20247:11
+    at async file:///C:/WORK/satellite/satellite-control-fe/node_modules/.pnpm/vite@8.0.16_@types+node@25.9.2_esbuild@0.28.0_jiti@2.7.0_terser@5.48.0_tsx@4.22.4_yaml@2.9.0/node_modules/vite/dist/node/chunks/node.js:34728:12
+    at async file:///C:/WORK/satellite/satellite-control-fe/node_modules/.pnpm/vite@8.0.16_@types+node@25.9.2_esbuild@0.28.0_jiti@2.7.0_terser@5.48.0_tsx@4.22.4_yaml@2.9.0/node_modules/vite/dist/node/chunks/node.js:31226:37
+    at async addManuallyIncludedOptimizeDeps (file:///C:/WORK/satellite/satellite-control-fe/node_modules/.pnpm/vite@8.0.16_@types+node@25.9.2_esbuild@0.28.0_jiti@2.7.0_terser@5.48.0_tsx@4.22.4_yaml@2.9.0/node_modules/vite/dist/node/chunks/node.js:31891:19)
+    at async Object.init (file:///C:/WORK/satellite/satellite-control-fe/node_modules/.pnpm/vite@8.0.16_@types+node@25.9.2_esbuild@0.28.0_jiti@2.7.0_terser@5.48.0_tsx@4.22.4_yaml@2.9.0/node_modules/vite/dist/node/chunks/node.js:23332:4)
+    at async DevEnvironment.listen (file:///C:/WORK/satellite/satellite-control-fe/node_modules/.pnpm/vite@8.0.16_@types+node@25.9.2_esbuild@0.28.0_jiti@2.7.0_terser@5.48.0_tsx@4.22.4_yaml@2.9.0/node_modules/vite/dist/node/chunks/node.js:24902:3)
+    at async Promise.all (index 0)
+    at async file:///C:/WORK/satellite/satellite-control-fe/node_modules/.pnpm/vite@8.0.16_@types+node@25.9.2_esbuild@0.28.0_jiti@2.7.0_terser@5.48.0_tsx@4.22.4_yaml@2.9.0/node_modules/vite/dist/node/chunks/node.js:26476:36
+[00:18:56.569] [WARN] Broken build, fix the error above.
+You may need to refresh the browser.

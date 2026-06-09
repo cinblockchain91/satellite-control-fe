@@ -2,11 +2,13 @@
   "name": "@satellite-control/infra",
   "version": "0.0.0",
   "private": true,
+  "scripts": {
+    "test": "vitest run",
+    "coverage": "vitest run --coverage"
+  },
   "exports": {
     "./http": "./http/client.ts",
     "./http/auth": "./http/auth.http-adapter.ts",
-    "./mock/handlers": "./mock/auth.handlers.ts",
-    "./mock/auth": "./mock/auth.mock-adapter.ts",
     "./cache": "./cache/query-client.ts",
     "./cache/keys": "./cache/keys.ts"
   },
@@ -16,6 +18,7 @@
     "zod": "^3.22.0"
   },
   "devDependencies": {
+    "@satellite-control/vitest-config": "workspace:*",
     "@satellite-control/tsconfig": "workspace:*",
     "@satellite-control/shared": "workspace:*",
     "@satellite-control/entity-account": "workspace:*",

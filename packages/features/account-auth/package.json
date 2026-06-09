@@ -5,10 +5,15 @@
   "exports": {
     ".": "./index.ts"
   },
+  "scripts": {
+    "test": "vitest run",
+    "coverage": "vitest run --coverage"
+  },
   "dependencies": {
     "zustand": "^4.5.0"
   },
   "devDependencies": {
+    "@satellite-control/vitest-config": "workspace:*",
     "@satellite-control/tsconfig": "workspace:*",
     "@satellite-control/shared": "workspace:*",
     "@satellite-control/entity-account": "workspace:*",

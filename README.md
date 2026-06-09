@@ -4,7 +4,9 @@
 
 A modern web-based control interface for managing and monitoring satellite operations in real time. Built for mission control teams who need reliable, fast, and intuitive tools to oversee satellite fleets, track telemetry data, and execute remote commands.
 
----
+---  
+[Kanban Board](https://github.com/users/cinblockchain91/projects/4/views/1): Track development progress here.  
+[satellitecontrol.com](https://web-xi-orpin-46.vercel.app/login) : Production preview with testing credentials: (**admin**/**admin123**)
 
 ## Overview
 
@@ -94,7 +96,9 @@ NEXT_PUBLIC_FEATURE_DIGITAL_TWIN=false
 pnpm dev
 ```
 
-The app will be available at [http://localhost:3000](http://localhost:3000).
+The app will be available at [http://localhost:3000](http://localhost:3000).  
+
+
 
 ---
 

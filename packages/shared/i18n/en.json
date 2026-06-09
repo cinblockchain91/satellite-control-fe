@@ -1,0 +1,28 @@
+{
+  "nav": {
+    "platform": "Platform",
+    "dashboard": "Dashboard",
+    "satellites": "Satellites",
+    "active": "Active",
+    "idle": "Idle",
+    "schedule": "Schedule",
+    "operations": "Operations",
+    "telemetry": "Telemetry",
+    "commands": "Commands",
+    "system": "System",
+    "settings": "Settings",
+    "signOut": "Sign out"
+  },
+  "auth": {
+    "title": "Satellite Control",
+    "subtitle": "Sign in to your account",
+    "username": "Username",
+    "password": "Password",
+    "usernamePlaceholder": "Enter username",
+    "passwordPlaceholder": "Enter password",
+    "signIn": "Sign in",
+    "loading": "Loading...",
+    "errorRequired": "Please enter username and password",
+    "errorFailed": "Login failed"
+  }
+}
