@@ -1,0 +1,24 @@
+{
+  "name": "@satellite-control/infra-auth-adapter",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "test": "vitest run",
+    "coverage": "vitest run --coverage"
+  },
+  "exports": {
+    ".": "./index.ts"
+  },
+  "dependencies": {
+    "@satellite-control/infra-http": "workspace:*",
+    "@satellite-control/entity-account": "workspace:*",
+    "zod": "^3.22.0"
+  },
+  "devDependencies": {
+    "@satellite-control/vitest-config": "workspace:*",
+    "@satellite-control/tsconfig": "workspace:*",
+    "@satellite-control/shared": "workspace:*",
+    "msw": "^2.2.0",
+    "typescript": "^5.4.0"
+  }
+}

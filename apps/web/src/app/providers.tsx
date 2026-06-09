@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { createQueryClient } from "@satellite-control/infra/cache";
+import { createQueryClient } from "@satellite-control/infra-http";
 import { TooltipProvider } from "@/shared/components/ui/tooltip";
 
 export function Providers({ children }: { children: React.ReactNode }) {

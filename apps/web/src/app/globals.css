@@ -1,8 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
-@import "@satellite-control/ds-tokens/css";
-@import "@satellite-control/ds-ui-web/css";
 
 @custom-variant dark (&:is(.dark *));
 
