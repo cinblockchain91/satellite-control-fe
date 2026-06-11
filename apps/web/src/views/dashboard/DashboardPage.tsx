@@ -1,19 +1,11 @@
 import { SceneCanvasLazy } from "@/shared/3d";
-
-function TestSphere() {
-  return (
-    <mesh>
-      <sphereGeometry args={[1, 32, 32]} />
-      <meshStandardMaterial color="#4a9eff" wireframe />
-    </mesh>
-  );
-}
+import { MissionControlScene } from "@/widgets/mission-control-scene";
 
 export function DashboardPage() {
   return (
-    <main className="h-full w-full">
+    <main className="h-[calc(100svh-4rem)] w-full">
       <SceneCanvasLazy className="h-full w-full">
-        <TestSphere />
+        <MissionControlScene />
       </SceneCanvasLazy>
     </main>
   );
