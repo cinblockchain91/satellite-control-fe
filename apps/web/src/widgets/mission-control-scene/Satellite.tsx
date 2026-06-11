@@ -15,10 +15,28 @@ export function Satellite({ data, isSelected, onSelect }: SatelliteProps) {
   const color = STATUS_COLORS[data.status];
   const [hovered, setHovered] = useState(false);
   const ringRef = useRef<THREE.Mesh>(null);
+  const bodyRef = useRef<THREE.MeshStandardMaterial>(null);
+  const { healthScore } = data.telemetry;
 
-  useFrame((_, delta) => {
+  useFrame((state, delta) => {
     if (isSelected && ringRef.current) {
       ringRef.current.rotation.z += delta * 0.8;
+    }
+
+    if (!bodyRef.current) return;
+
+    if (isSelected) {
+      bodyRef.current.emissiveIntensity = 0.8;
+    } else if (hovered) {
+      bodyRef.current.emissiveIntensity = 0.3;
+    } else if (healthScore < 50) {
+      // Low health: pulse speed and intensity scale with severity
+      const speed = healthScore < 30 ? 3 : 1.5;
+      const maxIntensity = healthScore < 30 ? 0.35 : 0.18;
+      bodyRef.current.emissiveIntensity =
+        (Math.sin(state.clock.elapsedTime * speed) * 0.5 + 0.5) * maxIntensity;
+    } else {
+      bodyRef.current.emissiveIntensity = 0;
     }
   });
 
@@ -35,9 +53,10 @@ export function Satellite({ data, isSelected, onSelect }: SatelliteProps) {
       <mesh>
         <boxGeometry args={[0.15, 0.15, 0.15]} />
         <meshStandardMaterial
+          ref={bodyRef}
           color={color}
           emissive={color}
-          emissiveIntensity={isSelected ? 0.8 : hovered ? 0.3 : 0}
+          emissiveIntensity={0}
         />
       </mesh>
       <mesh rotation={[0, 0, Math.PI / 2]}>
