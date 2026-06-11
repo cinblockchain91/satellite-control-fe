@@ -1,11 +1,36 @@
 "use client";
 
-import { OrbitControls, Stars } from "@react-three/drei";
+import { useEffect, useRef } from "react";
+import { CameraControls, Stars } from "@react-three/drei";
+import * as THREE from "three";
+import { Earth } from "./Earth";
 import { OrbitalRings } from "./OrbitalRings";
 import { Satellite } from "./Satellite";
 import { MOCK_SATELLITES } from "./satellites.data";
 
-export function MissionControlScene() {
+interface MissionControlSceneProps {
+  selectedId: string | null;
+  onSelect: (id: string | null) => void;
+}
+
+export function MissionControlScene({ selectedId, onSelect }: MissionControlSceneProps) {
+  const controlsRef = useRef<React.ComponentRef<typeof CameraControls>>(null);
+
+  useEffect(() => {
+    const controls = controlsRef.current;
+    if (!controls) return;
+    if (selectedId) {
+      const sat = MOCK_SATELLITES.find((s) => s.id === selectedId);
+      if (sat) {
+        const target = new THREE.Vector3(...sat.position);
+        const camPos = target.clone().add(target.clone().normalize().multiplyScalar(0.8));
+        void controls.setLookAt(camPos.x, camPos.y, camPos.z, target.x, target.y, target.z, true);
+      }
+    } else {
+      void controls.setLookAt(0, 0, 5, 0, 0, 0, true);
+    }
+  }, [selectedId]);
+
   return (
     <>
       <color attach="background" args={["#080c14"]} />
@@ -15,22 +40,24 @@ export function MissionControlScene() {
 
       <Stars radius={200} depth={60} count={4000} factor={4} fade />
 
-      <mesh>
-        <sphereGeometry args={[1, 64, 64]} />
-        <meshStandardMaterial color="#1a6b3c" roughness={0.8} />
-      </mesh>
+      <Earth />
 
       <OrbitalRings />
 
       {MOCK_SATELLITES.map((sat) => (
-        <Satellite key={sat.id} data={sat} />
+        <Satellite
+          key={sat.id}
+          data={sat}
+          isSelected={selectedId === sat.id}
+          onSelect={() => onSelect(selectedId === sat.id ? null : sat.id)}
+        />
       ))}
 
-      <OrbitControls
-        enableDamping
-        dampingFactor={0.05}
-        minDistance={2}
+      <CameraControls
+        ref={controlsRef}
+        minDistance={0.5}
         maxDistance={20}
+        dampingFactor={0.05}
       />
     </>
   );

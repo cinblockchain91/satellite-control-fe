@@ -30,6 +30,20 @@
       "critical": "Critical"
     }
   },
+  "satelliteDetail": {
+    "noSelection": "Click a satellite to inspect",
+    "signalAndPower": "Signal & Power",
+    "signalStrength": "Signal Strength",
+    "battery": "Battery",
+    "environment": "Environment",
+    "temperature": "Temperature",
+    "altitude": "Altitude",
+    "status": {
+      "online": "Online",
+      "warning": "Warning",
+      "offline": "Offline"
+    }
+  },
   "auth": {
     "title": "Satellite Control",
     "subtitle": "Sign in to your account",

@@ -65,6 +65,8 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!_next|favicon.ico).*)"],
+  matcher: [
+    "/((?!_next|favicon.ico|.*\\.(?:jpg|jpeg|png|webp|svg|gif|ico|woff2?|ttf|otf)$).*)",
+  ],
   runtime: "nodejs",
 };
