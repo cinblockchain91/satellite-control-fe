@@ -21,5 +21,8 @@ export default defineConfig({
     command: "pnpm run start",
     url: "http://localhost:3000",
     reuseExistingServer: !process.env.CI,
+    env: {
+      JWT_SECRET: "e2e-test-secret-32-chars-minimum!",
+    },
   },
 });

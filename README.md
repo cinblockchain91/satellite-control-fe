@@ -4,9 +4,10 @@
 
 A modern web-based control interface for managing and monitoring satellite operations in real time. Built for mission control teams who need reliable, fast, and intuitive tools to oversee satellite fleets, track telemetry data, and execute remote commands.
 
----  
+---
+
 [Kanban Board](https://github.com/users/cinblockchain91/projects/4/views/1): Track development progress here.  
-[satellitecontrol.com](https://web-xi-orpin-46.vercel.app/login) : Production preview with testing credentials: (**admin**/**admin123**)
+[satellitecontrol.com](https://web-2xu214h09-hoang-van-cuongs-projects.vercel.app) : Production preview with testing credentials: (**admin**/**admin123**)
 
 ## Overview
 
@@ -22,17 +23,17 @@ Satellite Control FE is the frontend layer of the Satellite Control Platform —
 
 ## Tech Stack
 
-| Layer | Technology |
-|-------|-----------|
-| Framework | Next.js 15 (App Router) |
-| UI | React 19, Tailwind CSS v4, Radix UI |
-| State management | Zustand |
-| Server state | TanStack Query v5 |
-| Language | TypeScript 5 |
-| Monorepo | pnpm Workspaces + Turborepo |
-| Linting | ESLint 9 (flat config) |
-| Git hooks | Husky + Commitlint |
-| CI/CD | GitHub Actions + Vercel |
+| Layer            | Technology                          |
+| ---------------- | ----------------------------------- |
+| Framework        | Next.js 15 (App Router)             |
+| UI               | React 19, Tailwind CSS v4, Radix UI |
+| State management | Zustand                             |
+| Server state     | TanStack Query v5                   |
+| Language         | TypeScript 5                        |
+| Monorepo         | pnpm Workspaces + Turborepo         |
+| Linting          | ESLint 9 (flat config)              |
+| Git hooks        | Husky + Commitlint                  |
+| CI/CD            | GitHub Actions + Vercel             |
 
 ---
 
@@ -96,9 +97,7 @@ NEXT_PUBLIC_FEATURE_DIGITAL_TWIN=false
 pnpm dev
 ```
 
-The app will be available at [http://localhost:3000](http://localhost:3000).  
-
-
+The app will be available at [http://localhost:3000](http://localhost:3000).
 
 ---
 
@@ -107,6 +106,7 @@ The app will be available at [http://localhost:3000](http://localhost:3000).
 Since the backend is under active development, the frontend ships with a built-in mock layer. When `NEXT_PUBLIC_USE_MOCK` is not explicitly set to `"false"`, all API calls are intercepted and served by mock adapters — no backend required.
 
 **Default mock credentials:**
+
 ```
 Username: admin
 Password: admin123
@@ -170,11 +170,11 @@ feature branch → develop → main
 
 GitHub Actions handles the full CI/CD pipeline:
 
-| Job | Trigger | Steps |
-|-----|---------|-------|
-| `ci` | Push / PR | Type check → Lint |
-| `deploy-preview` | PR opened/updated | Build → Deploy to Vercel Preview |
-| `deploy-production` | Merge to `main` | Build → Deploy to Vercel Production |
+| Job                 | Trigger           | Steps                               |
+| ------------------- | ----------------- | ----------------------------------- |
+| `ci`                | Push / PR         | Type check → Lint                   |
+| `deploy-preview`    | PR opened/updated | Build → Deploy to Vercel Preview    |
+| `deploy-production` | Merge to `main`   | Build → Deploy to Vercel Production |
 
 Preview URLs are posted automatically as PR comments.
 
@@ -182,13 +182,48 @@ Preview URLs are posted automatically as PR comments.
 
 ## Environment Variables
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `NEXT_PUBLIC_USE_MOCK` | Enable mock API adapters | `true` |
-| `NEXT_PUBLIC_APP_ENV` | Application environment | `development` |
-| `NEXT_PUBLIC_API_URL` | Backend REST API base URL | `http://localhost:4000` |
-| `NEXT_PUBLIC_WS_URL` | WebSocket server URL | `ws://localhost:4000` |
-| `NEXT_PUBLIC_FEATURE_DIGITAL_TWIN` | Enable digital twin feature | `false` |
+| Variable                           | Description                 | Default                 |
+| ---------------------------------- | --------------------------- | ----------------------- |
+| `NEXT_PUBLIC_USE_MOCK`             | Enable mock API adapters    | `true`                  |
+| `NEXT_PUBLIC_APP_ENV`              | Application environment     | `development`           |
+| `NEXT_PUBLIC_API_URL`              | Backend REST API base URL   | `http://localhost:4000` |
+| `NEXT_PUBLIC_WS_URL`               | WebSocket server URL        | `ws://localhost:4000`   |
+| `NEXT_PUBLIC_FEATURE_DIGITAL_TWIN` | Enable digital twin feature | `false`                 |
+
+---
+
+## Changelog
+
+### Milestone 10 — 3D Mission Control Dashboard
+
+**3D Scene**
+- Interactive Earth globe with real texture (place `earth.jpg` in `apps/web/public/textures/` — free 2K map at solarsystemscope.com/textures), slow axial rotation, and solid-color fallback if texture unavailable
+- Orbital rings at equatorial, polar, and inclined inclinations
+- Satellite meshes with status colors (online / warning / offline)
+- Loading overlay while Canvas and assets initialize
+
+**Satellite Selection**
+- Click a satellite → emissive glow + spinning ring highlight
+- Camera flies and zooms to the selected satellite automatically
+- Click again to deselect and return camera to default view
+
+**Telemetry Panel**
+- Live fleet overview (satellite count, signal, battery, temperature)
+- Switches to per-satellite detail view on selection
+- Responsive: sidebar on desktop, sheet drawer on mobile/tablet
+
+**App-wide Space Theme**
+- Permanent dark navy theme (`#080c14`) unified across login, sidebar, header, and panels via CSS custom properties
+
+**i18n**
+- Full EN / VI support for all dashboard strings
+- Locale switcher in header
+
+**Performance**
+- `useFrame` guard — ring animation only runs for selected satellite
+- Earth sphere polygon count reduced (64×64 → 32×32)
+- Earth texture preloaded via `<link rel="preload">`
+- FPS stats overlay in development mode (`<Stats>` from @react-three/drei)
 
 ---
 

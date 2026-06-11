@@ -11,7 +11,9 @@
     "style-dictionary": "^4.4.0"
   },
   "exports": {
-    "./css": "./build/css/tokens.css",
-    "./js": "./build/js/tokens.js"
+    ".": {
+      "types": "./build/js/tokens.d.ts",
+      "default": "./build/js/tokens.js"
+    }
   }
 }

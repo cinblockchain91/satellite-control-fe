@@ -8,7 +8,8 @@ const nextConfig: NextConfig = {
     "@satellite-control/shared",
     "@satellite-control/entity-account",
     "@satellite-control/feature-account-auth",
-    "@satellite-control/infra",
+    "@satellite-control/infra-http",
+    "@satellite-control/infra-auth-adapter",
   ],
   typedRoutes: true,
 };

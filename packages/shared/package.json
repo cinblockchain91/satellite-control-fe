@@ -7,7 +7,6 @@
     "./config": "./config/env.ts",
     "./lib/*": "./lib/*.ts",
     "./types/*": "./types/*.ts",
-    "./port/*": "./port/*.ts",
     "./i18n/*": "./i18n/*.json"
   },
   "dependencies": {

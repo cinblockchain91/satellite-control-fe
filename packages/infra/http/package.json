@@ -1,0 +1,21 @@
+{
+  "name": "@satellite-control/infra-http",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "test": "vitest run",
+    "coverage": "vitest run --coverage"
+  },
+  "exports": {
+    ".": "./index.ts"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "^5.28.0"
+  },
+  "devDependencies": {
+    "@satellite-control/vitest-config": "workspace:*",
+    "@satellite-control/tsconfig": "workspace:*",
+    "msw": "^2.2.0",
+    "typescript": "^5.4.0"
+  }
+}
