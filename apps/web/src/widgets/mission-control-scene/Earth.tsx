@@ -1,13 +1,25 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
-import { useTexture } from "@react-three/drei";
+import { TextureLoader } from "three";
 import type * as THREE from "three";
 
 export function Earth() {
   const meshRef = useRef<THREE.Mesh>(null);
-  const texture = useTexture("/textures/earth.jpg");
+  const materialRef = useRef<THREE.MeshStandardMaterial>(null);
+
+  useEffect(() => {
+    const loader = new TextureLoader();
+    loader.load("/textures/earth.jpg", (t) => {
+      t.colorSpace = "srgb";
+      const mat = materialRef.current;
+      if (!mat) return;
+      mat.map = t;
+      mat.color.set("#ffffff");
+      mat.needsUpdate = true;
+    });
+  }, []);
 
   useFrame((_, delta) => {
     if (meshRef.current) {
@@ -18,7 +30,7 @@ export function Earth() {
   return (
     <mesh ref={meshRef}>
       <sphereGeometry args={[1, 64, 64]} />
-      <meshStandardMaterial map={texture} roughness={0.8} />
+      <meshStandardMaterial ref={materialRef} color="#1a6b3c" roughness={0.8} />
     </mesh>
   );
 }
