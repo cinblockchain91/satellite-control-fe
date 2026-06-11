@@ -3,10 +3,10 @@
 import { useRef, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import type * as THREE from "three";
-import { type SatelliteData, STATUS_COLORS } from "./satellites.data";
+import { type Satellite, STATUS_COLORS } from "./satellites.data";
 
 interface SatelliteProps {
-  data: SatelliteData;
+  data: Satellite;
   isSelected: boolean;
   onSelect: () => void;
 }

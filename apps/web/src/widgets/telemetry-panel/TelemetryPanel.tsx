@@ -19,9 +19,10 @@ const FLEET_STATUS_CLASS: Record<SystemStatus, string> = {
   critical: "border-red-500/40 bg-red-500/10 text-red-400",
 };
 
-const SAT_STATUS_CLASS: Record<"online" | "warning" | "offline", string> = {
+const SAT_STATUS_CLASS: Record<"online" | "warning" | "degraded" | "offline", string> = {
   online: "border-green-500/40 bg-green-500/10 text-green-400",
   warning: "border-yellow-500/40 bg-yellow-500/10 text-yellow-400",
+  degraded: "border-orange-500/40 bg-orange-500/10 text-orange-400",
   offline: "border-red-500/40 bg-red-500/10 text-red-400",
 };
 
