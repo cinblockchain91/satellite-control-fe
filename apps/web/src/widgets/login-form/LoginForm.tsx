@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Button } from "@/shared/components/ui/button";
@@ -24,6 +24,11 @@ interface LoginFormProps {
 export function LoginForm({ onSuccess }: LoginFormProps) {
   const t = useTranslations("auth");
   const [username, setUsername] = useState("");
+
+  useEffect(() => {
+    // TODO: remove after Vercel env var is confirmed
+    console.log("[env] NEXT_PUBLIC_FEATURE_DIGITAL_TWIN =", process.env.NEXT_PUBLIC_FEATURE_DIGITAL_TWIN);
+  }, []);
   const [password, setPassword] = useState("");
   const { isLoading, error, setLoading, setError, setAccount } = useAuthStore();
   const router = useRouter();
