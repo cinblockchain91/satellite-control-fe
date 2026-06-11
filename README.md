@@ -192,6 +192,41 @@ Preview URLs are posted automatically as PR comments.
 
 ---
 
+## Changelog
+
+### Milestone 10 — 3D Mission Control Dashboard
+
+**3D Scene**
+- Interactive Earth globe with real texture (place `earth.jpg` in `apps/web/public/textures/` — free 2K map at solarsystemscope.com/textures), slow axial rotation, and solid-color fallback if texture unavailable
+- Orbital rings at equatorial, polar, and inclined inclinations
+- Satellite meshes with status colors (online / warning / offline)
+- Loading overlay while Canvas and assets initialize
+
+**Satellite Selection**
+- Click a satellite → emissive glow + spinning ring highlight
+- Camera flies and zooms to the selected satellite automatically
+- Click again to deselect and return camera to default view
+
+**Telemetry Panel**
+- Live fleet overview (satellite count, signal, battery, temperature)
+- Switches to per-satellite detail view on selection
+- Responsive: sidebar on desktop, sheet drawer on mobile/tablet
+
+**App-wide Space Theme**
+- Permanent dark navy theme (`#080c14`) unified across login, sidebar, header, and panels via CSS custom properties
+
+**i18n**
+- Full EN / VI support for all dashboard strings
+- Locale switcher in header
+
+**Performance**
+- `useFrame` guard — ring animation only runs for selected satellite
+- Earth sphere polygon count reduced (64×64 → 32×32)
+- Earth texture preloaded via `<link rel="preload">`
+- FPS stats overlay in development mode (`<Stats>` from @react-three/drei)
+
+---
+
 ## License
 
 Private — All rights reserved © Satellite Control Team
