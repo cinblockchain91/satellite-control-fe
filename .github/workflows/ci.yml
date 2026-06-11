@@ -33,6 +33,7 @@ jobs:
 
       - name: Test
         run: pnpm test
+
   e2e:
     needs: ci
     runs-on: ubuntu-latest
@@ -131,12 +132,33 @@ jobs:
               body: '🚀 Preview: ${{ steps.deploy.outputs.url }}'
             })
 
-  deploy-production:
+  merge-to-main:
     needs: ci
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/v')
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.PAT_TOKEN }}
+
+      - name: Merge develop into main
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout main
+          git merge origin/develop --no-ff -m "chore: merge develop → main (${{ github.ref_name }})"
+          git push origin main
+
+  deploy-production:
+    needs: merge-to-main
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
 
       - uses: pnpm/action-setup@v3
         with:
