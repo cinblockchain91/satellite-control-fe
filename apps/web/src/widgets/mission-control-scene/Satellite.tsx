@@ -2,7 +2,6 @@
 
 import { useRef, useState } from "react";
 import { useFrame } from "@react-three/fiber";
-import { Html } from "@react-three/drei";
 import type * as THREE from "three";
 import { type Satellite, STATUS_COLORS } from "./satellites.data";
 
@@ -76,15 +75,6 @@ export function Satellite({ data, isSelected, onSelect }: SatelliteProps) {
           <torusGeometry args={[0.35, 0.02, 8, 32]} />
           <meshBasicMaterial color={color} />
         </mesh>
-      )}
-
-      {hovered && !isSelected && (
-        <Html position={[0, 0.28, 0]} center distanceFactor={8}>
-          <div className="pointer-events-none flex items-center gap-1.5 whitespace-nowrap rounded border border-border bg-background/90 px-2 py-0.5 text-xs font-semibold text-foreground shadow-md backdrop-blur-sm">
-            <span className="inline-block h-1.5 w-1.5 shrink-0 rounded-full" style={{ backgroundColor: color }} />
-            {data.name}
-          </div>
-        </Html>
       )}
     </group>
   );

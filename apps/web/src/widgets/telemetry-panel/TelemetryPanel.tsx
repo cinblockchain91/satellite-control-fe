@@ -12,7 +12,6 @@ import { Separator } from "@/shared/components/ui/separator";
 import { cn } from "@/shared/components/lib/utils";
 import { useLiveTelemetry, type SystemStatus } from "./telemetry.mock";
 import type { SelectedSatelliteInfo } from "./types";
-import { healthScoreVariant } from "./health-score.utils";
 
 const FLEET_STATUS_CLASS: Record<SystemStatus, string> = {
   nominal: "border-green-500/40 bg-green-500/10 text-green-400",
@@ -62,29 +61,12 @@ export function TelemetryPanel({ className, selectedSatellite }: TelemetryPanelP
       </h2>
 
       {selectedSatellite ? (
-        <div data-testid="telemetry-satellite-detail">
+        <>
           <div className="flex items-center justify-between">
             <span className="text-sm font-semibold text-foreground">{selectedSatellite.name}</span>
             <Badge variant="outline" className={SAT_STATUS_CLASS[selectedSatellite.status]}>
               {td(`status.${selectedSatellite.status}`)}
             </Badge>
-          </div>
-
-          <div className="flex flex-col gap-1">
-            <div className="flex items-center justify-between">
-              <span className="text-xs text-muted-foreground uppercase tracking-wider">
-                {td("healthScore")}
-              </span>
-              <span className={`text-sm font-mono font-semibold ${healthScoreVariant(selectedSatellite.healthScore).text}`}>
-                {selectedSatellite.healthScore}
-              </span>
-            </div>
-            <div className="h-1 w-full rounded-full bg-muted">
-              <div
-                className={`h-1 rounded-full transition-all ${healthScoreVariant(selectedSatellite.healthScore).bar}`}
-                style={{ width: `${selectedSatellite.healthScore}%` }}
-              />
-            </div>
           </div>
 
           <Card size="sm" className="bg-background border-border">
@@ -122,9 +104,9 @@ export function TelemetryPanel({ className, selectedSatellite }: TelemetryPanelP
               <MetricRow label={td("altitude")} value={`${selectedSatellite.altitude} km`} />
             </CardContent>
           </Card>
-        </div>
+        </>
       ) : (
-        <div data-testid="telemetry-no-selection">
+        <>
           <p className="text-xs text-muted-foreground">{td("noSelection")}</p>
 
           <Card size="sm" className="bg-background border-border">
@@ -183,7 +165,7 @@ export function TelemetryPanel({ className, selectedSatellite }: TelemetryPanelP
               />
             </CardContent>
           </Card>
-        </div>
+        </>
       )}
     </aside>
   );

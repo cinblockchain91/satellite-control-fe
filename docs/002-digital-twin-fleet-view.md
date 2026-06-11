@@ -41,8 +41,6 @@ Three states (`online | warning | offline`) were insufficient — an intermediat
 
 **Why:** A real backend would compute this server-side using proprietary weighting logic. Storing it as a field keeps the frontend passive — it displays what it receives without re-implementing backend business logic. The Zod schema enforces `min(0).max(100)`.
 
-**Display convention (FE only):** The UI color-codes healthScore into three bands: ≥ 70 → green (normal), 40–69 → yellow (caution), < 40 → red (critical). These thresholds are a frontend display decision, independent of the status field and unrelated to any backend scoring logic. A satellite can be `status: "warning"` with `healthScore: 72` (declining but not yet critical by score) — both values are shown separately.
-
 ### 4. Status-driven pulse animation, not health-driven
 
 Visual pulse effects in the 3D scene are keyed to `status`, not `healthScore`:
