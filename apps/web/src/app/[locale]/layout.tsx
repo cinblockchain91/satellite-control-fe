@@ -38,6 +38,9 @@ export default async function LocaleLayout({
       lang={locale}
       className={`${geistSans.variable} ${geistMono.variable} dark h-full antialiased`}
     >
+      <head>
+        <link rel="preload" href="/textures/earth.jpg" as="image" />
+      </head>
       <body className="min-h-full flex flex-col">
         <NextIntlClientProvider>
           <Providers>{children}</Providers>

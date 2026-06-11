@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { CameraControls, Stars } from "@react-three/drei";
+import { CameraControls, Stars, Stats } from "@react-three/drei";
 import * as THREE from "three";
 import { Earth } from "./Earth";
 import { OrbitalRings } from "./OrbitalRings";
@@ -59,6 +59,7 @@ export function MissionControlScene({ selectedId, onSelect }: MissionControlScen
         maxDistance={20}
         dampingFactor={0.05}
       />
+      {process.env.NODE_ENV === "development" && <Stats />}
     </>
   );
 }
