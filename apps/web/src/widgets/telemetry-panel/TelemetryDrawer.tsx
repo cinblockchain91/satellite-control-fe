@@ -32,9 +32,16 @@ export function TelemetryDrawer({ selectedSatellite }: TelemetryDrawerProps) {
           {t("title")}
         </Button>
       </SheetTrigger>
-      <SheetContent side="right" className="p-0 w-72 bg-card border-border" aria-describedby={undefined}>
+      <SheetContent
+        side="right"
+        className="p-0 w-72 bg-card border-border"
+        aria-describedby={undefined}
+      >
         <SheetTitle className="sr-only">{t("title")}</SheetTitle>
-        <TelemetryPanel className="w-full border-l-0 h-full" selectedSatellite={selectedSatellite} />
+        <TelemetryPanel
+          className="w-full border-l-0 h-full"
+          selectedSatellite={selectedSatellite ?? null}
+        />
       </SheetContent>
     </Sheet>
   );
