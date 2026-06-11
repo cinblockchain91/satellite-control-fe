@@ -16,8 +16,6 @@ export function Satellite({ data, isSelected, onSelect }: SatelliteProps) {
   const [hovered, setHovered] = useState(false);
   const ringRef = useRef<THREE.Mesh>(null);
   const bodyRef = useRef<THREE.MeshStandardMaterial>(null);
-  const { healthScore } = data.telemetry;
-
   useFrame((state, delta) => {
     if (isSelected && ringRef.current) {
       ringRef.current.rotation.z += delta * 0.8;
@@ -29,13 +27,14 @@ export function Satellite({ data, isSelected, onSelect }: SatelliteProps) {
       bodyRef.current.emissiveIntensity = 0.8;
     } else if (hovered) {
       bodyRef.current.emissiveIntensity = 0.3;
-    } else if (healthScore < 50) {
-      // Low health: pulse speed and intensity scale with severity
-      const speed = healthScore < 30 ? 3 : 1.5;
-      const maxIntensity = healthScore < 30 ? 0.35 : 0.18;
+    } else if (data.status === "degraded") {
       bodyRef.current.emissiveIntensity =
-        (Math.sin(state.clock.elapsedTime * speed) * 0.5 + 0.5) * maxIntensity;
+        (Math.sin(state.clock.elapsedTime * 3) * 0.5 + 0.5) * 0.35;
+    } else if (data.status === "warning") {
+      bodyRef.current.emissiveIntensity =
+        (Math.sin(state.clock.elapsedTime * 1.5) * 0.5 + 0.5) * 0.18;
     } else {
+      // online + offline: static, no pulse
       bodyRef.current.emissiveIntensity = 0;
     }
   });
@@ -57,6 +56,8 @@ export function Satellite({ data, isSelected, onSelect }: SatelliteProps) {
           color={color}
           emissive={color}
           emissiveIntensity={0}
+          opacity={data.status === "offline" ? 0.45 : 1}
+          transparent={data.status === "offline"}
         />
       </mesh>
       <mesh rotation={[0, 0, Math.PI / 2]}>
