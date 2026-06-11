@@ -4,7 +4,7 @@ import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import { Suspense } from "react";
 
-interface SceneCanvasProps {
+export interface SceneCanvasProps {
   children: React.ReactNode;
   className?: string;
 }
