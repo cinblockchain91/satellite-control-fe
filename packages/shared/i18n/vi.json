@@ -13,6 +13,23 @@
     "settings": "Cài đặt",
     "signOut": "Đăng xuất"
   },
+  "telemetryPanel": {
+    "title": "Đo từ xa",
+    "fleetStatus": "Trạng thái đội vệ tinh",
+    "totalSatellites": "Tổng số vệ tinh",
+    "online": "Trực tuyến",
+    "system": "Hệ thống",
+    "signalAndPower": "Tín hiệu & Năng lượng",
+    "signalStrength": "Cường độ tín hiệu",
+    "battery": "Pin",
+    "environment": "Môi trường",
+    "temperature": "Nhiệt độ",
+    "status": {
+      "nominal": "Bình thường",
+      "warning": "Cảnh báo",
+      "critical": "Nghiêm trọng"
+    }
+  },
   "auth": {
     "title": "Satellite Control",
     "subtitle": "Đăng nhập vào tài khoản",
