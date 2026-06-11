@@ -59,7 +59,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
       <CardContent className="space-y-4">
         <form onSubmit={handleSubmit}>
           {error && (
-            <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-600">
+            <p className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">
               {error}
             </p>
           )}
