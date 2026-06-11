@@ -1,8 +1,20 @@
+import { SceneCanvasLazy } from "@/shared/3d";
+
+function TestSphere() {
+  return (
+    <mesh>
+      <sphereGeometry args={[1, 32, 32]} />
+      <meshStandardMaterial color="#4a9eff" wireframe />
+    </mesh>
+  );
+}
+
 export function DashboardPage() {
   return (
-    <main className="p-6">
-      <h1 className="text-2xl font-bold">Dashboard verson 2</h1>
-      <p className="mt-2 text-gray-500">Welcome to Satellite Control</p>
+    <main className="h-full w-full">
+      <SceneCanvasLazy className="h-full w-full">
+        <TestSphere />
+      </SceneCanvasLazy>
     </main>
   );
 }
