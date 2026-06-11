@@ -28,7 +28,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
   useEffect(() => {
     // TODO: remove after Vercel env var is confirmed
     console.log(
-      "111NEXT_PUBLIC_FEATURE_DIGITAL_TWIN =",
+      "222UBLIC_FEATURE_DIGITAL_TWIN =",
       process.env.NEXT_PUBLIC_FEATURE_DIGITAL_TWIN,
     );
   }, []);
