@@ -2,6 +2,7 @@
   "nav": {
     "platform": "Platform",
     "dashboard": "Dashboard",
+    "digitalTwin": "Digital Twin",
     "satellites": "Satellites",
     "active": "Active",
     "idle": "Idle",
@@ -43,6 +44,11 @@
       "warning": "Warning",
       "offline": "Offline"
     }
+  },
+  "digitalTwin": {
+    "title": "Digital Twin",
+    "subtitle": "Fleet View",
+    "legendPlaceholder": "Fleet Legend"
   },
   "auth": {
     "title": "Satellite Control",

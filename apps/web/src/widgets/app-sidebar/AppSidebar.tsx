@@ -43,7 +43,9 @@ import {
   LogOut,
   CalendarDays,
   Radio,
+  Globe,
 } from "lucide-react";
+import { env } from "@/shared/config/env";
 
 export function AppSidebar() {
   const t = useTranslations("nav");
@@ -68,6 +70,9 @@ export function AppSidebar() {
 
   const platformNav = [
     { title: t("dashboard"), url: "/dashboard", icon: LayoutDashboard },
+    ...(env.featureDigitalTwin
+      ? [{ title: t("digitalTwin"), url: "/digital-twin", icon: Globe }]
+      : []),
   ];
 
   const satellitesSubNav = [

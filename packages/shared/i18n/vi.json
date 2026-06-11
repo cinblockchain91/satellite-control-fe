@@ -2,6 +2,7 @@
   "nav": {
     "platform": "Nền tảng",
     "dashboard": "Bảng điều khiển",
+    "digitalTwin": "Bản sao số",
     "satellites": "Vệ tinh",
     "active": "Đang hoạt động",
     "idle": "Chờ",
@@ -43,6 +44,11 @@
       "warning": "Cảnh báo",
       "offline": "Ngoại tuyến"
     }
+  },
+  "digitalTwin": {
+    "title": "Bản sao số",
+    "subtitle": "Xem đội vệ tinh",
+    "legendPlaceholder": "Chú giải đội"
   },
   "auth": {
     "title": "Satellite Control",
