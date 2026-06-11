@@ -8,6 +8,7 @@ import { SceneLoaderOverlay } from "./scene-loader-overlay";
 export interface SceneCanvasProps {
   children: React.ReactNode;
   className?: string;
+  onPointerMissed?: () => void;
 }
 
 function CanvasLoader() {
@@ -18,10 +19,10 @@ function CanvasLoader() {
   );
 }
 
-export function SceneCanvas({ children, className }: SceneCanvasProps) {
+export function SceneCanvas({ children, className, onPointerMissed }: SceneCanvasProps) {
   return (
     <div className={className} style={{ width: "100%", height: "100%" }}>
-      <Canvas camera={{ position: [0, 0, 5], fov: 60 }}>
+      <Canvas camera={{ position: [0, 0, 5], fov: 60 }} {...(onPointerMissed ? { onPointerMissed: () => onPointerMissed() } : {})}>
         <Suspense fallback={<CanvasLoader />}>{children}</Suspense>
       </Canvas>
     </div>
