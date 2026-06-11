@@ -29,7 +29,7 @@ export function Earth() {
 
   return (
     <mesh ref={meshRef}>
-      <sphereGeometry args={[1, 64, 64]} />
+      <sphereGeometry args={[1, 32, 32]} />
       <meshStandardMaterial ref={materialRef} color="#1a6b3c" roughness={0.8} />
     </mesh>
   );

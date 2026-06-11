@@ -17,7 +17,7 @@ export function Satellite({ data, isSelected, onSelect }: SatelliteProps) {
   const ringRef = useRef<THREE.Mesh>(null);
 
   useFrame((_, delta) => {
-    if (ringRef.current) {
+    if (isSelected && ringRef.current) {
       ringRef.current.rotation.z += delta * 0.8;
     }
   });
