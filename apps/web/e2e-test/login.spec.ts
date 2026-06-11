@@ -18,9 +18,10 @@ test.describe("Login flow", () => {
 
   test("authenticated user is redirected away from login", async ({ page }) => {
     // Login via API — cookie is stored in page's browser context automatically
-    await page.request.post("/api/auth/login", {
+    const res = await page.request.post("/api/auth/login", {
       data: { username: "admin", password: "admin123" },
     });
+    expect(res.ok()).toBeTruthy();
     await page.goto("/en/login");
     await expect(page).toHaveURL(/.*dashboard/);
   });
