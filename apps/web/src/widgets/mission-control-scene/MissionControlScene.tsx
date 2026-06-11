@@ -1,6 +1,8 @@
 "use client";
 
 import { OrbitControls, Stars } from "@react-three/drei";
+import { Satellite } from "./Satellite";
+import { MOCK_SATELLITES } from "./satellites.data";
 
 export function MissionControlScene() {
   return (
@@ -16,6 +18,10 @@ export function MissionControlScene() {
         <sphereGeometry args={[1, 64, 64]} />
         <meshStandardMaterial color="#1a6b3c" roughness={0.8} />
       </mesh>
+
+      {MOCK_SATELLITES.map((sat) => (
+        <Satellite key={sat.id} data={sat} />
+      ))}
 
       <OrbitControls
         enableDamping
