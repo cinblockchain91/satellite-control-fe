@@ -22,7 +22,7 @@ export function DigitalTwinShell() {
   return (
     <main data-testid="digital-twin-shell" className="flex h-[calc(100svh-4rem)] w-full overflow-hidden">
       <div className="relative flex-1 min-w-0">
-        <SceneCanvasLazy className="h-full w-full">
+        <SceneCanvasLazy className="h-full w-full" onPointerMissed={() => setSelectedId(null)}>
           <MissionControlScene selectedId={selectedId} onSelect={setSelectedId} />
         </SceneCanvasLazy>
 

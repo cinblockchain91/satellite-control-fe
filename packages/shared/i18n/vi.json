@@ -39,6 +39,7 @@
     "environment": "Môi trường",
     "temperature": "Nhiệt độ",
     "altitude": "Độ cao",
+    "healthScore": "Điểm sức khỏe",
     "status": {
       "online": "Trực tuyến",
       "warning": "Cảnh báo",
