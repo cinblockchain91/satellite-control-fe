@@ -42,6 +42,7 @@
     "status": {
       "online": "Online",
       "warning": "Warning",
+      "degraded": "Degraded",
       "offline": "Offline"
     }
   },

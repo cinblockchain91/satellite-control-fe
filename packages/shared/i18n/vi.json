@@ -42,6 +42,7 @@
     "status": {
       "online": "Trực tuyến",
       "warning": "Cảnh báo",
+      "degraded": "Suy giảm",
       "offline": "Ngoại tuyến"
     }
   },
