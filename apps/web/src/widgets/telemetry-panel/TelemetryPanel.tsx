@@ -96,7 +96,7 @@ export function TelemetryPanel({
 }: TelemetryPanelProps) {
   const t = useTranslations("telemetryPanel");
   const td = useTranslations("satelliteDetail");
-  const telemetry = useLiveTelemetry();
+  const telemetry = useLiveTelemetry(satellites ?? []);
   const counts = satellites ? countByStatus(satellites) : null;
 
   return (
