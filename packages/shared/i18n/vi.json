@@ -31,6 +31,11 @@
       "nominal": "Bình thường",
       "warning": "Cảnh báo",
       "critical": "Nghiêm trọng"
+    },
+    "orbitAlerts": {
+      "title": "Cảnh báo quỹ đạo",
+      "noAlerts": "Không có cảnh báo",
+      "conjunctionWarning": "nguy cơ va chạm"
     }
   },
   "satelliteDetail": {
@@ -60,7 +65,15 @@
       "hintTouch": "Kéo để xoay · Chụm để thu phóng",
       "reset": "Đặt lại góc nhìn"
     },
-    "lowFpsWarning": "Tốc độ khung hình thấp"
+    "lowFpsWarning": "Tốc độ khung hình thấp",
+    "orbitLegend": {
+      "title": "Chú giải quỹ đạo",
+      "orbitPath": "Đường quỹ đạo",
+      "currentPosition": "Vị trí hiện tại",
+      "predictedPosition": "Dự đoán (+5 phút)",
+      "conjunctionRisk": "Nguy cơ va chạm",
+      "signalLost": "Mất tín hiệu (ngoại tuyến)"
+    }
   },
   "auth": {
     "title": "Satellite Control",

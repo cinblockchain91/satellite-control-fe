@@ -307,6 +307,44 @@ default    → status color, opacity 0.20
 
 `isAtRisk` overrides color but not selection opacity — if a satellite is both selected AND at risk, it shows red at 0.85 opacity.
 
+### 17. Orbit legend and alert panel
+
+#### `OrbitLegend` component
+
+`OrbitLegend.tsx` is a DOM overlay (not R3F) mounted at `absolute bottom-4 right-4` inside the canvas area of `DigitalTwinShell`, visible on desktop only (`hidden lg:block`). It sits symmetrically opposite `FleetLegend` (bottom-left) — fleet colour coding on the left, orbit visual coding on the right.
+
+Legend items:
+
+| Symbol | Meaning |
+|---|---|
+| Thin line (status colour) | Orbit path — faint by default, bright when selected, red when at risk |
+| Small square | Current satellite position (animated cube mesh) |
+| Rotated square outline | Predicted position, 5 min ahead (`PREDICTION_WINDOW = 300` demo-seconds) |
+| Solid red line | Conjunction risk — orbit path turns red when a nearby satellite is detected |
+| Very faint line | Signal lost — orbit path at 0.08 opacity for offline satellites |
+
+The component uses `useTranslations("digitalTwin.orbitLegend")`. New i18n keys: `orbitLegend.{title,orbitPath,currentPosition,predictedPosition,conjunctionRisk,signalLost}` in `en.json` and `vi.json`.
+
+#### Orbit Alerts section in `TelemetryPanel`
+
+A new "Orbit Alerts" card is added to the no-selection view in `TelemetryPanel`. It lists every satellite currently flagged for conjunction risk by name with a red dot indicator, followed by a caption label. When no conjunctions are active, it renders "No active alerts" in muted text.
+
+New i18n keys: `telemetryPanel.orbitAlerts.{title,noAlerts,conjunctionWarning}`.
+
+#### State lifting — `onConjunctionChange` callback
+
+`MissionControlScene` receives a new optional prop `onConjunctionChange?: ((ids: Set<string>) => void) | undefined`, matching the pattern of `onLowFps`. Inside `useFrame`, after updating internal `conjunctionIds` state, the callback fires with the same `Set<string>`:
+
+```ts
+const newIds = new Set(pairs.flatMap(([a, b]) => [a, b]));
+setConjunctionIds(newIds);      // internal — for OrbitPath / Satellite props
+onConjunctionChange?.(newIds);  // external — lifted to shell
+```
+
+`DigitalTwinShell` owns a `conjunctionIds: Set<string>` state, initialised as `new Set()`, updated by `onConjunctionChange`. It passes `conjunctionIds` down to `TelemetryPanel` (desktop sidebar) and `TelemetryDrawer` (mobile sheet, passes through to `TelemetryPanel`).
+
+`MissionControlScene` retains its own internal copy for rendering — the shell's copy is a replica synced once per second via the callback. Two independent copies, one source of truth (`useFrame` detection). This is identical in spirit to how `isLowFps` works.
+
 ## Consequences
 
 - `@satellite-control/entity-satellite` is a new workspace package; any app in the monorepo can depend on it
@@ -315,3 +353,6 @@ default    → status color, opacity 0.20
 - All 3D visual logic remains in `widgets/mission-control-scene/` — no Three.js code in the entity or feature layers
 - `MissionControlScene` is now a `forwardRef` component; consumers must type their ref as `CameraControlsHandle` from the widget index
 - `TelemetryPanel` and `TelemetryDrawer` now accept an optional `satellites` prop; when omitted, the status breakdown is hidden
+- `OrbitLegend` is the counterpart to `FleetLegend` — both are DOM overlays on the canvas. `FleetLegend` explains status colours; `OrbitLegend` explains orbit visual elements (paths, position markers, risk indicators)
+- `TelemetryPanel` and `TelemetryDrawer` now accept an optional `conjunctionIds` prop; when omitted, the Orbit Alerts card shows "No active alerts"
+- `onConjunctionChange` on `MissionControlScene` is optional — the scene works without it; `DigitalTwinShell` opts in to receive updates for display in `TelemetryPanel`

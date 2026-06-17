@@ -31,6 +31,11 @@
       "nominal": "Nominal",
       "warning": "Warning",
       "critical": "Critical"
+    },
+    "orbitAlerts": {
+      "title": "Orbit Alerts",
+      "noAlerts": "No active alerts",
+      "conjunctionWarning": "conjunction risk"
     }
   },
   "satelliteDetail": {
@@ -60,7 +65,15 @@
       "hintTouch": "Drag to rotate · Pinch to zoom",
       "reset": "Reset view"
     },
-    "lowFpsWarning": "Low frame rate detected"
+    "lowFpsWarning": "Low frame rate detected",
+    "orbitLegend": {
+      "title": "Orbit Legend",
+      "orbitPath": "Orbit path",
+      "currentPosition": "Current position",
+      "predictedPosition": "Predicted (+5 min)",
+      "conjunctionRisk": "Conjunction risk",
+      "signalLost": "Signal lost (offline)"
+    }
   },
   "auth": {
     "title": "Satellite Control",

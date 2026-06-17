@@ -94,12 +94,14 @@ interface TelemetryPanelProps {
   className?: string;
   selectedSatellite?: SelectedSatelliteInfo | null;
   satellites?: Satellite[] | undefined;
+  conjunctionIds?: Set<string>;
 }
 
 export function TelemetryPanel({
   className,
   selectedSatellite,
   satellites,
+  conjunctionIds,
 }: TelemetryPanelProps) {
   const t = useTranslations("telemetryPanel");
   const td = useTranslations("satelliteDetail");
@@ -262,6 +264,32 @@ export function TelemetryPanel({
                   {t(`status.${telemetry.systemStatus}`)}
                 </Badge>
               </div>
+            </CardContent>
+          </Card>
+
+          <Card size="sm" className="bg-background border-border mb-[16px]">
+            <CardHeader>
+              <CardTitle className="text-xs text-muted-foreground uppercase tracking-wider font-normal">
+                {t("orbitAlerts.title")}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {conjunctionIds && conjunctionIds.size > 0 ? (
+                <div className="flex flex-col gap-1 py-1">
+                  {[...conjunctionIds].map((id) => {
+                    const sat = satellites?.find((s) => s.id === id);
+                    return (
+                      <div key={id} className="flex items-center gap-1.5">
+                        <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-red-500" />
+                        <span className="text-xs text-foreground">{sat?.name ?? id}</span>
+                      </div>
+                    );
+                  })}
+                  <p className="mt-0.5 text-[10px] text-red-400">{t("orbitAlerts.conjunctionWarning")}</p>
+                </div>
+              ) : (
+                <p className="py-1 text-xs text-muted-foreground">{t("orbitAlerts.noAlerts")}</p>
+              )}
             </CardContent>
           </Card>
 

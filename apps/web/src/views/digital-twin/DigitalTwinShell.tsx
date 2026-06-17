@@ -8,6 +8,7 @@ import {
   FleetLegend,
   MissionControlScene,
   MOCK_SATELLITES,
+  OrbitLegend,
   type CameraControlsHandle,
 } from "@/widgets/mission-control-scene";
 import { TelemetryDrawer, TelemetryPanel } from "@/widgets/telemetry-panel";
@@ -16,6 +17,7 @@ import type { SelectedSatelliteInfo } from "@/widgets/telemetry-panel";
 export function DigitalTwinShell() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [isLowFps, setIsLowFps] = useState(false);
+  const [conjunctionIds, setConjunctionIds] = useState<Set<string>>(new Set());
   const sceneRef = useRef<CameraControlsHandle>(null);
   const t = useTranslations("digitalTwin");
 
@@ -36,7 +38,13 @@ export function DigitalTwinShell() {
     <main data-testid="digital-twin-shell" className="flex h-[calc(100svh-4rem)] w-full overflow-hidden">
       <div className="relative flex-1 min-w-0">
         <SceneCanvasLazy className="h-full w-full" onPointerMissed={() => setSelectedId(null)}>
-          <MissionControlScene ref={sceneRef} selectedId={selectedId} onSelect={setSelectedId} onLowFps={setIsLowFps} />
+          <MissionControlScene
+            ref={sceneRef}
+            selectedId={selectedId}
+            onSelect={setSelectedId}
+            onLowFps={setIsLowFps}
+            onConjunctionChange={setConjunctionIds}
+          />
         </SceneCanvasLazy>
 
         {/* Camera controls hint — bottom-center of canvas area */}
@@ -49,6 +57,11 @@ export function DigitalTwinShell() {
           <FleetLegend />
         </div>
 
+        {/* Orbit legend — bottom-right of canvas, desktop only */}
+        <div className="absolute bottom-4 right-4 hidden lg:block">
+          <OrbitLegend />
+        </div>
+
         {isLowFps && (
           <div
             data-testid="low-fps-warning"
@@ -58,13 +71,14 @@ export function DigitalTwinShell() {
           </div>
         )}
 
-        <TelemetryDrawer selectedSatellite={selectedSatellite} satellites={MOCK_SATELLITES} />
+        <TelemetryDrawer selectedSatellite={selectedSatellite} satellites={MOCK_SATELLITES} conjunctionIds={conjunctionIds} />
       </div>
 
       <TelemetryPanel
         className="hidden lg:flex"
         selectedSatellite={selectedSatellite}
         satellites={MOCK_SATELLITES}
+        conjunctionIds={conjunctionIds}
       />
     </main>
   );

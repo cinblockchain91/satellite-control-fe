@@ -20,10 +20,11 @@ interface MissionControlSceneProps {
   selectedId: string | null;
   onSelect: (id: string | null) => void;
   onLowFps?: ((isLow: boolean) => void) | undefined;
+  onConjunctionChange?: ((ids: Set<string>) => void) | undefined;
 }
 
 export const MissionControlScene = forwardRef<CameraControlsHandle, MissionControlSceneProps>(
-  function MissionControlScene({ selectedId, onSelect, onLowFps }, ref) {
+  function MissionControlScene({ selectedId, onSelect, onLowFps, onConjunctionChange }, ref) {
     const controlsRef = useRef<React.ComponentRef<typeof CameraControls>>(null);
     const [conjunctionIds, setConjunctionIds] = useState<Set<string>>(new Set());
     const lastCheckSecRef = useRef(-1);
@@ -33,7 +34,9 @@ export const MissionControlScene = forwardRef<CameraControlsHandle, MissionContr
       if (sec === lastCheckSecRef.current) return;
       lastCheckSecRef.current = sec;
       const pairs = detectConjunctions(MOCK_SATELLITES, state.clock.elapsedTime);
-      setConjunctionIds(new Set(pairs.flatMap(([a, b]) => [a, b])));
+      const newIds = new Set(pairs.flatMap(([a, b]) => [a, b]));
+      setConjunctionIds(newIds);
+      onConjunctionChange?.(newIds);
     });
 
     useImperativeHandle(
