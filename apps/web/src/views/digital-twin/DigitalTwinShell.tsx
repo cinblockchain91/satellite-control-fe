@@ -1,10 +1,10 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { useTranslations } from "next-intl";
 import { SceneCanvasLazy } from "@/shared/3d";
 import {
   CameraControlsOverlay,
+  FleetLegend,
   MissionControlScene,
   MOCK_SATELLITES,
   type CameraControlsHandle,
@@ -13,7 +13,6 @@ import { TelemetryDrawer, TelemetryPanel } from "@/widgets/telemetry-panel";
 import type { SelectedSatelliteInfo } from "@/widgets/telemetry-panel";
 
 export function DigitalTwinShell() {
-  const t = useTranslations("digitalTwin");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const sceneRef = useRef<CameraControlsHandle>(null);
 
@@ -42,17 +41,19 @@ export function DigitalTwinShell() {
           <CameraControlsOverlay onReset={handleCameraReset} />
         </div>
 
-        {/* Legend zone — bottom-left, desktop only (issue #63) */}
-        <div className="absolute bottom-4 left-4 rounded-lg border border-border bg-background/80 backdrop-blur-sm px-3 py-2 hidden lg:block">
-          <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-            {t("legendPlaceholder")}
-          </span>
+        {/* Fleet legend — bottom-left, desktop only */}
+        <div className="absolute bottom-4 left-4 hidden lg:block">
+          <FleetLegend />
         </div>
 
-        <TelemetryDrawer selectedSatellite={selectedSatellite} />
+        <TelemetryDrawer selectedSatellite={selectedSatellite} satellites={MOCK_SATELLITES} />
       </div>
 
-      <TelemetryPanel className="hidden lg:flex" selectedSatellite={selectedSatellite} />
+      <TelemetryPanel
+        className="hidden lg:flex"
+        selectedSatellite={selectedSatellite}
+        satellites={MOCK_SATELLITES}
+      />
     </main>
   );
 }

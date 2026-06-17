@@ -11,13 +11,15 @@ import {
 } from "@/shared/components/ui/sheet";
 import { TelemetryPanel } from "./TelemetryPanel";
 
+import type { Satellite } from "@satellite-control/entity-satellite";
 import type { SelectedSatelliteInfo } from "./types";
 
 interface TelemetryDrawerProps {
   selectedSatellite?: SelectedSatelliteInfo | null;
+  satellites?: Satellite[];
 }
 
-export function TelemetryDrawer({ selectedSatellite }: TelemetryDrawerProps) {
+export function TelemetryDrawer({ selectedSatellite, satellites }: TelemetryDrawerProps) {
   const t = useTranslations("telemetryPanel");
 
   return (
@@ -41,6 +43,7 @@ export function TelemetryDrawer({ selectedSatellite }: TelemetryDrawerProps) {
         <TelemetryPanel
           className="w-full border-l-0 h-full"
           selectedSatellite={selectedSatellite ?? null}
+          satellites={satellites}
         />
       </SheetContent>
     </Sheet>

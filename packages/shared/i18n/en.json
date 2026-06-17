@@ -25,6 +25,8 @@
     "battery": "Battery",
     "environment": "Environment",
     "temperature": "Temperature",
+    "degraded": "Degraded",
+    "offline": "Offline",
     "status": {
       "nominal": "Nominal",
       "warning": "Warning",
@@ -51,6 +53,9 @@
     "title": "Digital Twin",
     "subtitle": "Fleet View",
     "legendPlaceholder": "Fleet Legend",
+    "legend": {
+      "title": "Status"
+    },
     "cameraControls": {
       "hint": "Drag to rotate · Scroll to zoom",
       "hintTouch": "Drag to rotate · Pinch to zoom",
