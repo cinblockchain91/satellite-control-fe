@@ -10,10 +10,11 @@ import { type Satellite, STATUS_COLORS } from "./satellites.data";
 interface SatelliteProps {
   data: Satellite;
   isSelected: boolean;
+  isAtRisk: boolean;
   onSelect: () => void;
 }
 
-export function Satellite({ data, isSelected, onSelect }: SatelliteProps) {
+export function Satellite({ data, isSelected, isAtRisk, onSelect }: SatelliteProps) {
   const color = STATUS_COLORS[data.status];
   const [hovered, setHovered] = useState(false);
   const groupRef = useRef<THREE.Group>(null);
@@ -84,6 +85,13 @@ export function Satellite({ data, isSelected, onSelect }: SatelliteProps) {
         <mesh ref={ringRef} rotation={[Math.PI / 2, 0, 0]}>
           <torusGeometry args={[0.35, 0.02, 8, 32]} />
           <meshBasicMaterial color={color} />
+        </mesh>
+      )}
+
+      {isAtRisk && (
+        <mesh rotation={[Math.PI / 2, 0, 0]}>
+          <torusGeometry args={[0.5, 0.015, 8, 32]} />
+          <meshBasicMaterial color="#ef4444" transparent opacity={0.7} />
         </mesh>
       )}
 

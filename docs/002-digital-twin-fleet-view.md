@@ -273,6 +273,40 @@ Each satellite has a `<PredictedMarker orbit={sat.orbit} color={...} />` mounted
 
 **Initial position prop:** `position={computeOrbitPosition(orbit, PREDICTION_WINDOW)}` sets the t=0 starting point before `useFrame` fires on the first frame — no position flash on mount.
 
+### 16. Orbital warning states — conjunction detection and risk visuals
+
+#### Warning type mapping
+
+| Warning type | Source | Visual |
+|---|---|---|
+| Collision risk | `detectConjunctions` pairwise distance | Orbit path → red (#ef4444), opacity 0.7, lineWidth 1.5; Satellite → outer red torus ring (r=0.5) |
+| Signal loss / offline | `sat.status === "offline"` | Orbit path opacity → 0.08 (nearly invisible) |
+| Unstable / off-track | `status: "degraded"` | Existing fast pulse (3 Hz) on satellite mesh — no additional orbit path change |
+| Caution | `status: "warning"` | Existing slow pulse (1.5 Hz) on satellite mesh |
+
+#### `detectConjunctions` — pure function
+
+`detectConjunctions(satellites, t, threshold = 0.5)` computes all-pairs distances using `computeOrbitPosition` at time `t` and returns `[string, string][]` pairs. It is a pure function with no side effects — safe to call in a throttled `useFrame`.
+
+`CONJUNCTION_THRESHOLD = 0.5` scene units (≈3185 km). Set deliberately large for demo visibility; a real system would use ~10 km.
+
+#### Conjunction detection in `MissionControlScene`
+
+`useFrame` in `MissionControlScene` runs `detectConjunctions` once per second (throttled via `Math.floor(elapsedTime)` comparison). Result stored in `conjunctionIds: Set<string>` via `useState`. One `setState` per second → one React re-render per second for `OrbitPath` × 6 and `Satellite` × 6 — acceptable overhead.
+
+**Why `useState` instead of pure imperative refs:** `OrbitPath` uses `<Line>` from drei which is declarative (props-driven). Color and opacity on `LineMaterial` cannot be updated imperatively without a material ref — passing props is cleaner and the 1/sec re-render cost is negligible.
+
+#### Visual priority order (OrbitPath)
+
+```
+isOffline → opacity 0.08  (signal lost, path nearly invisible)
+isSelected → opacity 0.85 (user focus, full visibility)
+isAtRisk   → red, opacity 0.70, lineWidth 1.5
+default    → status color, opacity 0.20
+```
+
+`isAtRisk` overrides color but not selection opacity — if a satellite is both selected AND at risk, it shows red at 0.85 opacity.
+
 ## Consequences
 
 - `@satellite-control/entity-satellite` is a new workspace package; any app in the monorepo can depend on it
