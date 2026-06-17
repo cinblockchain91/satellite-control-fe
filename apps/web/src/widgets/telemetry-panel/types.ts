@@ -9,4 +9,6 @@ export interface SelectedSatelliteInfo {
   temperature: number;
   altitude: number;
   healthScore: number;
+  latency: number;
+  anomalyLevel: number;
 }
