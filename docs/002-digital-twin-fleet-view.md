@@ -253,6 +253,14 @@ Visual hierarchy:
 
 `OrbitalRings.tsx` (three static torus meshes) is deleted. The three generic rings were decorative — they did not match any satellite's actual orbit. The new orbit paths are derived from each satellite's real orbital parameters, so the 3D scene now accurately represents the fleet's flight geometry.
 
+#### Orbit path is clickable
+
+`OrbitPath` accepts an optional `onSelect?: () => void` prop. Clicking the orbit line triggers the same toggle behaviour as clicking the satellite mesh — if the satellite is already selected, clicking its orbit deselects it; otherwise it selects it. `e.stopPropagation()` prevents the click from bubbling to the canvas `onPointerMissed` handler.
+
+`onPointerOver` / `onPointerOut` change `document.body.style.cursor` to `pointer` / `default` — the same pattern used in `Satellite.tsx`. This gives users a clear affordance that the orbit line is interactive.
+
+Orbit paths are a larger hit surface than the satellite cube (0.15 scene units), so clicking an orbit line is substantially easier during a demo than targeting the animated mesh.
+
 #### `useMemo` keyed to `orbit`
 
 Points are memoised with `useMemo(() => [...], [orbit])`. Since `MOCK_SATELLITES` is a module-level constant, the memo never recomputes during a session. After issue #69 introduces dynamic satellite data from a backend, the memo will still be correct — orbit parameters change rarely (reboost manoeuvres), not every frame.

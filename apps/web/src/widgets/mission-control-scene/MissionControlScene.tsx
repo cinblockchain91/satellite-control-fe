@@ -83,6 +83,7 @@ export const MissionControlScene = forwardRef<CameraControlsHandle, MissionContr
             isSelected={selectedId === sat.id}
             isAtRisk={conjunctionIds.has(sat.id)}
             isOffline={sat.status === "offline"}
+            onSelect={() => onSelect(selectedId === sat.id ? null : sat.id)}
           />
         ))}
 
