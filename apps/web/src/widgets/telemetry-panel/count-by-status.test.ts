@@ -3,12 +3,15 @@ import { countByStatus } from "./count-by-status";
 import { SatelliteId } from "@satellite-control/entity-satellite";
 import type { Satellite } from "@satellite-control/entity-satellite";
 
-function makeSat(status: Satellite["status"], id = status): Satellite {
+const stubOrbit = { radius: 2.5, inclination: 0, raan: 0, speed: 0.3, initialAngle: 0 };
+
+function makeSat(status: Satellite["status"], id: string): Satellite {
   return {
     id: SatelliteId(`sat-${id}`),
     name: `SAT-${id}`,
     position: [0, 0, 0],
     status,
+    orbit: stubOrbit,
     telemetry: { signalStrength: 0, battery: 0, temperature: 0, altitude: 0, healthScore: 0 },
   };
 }

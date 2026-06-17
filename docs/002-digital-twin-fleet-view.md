@@ -152,13 +152,58 @@ The following items were evaluated and intentionally deferred. They do not block
 | # | Item | Milestone |
 |---|------|-----------|
 | 1 | Real backend — replace `useLiveTelemetry` with TanStack Query | 3 |
-| 2 | Keplerian orbit path rendering (actual elliptical paths) | 3 |
-| 3 | Time-series telemetry chart in `TelemetryPanel` | 3 |
-| 4 | Mobile `TelemetryDrawer` UX refinement (swipe-to-close, peek state) | 3 |
-| 5 | Keyboard navigation in 3D scene (Tab to cycle satellites) | Accessibility milestone |
-| 6 | Multi-satellite comparison (multi-select) | Requires UX spec |
+| 2 | Time-series telemetry chart in `TelemetryPanel` | 3 |
+| 3 | Mobile `TelemetryDrawer` UX refinement (swipe-to-close, peek state) | 3 |
+| 4 | Keyboard navigation in 3D scene (Tab to cycle satellites) | Accessibility milestone |
+| 5 | Multi-satellite comparison (multi-select) | Requires UX spec |
 
 **Known layout note:** `LowFpsWarning` badge stacks below `TelemetryDrawer` trigger on mobile (`top-14`) and moves to `top-4` on desktop where the drawer trigger is hidden. This is intentional — both elements share the right-edge column without overlapping.
+
+### 13. Orbital parameters — circular orbit model
+
+#### Orbit model: 5-parameter circular orbit
+
+Full Keplerian elements (6 parameters including eccentricity and argument of periapsis) are not used. With no real backend and eccentricity ≈ 0 for LEO satellites, the simpler circular model is sufficient and avoids complex anomaly calculations. If a real backend provides Keplerian elements, `computeOrbitPosition` can be upgraded to support non-zero eccentricity without changing the interface.
+
+The 5 parameters:
+
+| Field | Unit | Meaning |
+|-------|------|---------|
+| `radius` | scene units | Distance from origin. Earth = 1 unit. Satellites at 2.4–3.0 units are above the visible globe. |
+| `inclination` | degrees [0–180] | Tilt of orbital plane from the equatorial (XZ) plane. |
+| `raan` | degrees [0–360] | Right ascension of ascending node — rotates the orbital plane around the polar (Y) axis. |
+| `speed` | rad/s | Angular velocity. Demo-scaled (0.23–0.40 rad/s = ~15–27 s/orbit). Not derived from Kepler's third law (`v = √(GM/r)`). |
+| `initialAngle` | radians | Phase on the orbit at t = 0. |
+
+#### Coordinate system (Three.js Y-up)
+
+- XZ plane = equatorial plane
+- Y axis = polar axis (positive = north)
+
+`computeOrbitPosition(orbit, t)` formula:
+```
+θ = initialAngle + speed × t
+x = radius × (cos θ · cos Ω + sin θ · cos i · sin Ω)
+y = radius × (−sin θ · sin i)
+z = radius × (−cos θ · sin Ω + sin θ · cos i · cos Ω)
+```
+where i = inclination in radians, Ω = raan in radians.
+
+#### `position` field is derived, not independent
+
+`Satellite.position` stores `computeOrbitPosition(orbit, 0)` — the t=0 position. It exists for camera focus use in `MissionControlScene` without needing to re-compute. After issue #69 enables animation, `Satellite.tsx` will call `computeOrbitPosition` directly inside `useFrame` and `position` becomes the initial camera target only.
+
+#### `predictedPosition` is not a data field
+
+The issue spec listed "next predicted position" as a field. It is intentionally NOT stored in the entity — a stored value would be stale on every tick. Instead, `computeOrbitPosition(orbit, t + PREDICTION_WINDOW)` is the predicted position function. `PREDICTION_WINDOW` (300 s demo-time, labeled "+5 min") is defined as a constant in the widget layer (issue #69).
+
+#### `radius` and `telemetry.altitude` are independent
+
+`radius` is in scene units; `telemetry.altitude` is in km. They are related by scene scale (Earth radius = 1 unit ≈ 6371 km) but are not kept in sync — they serve different purposes (3D rendering vs. telemetry display). A future backend will provide both fields independently.
+
+#### Backend consideration
+
+When a real backend arrives, orbital parameters may come from a separate satellite catalog endpoint rather than the telemetry stream. `SatelliteOrbit` may become an optional field on `Satellite` with a separate fetch path. The Zod schema will need to be updated accordingly.
 
 ## Consequences
 
