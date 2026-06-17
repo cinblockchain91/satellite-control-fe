@@ -1,13 +1,16 @@
 "use client";
 
-import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
+import { useFrame } from "@react-three/fiber";
 import { CameraControls, Stars, Stats } from "@react-three/drei";
 import * as THREE from "three";
 import { Earth } from "./Earth";
-import { OrbitalRings } from "./OrbitalRings";
+import { OrbitPath } from "./OrbitPath";
 import { PerformanceMonitor } from "./PerformanceMonitor";
+import { PredictedMarker } from "./PredictedMarker";
 import { Satellite } from "./Satellite";
-import { MOCK_SATELLITES } from "./satellites.data";
+import { detectConjunctions } from "./detect-conjunctions";
+import { MOCK_SATELLITES, STATUS_COLORS } from "./satellites.data";
 
 export interface CameraControlsHandle {
   resetView(): void;
@@ -17,11 +20,24 @@ interface MissionControlSceneProps {
   selectedId: string | null;
   onSelect: (id: string | null) => void;
   onLowFps?: ((isLow: boolean) => void) | undefined;
+  onConjunctionChange?: ((ids: Set<string>) => void) | undefined;
 }
 
 export const MissionControlScene = forwardRef<CameraControlsHandle, MissionControlSceneProps>(
-  function MissionControlScene({ selectedId, onSelect, onLowFps }, ref) {
+  function MissionControlScene({ selectedId, onSelect, onLowFps, onConjunctionChange }, ref) {
     const controlsRef = useRef<React.ComponentRef<typeof CameraControls>>(null);
+    const [conjunctionIds, setConjunctionIds] = useState<Set<string>>(new Set());
+    const lastCheckSecRef = useRef(-1);
+
+    useFrame((state) => {
+      const sec = Math.floor(state.clock.elapsedTime);
+      if (sec === lastCheckSecRef.current) return;
+      lastCheckSecRef.current = sec;
+      const pairs = detectConjunctions(MOCK_SATELLITES, state.clock.elapsedTime);
+      const newIds = new Set(pairs.flatMap(([a, b]) => [a, b]));
+      setConjunctionIds(newIds);
+      onConjunctionChange?.(newIds);
+    });
 
     useImperativeHandle(
       ref,
@@ -59,13 +75,32 @@ export const MissionControlScene = forwardRef<CameraControlsHandle, MissionContr
 
         <Earth />
 
-        <OrbitalRings />
+        {MOCK_SATELLITES.map((sat) => (
+          <OrbitPath
+            key={sat.id}
+            orbit={sat.orbit}
+            color={STATUS_COLORS[sat.status]}
+            isSelected={selectedId === sat.id}
+            isAtRisk={conjunctionIds.has(sat.id)}
+            isOffline={sat.status === "offline"}
+            onSelect={() => onSelect(selectedId === sat.id ? null : sat.id)}
+          />
+        ))}
+
+        {MOCK_SATELLITES.map((sat) => (
+          <PredictedMarker
+            key={sat.id}
+            orbit={sat.orbit}
+            color={STATUS_COLORS[sat.status]}
+          />
+        ))}
 
         {MOCK_SATELLITES.map((sat) => (
           <Satellite
             key={sat.id}
             data={sat}
             isSelected={selectedId === sat.id}
+            isAtRisk={conjunctionIds.has(sat.id)}
             onSelect={() => onSelect(selectedId === sat.id ? null : sat.id)}
           />
         ))}

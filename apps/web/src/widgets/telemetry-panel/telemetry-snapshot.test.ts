@@ -3,18 +3,21 @@ import { buildSnapshot } from "./telemetry-snapshot";
 import { SatelliteId } from "@satellite-control/entity-satellite";
 import type { Satellite } from "@satellite-control/entity-satellite";
 
+const stubOrbit = { radius: 2.5, inclination: 0, raan: 0, speed: 0.3, initialAngle: 0 };
+
 function makeSat(
   status: Satellite["status"],
   signal: number,
   battery: number,
   temperature: number,
-  id = status,
+  id: string,
 ): Satellite {
   return {
     id: SatelliteId(`sat-${id}`),
     name: `SAT-${id}`,
     position: [0, 0, 0],
     status,
+    orbit: stubOrbit,
     telemetry: { signalStrength: signal, battery, temperature, altitude: 500, healthScore: 80 },
   };
 }

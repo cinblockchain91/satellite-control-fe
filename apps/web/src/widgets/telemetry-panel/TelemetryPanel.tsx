@@ -22,7 +22,10 @@ const FLEET_STATUS_CLASS: Record<SystemStatus, string> = {
   critical: "border-red-500/40 bg-red-500/10 text-red-400",
 };
 
-const STATUS_DOT_CLASS: Record<"online" | "warning" | "degraded" | "offline", string> = {
+const STATUS_DOT_CLASS: Record<
+  "online" | "warning" | "degraded" | "offline",
+  string
+> = {
   online: "bg-green-500",
   warning: "bg-yellow-500",
   degraded: "bg-orange-500",
@@ -75,10 +78,14 @@ function StatusCountRow({ status, label, count }: StatusCountRowProps) {
   return (
     <div className="flex items-center justify-between py-0.5">
       <div className="flex items-center gap-1.5">
-        <span className={`inline-block h-2 w-2 shrink-0 rounded-full ${STATUS_DOT_CLASS[status]}`} />
+        <span
+          className={`inline-block h-2 w-2 shrink-0 rounded-full ${STATUS_DOT_CLASS[status]}`}
+        />
         <span className="text-xs text-muted-foreground">{label}</span>
       </div>
-      <span className="text-sm font-mono font-semibold text-foreground">{count}</span>
+      <span className="text-sm font-mono font-semibold text-foreground">
+        {count}
+      </span>
     </div>
   );
 }
@@ -87,12 +94,14 @@ interface TelemetryPanelProps {
   className?: string;
   selectedSatellite?: SelectedSatelliteInfo | null;
   satellites?: Satellite[] | undefined;
+  conjunctionIds?: Set<string> | undefined;
 }
 
 export function TelemetryPanel({
   className,
   selectedSatellite,
   satellites,
+  conjunctionIds,
 }: TelemetryPanelProps) {
   const t = useTranslations("telemetryPanel");
   const td = useTranslations("satelliteDetail");
@@ -196,9 +205,11 @@ export function TelemetryPanel({
         </div>
       ) : (
         <div data-testid="telemetry-no-selection">
-          <p className="text-xs text-muted-foreground">{td("noSelection")}</p>
+          <p className="text-xs text-muted-foreground mb-[16px]">
+            {td("noSelection")}
+          </p>
 
-          <Card size="sm" className="bg-background border-border">
+          <Card size="sm" className="bg-background border-border mb-[16px]">
             <CardHeader>
               <CardTitle className="text-xs text-muted-foreground uppercase tracking-wider font-normal">
                 {t("fleetStatus")}
@@ -213,11 +224,30 @@ export function TelemetryPanel({
               {counts && (
                 <>
                   <Separator />
-                  <div className="flex flex-col gap-0.5 py-2" data-testid="fleet-status-breakdown">
-                    <StatusCountRow status="online" label={td("status.online")} count={counts.online} />
-                    <StatusCountRow status="warning" label={td("status.warning")} count={counts.warning} />
-                    <StatusCountRow status="degraded" label={td("status.degraded")} count={counts.degraded} />
-                    <StatusCountRow status="offline" label={td("status.offline")} count={counts.offline} />
+                  <div
+                    className="flex flex-col gap-0.5 py-2"
+                    data-testid="fleet-status-breakdown"
+                  >
+                    <StatusCountRow
+                      status="online"
+                      label={td("status.online")}
+                      count={counts.online}
+                    />
+                    <StatusCountRow
+                      status="warning"
+                      label={td("status.warning")}
+                      count={counts.warning}
+                    />
+                    <StatusCountRow
+                      status="degraded"
+                      label={td("status.degraded")}
+                      count={counts.degraded}
+                    />
+                    <StatusCountRow
+                      status="offline"
+                      label={td("status.offline")}
+                      count={counts.offline}
+                    />
                   </div>
                   <Separator />
                 </>
@@ -237,7 +267,33 @@ export function TelemetryPanel({
             </CardContent>
           </Card>
 
-          <Card size="sm" className="bg-background border-border">
+          <Card size="sm" className="bg-background border-border mb-[16px]">
+            <CardHeader>
+              <CardTitle className="text-xs text-muted-foreground uppercase tracking-wider font-normal">
+                {t("orbitAlerts.title")}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {conjunctionIds && conjunctionIds.size > 0 ? (
+                <div className="flex flex-col gap-1 py-1">
+                  {[...conjunctionIds].map((id) => {
+                    const sat = satellites?.find((s) => s.id === id);
+                    return (
+                      <div key={id} className="flex items-center gap-1.5">
+                        <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-red-500" />
+                        <span className="text-xs text-foreground">{sat?.name ?? id}</span>
+                      </div>
+                    );
+                  })}
+                  <p className="mt-0.5 text-[10px] text-red-400">{t("orbitAlerts.conjunctionWarning")}</p>
+                </div>
+              ) : (
+                <p className="py-1 text-xs text-muted-foreground">{t("orbitAlerts.noAlerts")}</p>
+              )}
+            </CardContent>
+          </Card>
+
+          <Card size="sm" className="bg-background border-border mb-[16px]">
             <CardHeader>
               <CardTitle className="text-xs text-muted-foreground uppercase tracking-wider font-normal">
                 {t("signalAndPower")}
@@ -263,7 +319,7 @@ export function TelemetryPanel({
             </CardContent>
           </Card>
 
-          <Card size="sm" className="bg-background border-border">
+          <Card size="sm" className="bg-background border-border mb-[16px]">
             <CardHeader>
               <CardTitle className="text-xs text-muted-foreground uppercase tracking-wider font-normal">
                 {t("environment")}

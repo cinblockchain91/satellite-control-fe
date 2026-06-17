@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { usePathname, Link, useRouter } from "@/shared/i18n/navigation";
+import { usePathname, Link } from "@/shared/i18n/navigation";
 import { useAuthStore } from "@satellite-control/feature-account-auth";
 import { authAdapter } from "@/shared/config/adapters";
 import {
@@ -50,13 +50,12 @@ import { env } from "@/shared/config/env";
 export function AppSidebar() {
   const t = useTranslations("nav");
   const pathname = usePathname();
-  const router = useRouter();
   const { account, reset } = useAuthStore();
 
   async function handleSignOut() {
     await authAdapter.logout();
     reset();
-    router.push("/login");
+    window.location.replace("/login");
   }
 
   const initials = account?.fullName

@@ -1,6 +1,6 @@
 # Satellite Control — Frontend
 
-![Banner](.github/banner.PNG)
+![Banner](.github/demo.gif)
 
 A modern web-based control interface for managing and monitoring satellite operations in real time. Built for mission control teams who need reliable, fast, and intuitive tools to oversee satellite fleets, track telemetry data, and execute remote commands.
 

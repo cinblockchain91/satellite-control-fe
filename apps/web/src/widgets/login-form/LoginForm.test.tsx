@@ -15,12 +15,13 @@ const mockAccount = {
 } as Account;
 
 const mockPush = vi.fn();
+const mockReplace = vi.fn();
 const mockSetLoading = vi.fn();
 const mockSetError = vi.fn();
 const mockSetAccount = vi.fn();
 
 vi.mock("next/navigation", () => ({
-  useRouter: () => ({ push: mockPush }),
+  useRouter: () => ({ push: mockPush, replace: mockReplace }),
 }));
 
 vi.mock("next-intl", () => ({
@@ -81,7 +82,7 @@ describe("LoginForm", () => {
     await userEvent.click(screen.getByRole("button"));
 
     await waitFor(() => {
-      expect(mockPush).toHaveBeenCalledWith("/dashboard");
+      expect(mockReplace).toHaveBeenCalledWith("/dashboard");
     });
   });
 

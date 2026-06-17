@@ -128,7 +128,7 @@ The scene already runs at 60 FPS with 6 satellites and no optimization was neede
 
 | Resource | Budget | Current |
 |----------|--------|---------|
-| Meshes | ≤ 50 | 16 (6 sats × 2 + 3 rings + 1 Earth) |
+| Meshes | ≤ 50 | 19 minimum (6 sats × 2 + 6 predicted markers + 1 Earth); up to 31 with selection/risk rings |
 | Lights | ≤ 2 | 2 (ambient + directional) |
 | Stars | ≤ 5000 | 4000 |
 | FPS target | 60 | 60+ ✅ |
@@ -152,19 +152,219 @@ The following items were evaluated and intentionally deferred. They do not block
 | # | Item | Milestone |
 |---|------|-----------|
 | 1 | Real backend — replace `useLiveTelemetry` with TanStack Query | 3 |
-| 2 | Keplerian orbit path rendering (actual elliptical paths) | 3 |
-| 3 | Time-series telemetry chart in `TelemetryPanel` | 3 |
-| 4 | Mobile `TelemetryDrawer` UX refinement (swipe-to-close, peek state) | 3 |
-| 5 | Keyboard navigation in 3D scene (Tab to cycle satellites) | Accessibility milestone |
-| 6 | Multi-satellite comparison (multi-select) | Requires UX spec |
+| 2 | Time-series telemetry chart in `TelemetryPanel` | 3 |
+| 3 | Mobile `TelemetryDrawer` UX refinement (swipe-to-close, peek state) | 3 |
+| 4 | Keyboard navigation in 3D scene (Tab to cycle satellites) | Accessibility milestone |
+| 5 | Multi-satellite comparison (multi-select) | Requires UX spec |
+| 6 | Camera tracking — follow selected satellite as it moves along orbit | 3 |
+| 7 | Predicted marker trail — store N past positions in ref, render BufferGeometry arc | 3 |
+| 8 | Segment-level orbit highlighting — click a point on the orbit to inspect position/time data | Requires UX spec |
 
 **Known layout note:** `LowFpsWarning` badge stacks below `TelemetryDrawer` trigger on mobile (`top-14`) and moves to `top-4` on desktop where the drawer trigger is hidden. This is intentional — both elements share the right-edge column without overlapping.
+
+### 13. Orbital parameters — circular orbit model
+
+#### Orbit model: 5-parameter circular orbit
+
+Full Keplerian elements (6 parameters including eccentricity and argument of periapsis) are not used. With no real backend and eccentricity ≈ 0 for LEO satellites, the simpler circular model is sufficient and avoids complex anomaly calculations. If a real backend provides Keplerian elements, `computeOrbitPosition` can be upgraded to support non-zero eccentricity without changing the interface.
+
+The 5 parameters:
+
+| Field | Unit | Meaning |
+|-------|------|---------|
+| `radius` | scene units | Distance from origin. Earth = 1 unit. Satellites at 2.4–3.0 units are above the visible globe. |
+| `inclination` | degrees [0–180] | Tilt of orbital plane from the equatorial (XZ) plane. |
+| `raan` | degrees [0–360] | Right ascension of ascending node — rotates the orbital plane around the polar (Y) axis. |
+| `speed` | rad/s | Angular velocity. Demo-scaled (0.23–0.40 rad/s = ~15–27 s/orbit). Not derived from Kepler's third law (`v = √(GM/r)`). |
+| `initialAngle` | radians | Phase on the orbit at t = 0. |
+
+#### Coordinate system (Three.js Y-up)
+
+- XZ plane = equatorial plane
+- Y axis = polar axis (positive = north)
+
+`computeOrbitPosition(orbit, t)` formula:
+```
+θ = initialAngle + speed × t
+x = radius × (cos θ · cos Ω + sin θ · cos i · sin Ω)
+y = radius × (−sin θ · sin i)
+z = radius × (−cos θ · sin Ω + sin θ · cos i · cos Ω)
+```
+where i = inclination in radians, Ω = raan in radians.
+
+#### `position` field is derived, not independent
+
+`Satellite.position` stores `computeOrbitPosition(orbit, 0)` — the t=0 position. It is used as the initial camera focus target in `MissionControlScene`. At runtime, `Satellite.tsx` calls `computeOrbitPosition(data.orbit, state.clock.elapsedTime)` inside `useFrame` and updates the group position imperatively — `position` is only the starting point before the first frame.
+
+#### `predictedPosition` is not a data field
+
+The issue spec listed "next predicted position" as a field. It is intentionally NOT stored in the entity — a stored value would be stale on every tick. Instead, `computeOrbitPosition(orbit, t + PREDICTION_WINDOW)` is the predicted position function. `PREDICTION_WINDOW = 300` (demo-seconds, labeled "+5 min") is exported from `PredictedMarker.tsx` in the widget layer.
+
+#### `radius` and `telemetry.altitude` are independent
+
+`radius` is in scene units; `telemetry.altitude` is in km. They are related by scene scale (Earth radius = 1 unit ≈ 6371 km) but are not kept in sync — they serve different purposes (3D rendering vs. telemetry display). A future backend will provide both fields independently.
+
+#### Satellite animation — `useFrame` imperative update
+
+`Satellite.tsx` animates each satellite by updating its Three.js group position directly inside `useFrame`:
+
+```ts
+useFrame((state, delta) => {
+  if (groupRef.current) {
+    const [x, y, z] = computeOrbitPosition(data.orbit, state.clock.elapsedTime);
+    groupRef.current.position.set(x, y, z);
+  }
+  // … pulse animation unchanged
+});
+```
+
+Key decisions:
+- **Imperative update via ref** — `groupRef.current.position.set(...)` bypasses React reconciler. No `useState`, no re-render. This is the correct R3F pattern for per-frame updates.
+- **`state.clock.elapsedTime`** — scene clock starts at 0 when the canvas mounts. All 6 satellites share the same clock, so relative phases (set by `initialAngle`) are preserved correctly.
+- **`position={data.position}` as initial prop** — the group starts at the t=0 orbit position before `useFrame` fires on the first frame. No position flash.
+- **Camera follow not implemented** — when a satellite is selected, `MissionControlScene` sets the camera to look at `sat.position` (t=0). The camera does not track the satellite as it moves. This is a known limitation; camera tracking is a separate feature.
+- **Visual emphasis** — existing pulse animation (degraded: 3 Hz, warning: 1.5 Hz) and selection ring already provide per-status visual emphasis. No additional effect added.
+
+#### Backend consideration
+
+When a real backend arrives, orbital parameters may come from a separate satellite catalog endpoint rather than the telemetry stream. `SatelliteOrbit` may become an optional field on `Satellite` with a separate fetch path. The Zod schema will need to be updated accordingly.
+
+### 14. Orbit path rendering — `OrbitPath` component
+
+#### `orbitToPoints` as pure function
+
+`orbitToPoints(orbit, segments = 128)` in `orbit-to-points.ts` converts an orbit into an array of 128 `[x,y,z]` points by sampling `computeOrbitPosition` at `t = i/segments * period` for i = 0..127. It lives in the widget layer (not the entity layer) because it is a rendering concern — the entity layer defines what an orbit is, the widget layer decides how to draw it.
+
+The function returns exactly `ORBIT_SEGMENTS` points without a repeated closing point. Callers that need a closed polyline append `pts[0]` themselves.
+
+#### `<OrbitPath>` as a per-satellite R3F component
+
+Each satellite gets its own `<OrbitPath orbit={sat.orbit} color={...} isSelected={...} />`. Orbit paths are mounted alongside the satellite meshes in `MissionControlScene`.
+
+`<Line>` from `@react-three/drei` renders the path as a fat line (`LineMaterial` / `Line2`). The closing point (`pts[0]` appended to the `points` array) closes the loop without requiring a `closed` prop — which is more stable across drei versions.
+
+Visual hierarchy:
+
+| State | Opacity | Effect |
+|-------|---------|--------|
+| Default | 0.20 | Faint orbit reference |
+| Selected | 0.85 | Clearly highlighted for the active satellite |
+
+`depthWrite={false}` prevents the transparent orbit lines from clipping objects behind them.
+
+#### Replaces decorative `OrbitalRings`
+
+`OrbitalRings.tsx` (three static torus meshes) is deleted. The three generic rings were decorative — they did not match any satellite's actual orbit. The new orbit paths are derived from each satellite's real orbital parameters, so the 3D scene now accurately represents the fleet's flight geometry.
+
+#### Orbit path is clickable
+
+`OrbitPath` accepts an optional `onSelect?: () => void` prop. Clicking the orbit line triggers the same toggle behaviour as clicking the satellite mesh — if the satellite is already selected, clicking its orbit deselects it; otherwise it selects it. `e.stopPropagation()` prevents the click from bubbling to the canvas `onPointerMissed` handler.
+
+`onPointerOver` / `onPointerOut` change `document.body.style.cursor` to `pointer` / `default` — the same pattern used in `Satellite.tsx`. This gives users a clear affordance that the orbit line is interactive.
+
+Orbit paths are a larger hit surface than the satellite cube (0.15 scene units), so clicking an orbit line is substantially easier during a demo than targeting the animated mesh.
+
+#### `useMemo` keyed to `orbit`
+
+Points are memoised with `useMemo(() => [...], [orbit])`. Since `MOCK_SATELLITES` is a module-level constant, the memo never recomputes during a session. After issue #69 introduces dynamic satellite data from a backend, the memo will still be correct — orbit parameters change rarely (reboost manoeuvres), not every frame.
+
+### 15. Predicted position marker — `PredictedMarker` component
+
+Each satellite has a `<PredictedMarker orbit={sat.orbit} color={...} />` mounted in `MissionControlScene` between the orbit path and the satellite mesh.
+
+**Formula:** `computeOrbitPosition(orbit, state.clock.elapsedTime + PREDICTION_WINDOW)` — the same orbit math, shifted 300 demo-seconds forward.
+
+**`PREDICTION_WINDOW = 300`** is exported from `PredictedMarker.tsx`. It is a widget-layer constant (rendering/demo concern), not an entity-layer concern.
+
+**Visual:** Wireframe octahedron, radius 0.06, opacity 0.45, same status color as the satellite. Octahedron shape distinguishes the predicted marker from the satellite cube at a glance.
+
+**Always visible** — shown for all satellites regardless of selection state. The predicted marker moves along the orbit in real time, staying exactly `PREDICTION_WINDOW` seconds ahead of the satellite.
+
+**Trail deferred** — "display a trail" was considered and deferred. A trail requires storing N past positions in a ref array and re-uploading a BufferGeometry each frame. The single lookahead marker satisfies the acceptance criteria ("visually understandable") at lower complexity.
+
+**Initial position prop:** `position={computeOrbitPosition(orbit, PREDICTION_WINDOW)}` sets the t=0 starting point before `useFrame` fires on the first frame — no position flash on mount.
+
+### 16. Orbital warning states — conjunction detection and risk visuals
+
+#### Warning type mapping
+
+| Warning type | Source | Visual |
+|---|---|---|
+| Collision risk | `detectConjunctions` pairwise distance | Orbit path → red (#ef4444), opacity 0.7, lineWidth 1.5; Satellite → outer red torus ring (r=0.5) |
+| Signal loss / offline | `sat.status === "offline"` | Orbit path opacity → 0.08 (nearly invisible) |
+| Unstable / off-track | `status: "degraded"` | Existing fast pulse (3 Hz) on satellite mesh — no additional orbit path change |
+| Caution | `status: "warning"` | Existing slow pulse (1.5 Hz) on satellite mesh |
+
+#### `detectConjunctions` — pure function
+
+`detectConjunctions(satellites, t, threshold = 0.5)` computes all-pairs distances using `computeOrbitPosition` at time `t` and returns `[string, string][]` pairs. It is a pure function with no side effects — safe to call in a throttled `useFrame`.
+
+`CONJUNCTION_THRESHOLD = 0.5` scene units (≈3185 km). Set deliberately large for demo visibility; a real system would use ~10 km.
+
+#### Conjunction detection in `MissionControlScene`
+
+`useFrame` in `MissionControlScene` runs `detectConjunctions` once per second (throttled via `Math.floor(elapsedTime)` comparison). Result stored in `conjunctionIds: Set<string>` via `useState`. One `setState` per second → one React re-render per second for `OrbitPath` × 6 and `Satellite` × 6 — acceptable overhead.
+
+**Why `useState` instead of pure imperative refs:** `OrbitPath` uses `<Line>` from drei which is declarative (props-driven). Color and opacity on `LineMaterial` cannot be updated imperatively without a material ref — passing props is cleaner and the 1/sec re-render cost is negligible.
+
+#### Visual priority order (OrbitPath)
+
+```
+isOffline → opacity 0.08  (signal lost, path nearly invisible)
+isSelected → opacity 0.85 (user focus, full visibility)
+isAtRisk   → red, opacity 0.70, lineWidth 1.5
+default    → status color, opacity 0.20
+```
+
+`isAtRisk` overrides color but not selection opacity — if a satellite is both selected AND at risk, it shows red at 0.85 opacity.
+
+### 17. Orbit legend and alert panel
+
+#### `OrbitLegend` component
+
+`OrbitLegend.tsx` is a DOM overlay (not R3F) mounted at `absolute bottom-4 right-4` inside the canvas area of `DigitalTwinShell`, visible on desktop only (`hidden lg:block`). It sits symmetrically opposite `FleetLegend` (bottom-left) — fleet colour coding on the left, orbit visual coding on the right.
+
+Legend items:
+
+| Symbol | Meaning |
+|---|---|
+| Thin line (status colour) | Orbit path — faint by default, bright when selected, red when at risk |
+| Small square | Current satellite position (animated cube mesh) |
+| Rotated square outline | Predicted position, 5 min ahead (`PREDICTION_WINDOW = 300` demo-seconds) |
+| Solid red line | Conjunction risk — orbit path turns red when a nearby satellite is detected |
+| Very faint line | Signal lost — orbit path at 0.08 opacity for offline satellites |
+
+The component uses `useTranslations("digitalTwin.orbitLegend")`. New i18n keys: `orbitLegend.{title,orbitPath,currentPosition,predictedPosition,conjunctionRisk,signalLost}` in `en.json` and `vi.json`.
+
+#### Orbit Alerts section in `TelemetryPanel`
+
+A new "Orbit Alerts" card is added to the no-selection view in `TelemetryPanel`. It lists every satellite currently flagged for conjunction risk by name with a red dot indicator, followed by a caption label. When no conjunctions are active, it renders "No active alerts" in muted text.
+
+New i18n keys: `telemetryPanel.orbitAlerts.{title,noAlerts,conjunctionWarning}`.
+
+#### State lifting — `onConjunctionChange` callback
+
+`MissionControlScene` receives a new optional prop `onConjunctionChange?: ((ids: Set<string>) => void) | undefined`, matching the pattern of `onLowFps`. Inside `useFrame`, after updating internal `conjunctionIds` state, the callback fires with the same `Set<string>`:
+
+```ts
+const newIds = new Set(pairs.flatMap(([a, b]) => [a, b]));
+setConjunctionIds(newIds);      // internal — for OrbitPath / Satellite props
+onConjunctionChange?.(newIds);  // external — lifted to shell
+```
+
+`DigitalTwinShell` owns a `conjunctionIds: Set<string>` state, initialised as `new Set()`, updated by `onConjunctionChange`. It passes `conjunctionIds` down to `TelemetryPanel` (desktop sidebar) and `TelemetryDrawer` (mobile sheet, passes through to `TelemetryPanel`).
+
+`MissionControlScene` retains its own internal copy for rendering — the shell's copy is a replica synced once per second via the callback. Two independent copies, one source of truth (`useFrame` detection). This is identical in spirit to how `isLowFps` works.
 
 ## Consequences
 
 - `@satellite-control/entity-satellite` is a new workspace package; any app in the monorepo can depend on it
 - `SatelliteStatus` and `SelectedSatelliteInfo` must stay in sync — `SAT_STATUS_CLASS` in `TelemetryPanel` and i18n `satelliteDetail.status.*` keys must cover all four statuses
-- `FleetLegend` replaces the `legendPlaceholder` div in `DigitalTwinShell`; the placeholder comment and `digitalTwin.legendPlaceholder` i18n key are now obsolete but kept for backwards compat until a full cleanup pass
+- `FleetLegend` replaces the former `legendPlaceholder` div in `DigitalTwinShell`; no placeholder key exists in the i18n files
 - All 3D visual logic remains in `widgets/mission-control-scene/` — no Three.js code in the entity or feature layers
 - `MissionControlScene` is now a `forwardRef` component; consumers must type their ref as `CameraControlsHandle` from the widget index
 - `TelemetryPanel` and `TelemetryDrawer` now accept an optional `satellites` prop; when omitted, the status breakdown is hidden
+- `OrbitLegend` is the counterpart to `FleetLegend` — both are DOM overlays on the canvas. `FleetLegend` explains status colours; `OrbitLegend` explains orbit visual elements (paths, position markers, risk indicators)
+- `TelemetryPanel` and `TelemetryDrawer` now accept an optional `conjunctionIds` prop; when omitted, the Orbit Alerts card shows "No active alerts"
+- `onConjunctionChange` on `MissionControlScene` is optional — the scene works without it; `DigitalTwinShell` opts in to receive updates for display in `TelemetryPanel`
+- Demo badge and auto-pilot are implemented entirely in `DigitalTwinShell` — no new components. Auto-pilot is opt-in (off by default); any manual interaction turns it off.

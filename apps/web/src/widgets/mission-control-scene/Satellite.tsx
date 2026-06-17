@@ -4,20 +4,29 @@ import { useRef, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import { Html } from "@react-three/drei";
 import type * as THREE from "three";
+import { computeOrbitPosition } from "@satellite-control/entity-satellite";
 import { type Satellite, STATUS_COLORS } from "./satellites.data";
 
 interface SatelliteProps {
   data: Satellite;
   isSelected: boolean;
+  isAtRisk: boolean;
   onSelect: () => void;
 }
 
-export function Satellite({ data, isSelected, onSelect }: SatelliteProps) {
+export function Satellite({ data, isSelected, isAtRisk, onSelect }: SatelliteProps) {
   const color = STATUS_COLORS[data.status];
   const [hovered, setHovered] = useState(false);
+  const groupRef = useRef<THREE.Group>(null);
   const ringRef = useRef<THREE.Mesh>(null);
   const bodyRef = useRef<THREE.MeshStandardMaterial>(null);
+
   useFrame((state, delta) => {
+    if (groupRef.current) {
+      const [x, y, z] = computeOrbitPosition(data.orbit, state.clock.elapsedTime);
+      groupRef.current.position.set(x, y, z);
+    }
+
     if (isSelected && ringRef.current) {
       ringRef.current.rotation.z += delta * 0.8;
     }
@@ -44,6 +53,7 @@ export function Satellite({ data, isSelected, onSelect }: SatelliteProps) {
 
   return (
     <group
+      ref={groupRef}
       position={data.position}
       scale={scale}
       onClick={(e) => { e.stopPropagation(); onSelect(); }}
@@ -75,6 +85,13 @@ export function Satellite({ data, isSelected, onSelect }: SatelliteProps) {
         <mesh ref={ringRef} rotation={[Math.PI / 2, 0, 0]}>
           <torusGeometry args={[0.35, 0.02, 8, 32]} />
           <meshBasicMaterial color={color} />
+        </mesh>
+      )}
+
+      {isAtRisk && (
+        <mesh rotation={[Math.PI / 2, 0, 0]}>
+          <torusGeometry args={[0.5, 0.015, 8, 32]} />
+          <meshBasicMaterial color="#ef4444" transparent opacity={0.7} />
         </mesh>
       )}
 

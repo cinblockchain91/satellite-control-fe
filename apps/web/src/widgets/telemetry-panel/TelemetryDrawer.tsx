@@ -17,9 +17,10 @@ import type { SelectedSatelliteInfo } from "./types";
 interface TelemetryDrawerProps {
   selectedSatellite?: SelectedSatelliteInfo | null;
   satellites?: Satellite[] | undefined;
+  conjunctionIds?: Set<string>;
 }
 
-export function TelemetryDrawer({ selectedSatellite, satellites }: TelemetryDrawerProps) {
+export function TelemetryDrawer({ selectedSatellite, satellites, conjunctionIds }: TelemetryDrawerProps) {
   const t = useTranslations("telemetryPanel");
 
   return (
@@ -44,6 +45,7 @@ export function TelemetryDrawer({ selectedSatellite, satellites }: TelemetryDraw
           className="w-full border-l-0 h-full"
           selectedSatellite={selectedSatellite ?? null}
           satellites={satellites}
+          conjunctionIds={conjunctionIds}
         />
       </SheetContent>
     </Sheet>
