@@ -11,9 +11,10 @@ interface OrbitPathProps {
   isSelected: boolean;
   isAtRisk: boolean;
   isOffline: boolean;
+  onSelect?: () => void;
 }
 
-export function OrbitPath({ orbit, color, isSelected, isAtRisk, isOffline }: OrbitPathProps) {
+export function OrbitPath({ orbit, color, isSelected, isAtRisk, isOffline, onSelect }: OrbitPathProps) {
   const points = useMemo(() => {
     const pts = orbitToPoints(orbit);
     return [...pts, pts[0]!] as [number, number, number][];
@@ -30,6 +31,9 @@ export function OrbitPath({ orbit, color, isSelected, isAtRisk, isOffline }: Orb
       opacity={opacity}
       transparent
       depthWrite={false}
+      onClick={(e) => { e.stopPropagation(); onSelect?.(); }}
+      onPointerOver={(e) => { e.stopPropagation(); document.body.style.cursor = "pointer"; }}
+      onPointerOut={() => { document.body.style.cursor = "default"; }}
     />
   );
 }
