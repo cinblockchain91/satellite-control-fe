@@ -22,6 +22,7 @@
     "@satellite-control/ds-icons": "workspace:*",
     "@satellite-control/ds-tokens": "workspace:*",
     "@satellite-control/entity-account": "workspace:*",
+    "@satellite-control/entity-satellite": "workspace:*",
     "@satellite-control/feature-account-auth": "workspace:*",
     "@satellite-control/infra-auth-adapter": "workspace:*",
     "@satellite-control/infra-http": "workspace:*",

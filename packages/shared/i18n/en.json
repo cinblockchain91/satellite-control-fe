@@ -2,6 +2,7 @@
   "nav": {
     "platform": "Platform",
     "dashboard": "Dashboard",
+    "digitalTwin": "Digital Twin",
     "satellites": "Satellites",
     "active": "Active",
     "idle": "Idle",
@@ -24,6 +25,8 @@
     "battery": "Battery",
     "environment": "Environment",
     "temperature": "Temperature",
+    "degraded": "Degraded",
+    "offline": "Offline",
     "status": {
       "nominal": "Nominal",
       "warning": "Warning",
@@ -38,11 +41,26 @@
     "environment": "Environment",
     "temperature": "Temperature",
     "altitude": "Altitude",
+    "healthScore": "Health Score",
     "status": {
       "online": "Online",
       "warning": "Warning",
+      "degraded": "Degraded",
       "offline": "Offline"
     }
+  },
+  "digitalTwin": {
+    "title": "Digital Twin",
+    "subtitle": "Fleet View",
+    "legend": {
+      "title": "Status"
+    },
+    "cameraControls": {
+      "hint": "Drag to rotate · Scroll to zoom",
+      "hintTouch": "Drag to rotate · Pinch to zoom",
+      "reset": "Reset view"
+    },
+    "lowFpsWarning": "Low frame rate detected"
   },
   "auth": {
     "title": "Satellite Control",

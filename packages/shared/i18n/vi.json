@@ -2,6 +2,7 @@
   "nav": {
     "platform": "Nền tảng",
     "dashboard": "Bảng điều khiển",
+    "digitalTwin": "Bản sao số",
     "satellites": "Vệ tinh",
     "active": "Đang hoạt động",
     "idle": "Chờ",
@@ -24,6 +25,8 @@
     "battery": "Pin",
     "environment": "Môi trường",
     "temperature": "Nhiệt độ",
+    "degraded": "Suy giảm",
+    "offline": "Ngoại tuyến",
     "status": {
       "nominal": "Bình thường",
       "warning": "Cảnh báo",
@@ -38,11 +41,26 @@
     "environment": "Môi trường",
     "temperature": "Nhiệt độ",
     "altitude": "Độ cao",
+    "healthScore": "Điểm sức khỏe",
     "status": {
       "online": "Trực tuyến",
       "warning": "Cảnh báo",
+      "degraded": "Suy giảm",
       "offline": "Ngoại tuyến"
     }
+  },
+  "digitalTwin": {
+    "title": "Bản sao số",
+    "subtitle": "Xem đội vệ tinh",
+    "legend": {
+      "title": "Trạng thái"
+    },
+    "cameraControls": {
+      "hint": "Kéo để xoay · Cuộn để thu phóng",
+      "hintTouch": "Kéo để xoay · Chụm để thu phóng",
+      "reset": "Đặt lại góc nhìn"
+    },
+    "lowFpsWarning": "Tốc độ khung hình thấp"
   },
   "auth": {
     "title": "Satellite Control",
