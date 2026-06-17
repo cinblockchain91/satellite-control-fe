@@ -22,7 +22,10 @@ const FLEET_STATUS_CLASS: Record<SystemStatus, string> = {
   critical: "border-red-500/40 bg-red-500/10 text-red-400",
 };
 
-const STATUS_DOT_CLASS: Record<"online" | "warning" | "degraded" | "offline", string> = {
+const STATUS_DOT_CLASS: Record<
+  "online" | "warning" | "degraded" | "offline",
+  string
+> = {
   online: "bg-green-500",
   warning: "bg-yellow-500",
   degraded: "bg-orange-500",
@@ -75,10 +78,14 @@ function StatusCountRow({ status, label, count }: StatusCountRowProps) {
   return (
     <div className="flex items-center justify-between py-0.5">
       <div className="flex items-center gap-1.5">
-        <span className={`inline-block h-2 w-2 shrink-0 rounded-full ${STATUS_DOT_CLASS[status]}`} />
+        <span
+          className={`inline-block h-2 w-2 shrink-0 rounded-full ${STATUS_DOT_CLASS[status]}`}
+        />
         <span className="text-xs text-muted-foreground">{label}</span>
       </div>
-      <span className="text-sm font-mono font-semibold text-foreground">{count}</span>
+      <span className="text-sm font-mono font-semibold text-foreground">
+        {count}
+      </span>
     </div>
   );
 }
@@ -196,9 +203,11 @@ export function TelemetryPanel({
         </div>
       ) : (
         <div data-testid="telemetry-no-selection">
-          <p className="text-xs text-muted-foreground">{td("noSelection")}</p>
+          <p className="text-xs text-muted-foreground mb-[16px]">
+            {td("noSelection")}
+          </p>
 
-          <Card size="sm" className="bg-background border-border">
+          <Card size="sm" className="bg-background border-border mb-[16px]">
             <CardHeader>
               <CardTitle className="text-xs text-muted-foreground uppercase tracking-wider font-normal">
                 {t("fleetStatus")}
@@ -213,11 +222,30 @@ export function TelemetryPanel({
               {counts && (
                 <>
                   <Separator />
-                  <div className="flex flex-col gap-0.5 py-2" data-testid="fleet-status-breakdown">
-                    <StatusCountRow status="online" label={td("status.online")} count={counts.online} />
-                    <StatusCountRow status="warning" label={td("status.warning")} count={counts.warning} />
-                    <StatusCountRow status="degraded" label={td("status.degraded")} count={counts.degraded} />
-                    <StatusCountRow status="offline" label={td("status.offline")} count={counts.offline} />
+                  <div
+                    className="flex flex-col gap-0.5 py-2"
+                    data-testid="fleet-status-breakdown"
+                  >
+                    <StatusCountRow
+                      status="online"
+                      label={td("status.online")}
+                      count={counts.online}
+                    />
+                    <StatusCountRow
+                      status="warning"
+                      label={td("status.warning")}
+                      count={counts.warning}
+                    />
+                    <StatusCountRow
+                      status="degraded"
+                      label={td("status.degraded")}
+                      count={counts.degraded}
+                    />
+                    <StatusCountRow
+                      status="offline"
+                      label={td("status.offline")}
+                      count={counts.offline}
+                    />
                   </div>
                   <Separator />
                 </>
@@ -237,7 +265,7 @@ export function TelemetryPanel({
             </CardContent>
           </Card>
 
-          <Card size="sm" className="bg-background border-border">
+          <Card size="sm" className="bg-background border-border mb-[16px]">
             <CardHeader>
               <CardTitle className="text-xs text-muted-foreground uppercase tracking-wider font-normal">
                 {t("signalAndPower")}
@@ -263,7 +291,7 @@ export function TelemetryPanel({
             </CardContent>
           </Card>
 
-          <Card size="sm" className="bg-background border-border">
+          <Card size="sm" className="bg-background border-border mb-[16px]">
             <CardHeader>
               <CardTitle className="text-xs text-muted-foreground uppercase tracking-wider font-normal">
                 {t("environment")}
