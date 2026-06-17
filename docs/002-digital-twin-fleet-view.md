@@ -112,6 +112,14 @@ These have different operational urgency. Collapsing them removes the signal tha
 
 `TelemetryPanel` accepts a `satellites?: Satellite[]` prop. Counts are computed from it directly — not from `useLiveTelemetry` — so the breakdown always reflects actual satellite states rather than simulated drift averages.
 
+### 10. `useLiveTelemetry` derives fleet averages from satellite data, not hardcoded snapshots
+
+`useLiveTelemetry(satellites)` accepts a `readonly Satellite[]` param and computes fleet averages (signal strength, battery, temperature) from it. A sinusoidal drift (`Math.sin(tick * speed) * amplitude`) is applied per metric to simulate live sensor variance without a backend.
+
+The hook no longer contains hardcoded snapshots. `buildSnapshot(satellites, tick)` is extracted as a pure function in `telemetry-snapshot.ts` (no React imports) to enable unit testing independent of the hook lifecycle.
+
+**Swap point for real API:** When a backend is available, replace `useLiveTelemetry` with a TanStack Query hook (`useQuery`) that fetches from the satellite telemetry endpoint. The `TelemetrySnapshot` interface is the contract — `TelemetryPanel` does not need to change.
+
 ## Consequences
 
 - `@satellite-control/entity-satellite` is a new workspace package; any app in the monorepo can depend on it
