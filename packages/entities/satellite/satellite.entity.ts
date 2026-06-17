@@ -11,6 +11,8 @@ export interface SatelliteTelemetry {
   temperature: number;
   altitude: number;
   healthScore: number;
+  latency: number;      // ms — round-trip signal latency; 0 when offline
+  anomalyLevel: number; // 0–100 — backend-computed anomaly score; 0 = stable, 100 = critical
 }
 
 export interface SatelliteOrbit {
