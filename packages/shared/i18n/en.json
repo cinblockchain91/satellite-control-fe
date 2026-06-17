@@ -3,6 +3,7 @@
     "platform": "Platform",
     "dashboard": "Dashboard",
     "digitalTwin": "Digital Twin",
+    "telemetryTunnel": "Telemetry Tunnel",
     "satellites": "Satellites",
     "active": "Active",
     "idle": "Idle",
