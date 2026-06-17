@@ -52,7 +52,7 @@ export function DigitalTwinShell() {
         {isLowFps && (
           <div
             data-testid="low-fps-warning"
-            className="absolute top-4 right-4 flex items-center gap-1.5 rounded-md border border-yellow-500/40 bg-yellow-500/10 px-2.5 py-1.5 text-xs text-yellow-400"
+            className="absolute top-14 right-4 lg:top-4 flex items-center gap-1.5 rounded-md border border-yellow-500/40 bg-yellow-500/10 px-2.5 py-1.5 text-xs text-yellow-400"
           >
             {t("lowFpsWarning")}
           </div>

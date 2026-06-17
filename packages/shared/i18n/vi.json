@@ -52,7 +52,6 @@
   "digitalTwin": {
     "title": "Bản sao số",
     "subtitle": "Xem đội vệ tinh",
-    "legendPlaceholder": "Chú giải đội",
     "legend": {
       "title": "Trạng thái"
     },

@@ -52,7 +52,6 @@
   "digitalTwin": {
     "title": "Digital Twin",
     "subtitle": "Fleet View",
-    "legendPlaceholder": "Fleet Legend",
     "legend": {
       "title": "Status"
     },
