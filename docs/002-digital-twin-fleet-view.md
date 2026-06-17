@@ -72,9 +72,29 @@ The sidebar link to the digital twin view is conditionally rendered based on `en
 
 **Consequence:** Changing the flag requires a new deployment. This is acceptable for a feature-gate rollout but means the flag cannot be toggled without redeploy.
 
+### 7. Camera control UX: hint bar + reset button only, no zoom UI buttons
+
+Dedicated zoom buttons (+ / −) were considered and rejected. `CameraControls` from `@react-three/drei` already handles scroll-to-zoom (desktop) and pinch-to-zoom (touch) natively and stably. Adding UI buttons would be redundant and clutter the interface.
+
+The chosen approach:
+
+| Element | Purpose |
+|---------|---------|
+| Hint bar (text) | Onboard first-time users — "Drag to rotate · Scroll to zoom" (desktop) or "Drag to rotate · Pinch to zoom" (touch) |
+| Reset button | Single escape hatch for users who lose their orientation in the 3D scene |
+
+**Touch detection:** `navigator.maxTouchPoints > 0` in a `useEffect` (after hydration) selects the correct hint variant. Default before mount is the desktop hint to avoid hydration mismatch.
+
+**Encapsulation:** `MissionControlScene` uses `forwardRef` + `useImperativeHandle` to expose a `CameraControlsHandle` API (`resetView()`). The shell and overlay layer never import Three.js or drei types directly — all camera logic stays inside `widgets/mission-control-scene/`.
+
+**Reset behaviour:** Resets camera to `[0,0,5]` looking at origin AND deselects any selected satellite, returning operator to full-fleet view.
+
+**i18n:** All hint and button text lives under `digitalTwin.cameraControls.*` in shared i18n messages.
+
 ## Consequences
 
 - `@satellite-control/entity-satellite` is a new workspace package; any app in the monorepo can depend on it
 - `SatelliteStatus` and `SelectedSatelliteInfo` must stay in sync — `SAT_STATUS_CLASS` in `TelemetryPanel` and i18n `satelliteDetail.status.*` keys must cover all four statuses
 - The `DigitalTwinShell` layout reserves a legend zone (bottom-left overlay) for future implementation (fleet legend — ADR not yet written)
 - All 3D visual logic remains in `widgets/mission-control-scene/` — no Three.js code in the entity or feature layers
+- `MissionControlScene` is now a `forwardRef` component; consumers must type their ref as `CameraControlsHandle` from the widget index

@@ -50,7 +50,12 @@
   "digitalTwin": {
     "title": "Digital Twin",
     "subtitle": "Fleet View",
-    "legendPlaceholder": "Fleet Legend"
+    "legendPlaceholder": "Fleet Legend",
+    "cameraControls": {
+      "hint": "Drag to rotate · Scroll to zoom",
+      "hintTouch": "Drag to rotate · Pinch to zoom",
+      "reset": "Reset view"
+    }
   },
   "auth": {
     "title": "Satellite Control",
