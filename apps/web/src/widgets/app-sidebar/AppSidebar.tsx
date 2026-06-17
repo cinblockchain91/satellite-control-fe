@@ -56,7 +56,7 @@ export function AppSidebar() {
   async function handleSignOut() {
     await authAdapter.logout();
     reset();
-    router.push("/login");
+    window.location.replace("/login");
   }
 
   const initials = account?.fullName
