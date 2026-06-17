@@ -205,6 +205,37 @@ The issue spec listed "next predicted position" as a field. It is intentionally 
 
 When a real backend arrives, orbital parameters may come from a separate satellite catalog endpoint rather than the telemetry stream. `SatelliteOrbit` may become an optional field on `Satellite` with a separate fetch path. The Zod schema will need to be updated accordingly.
 
+### 14. Orbit path rendering — `OrbitPath` component
+
+#### `orbitToPoints` as pure function
+
+`orbitToPoints(orbit, segments = 128)` in `orbit-to-points.ts` converts an orbit into an array of 128 `[x,y,z]` points by sampling `computeOrbitPosition` at `t = i/segments * period` for i = 0..127. It lives in the widget layer (not the entity layer) because it is a rendering concern — the entity layer defines what an orbit is, the widget layer decides how to draw it.
+
+The function returns exactly `ORBIT_SEGMENTS` points without a repeated closing point. Callers that need a closed polyline append `pts[0]` themselves.
+
+#### `<OrbitPath>` as a per-satellite R3F component
+
+Each satellite gets its own `<OrbitPath orbit={sat.orbit} color={...} isSelected={...} />`. Orbit paths are mounted alongside the satellite meshes in `MissionControlScene`.
+
+`<Line>` from `@react-three/drei` renders the path as a fat line (`LineMaterial` / `Line2`). The closing point (`pts[0]` appended to the `points` array) closes the loop without requiring a `closed` prop — which is more stable across drei versions.
+
+Visual hierarchy:
+
+| State | Opacity | Effect |
+|-------|---------|--------|
+| Default | 0.20 | Faint orbit reference |
+| Selected | 0.85 | Clearly highlighted for the active satellite |
+
+`depthWrite={false}` prevents the transparent orbit lines from clipping objects behind them.
+
+#### Replaces decorative `OrbitalRings`
+
+`OrbitalRings.tsx` (three static torus meshes) is deleted. The three generic rings were decorative — they did not match any satellite's actual orbit. The new orbit paths are derived from each satellite's real orbital parameters, so the 3D scene now accurately represents the fleet's flight geometry.
+
+#### `useMemo` keyed to `orbit`
+
+Points are memoised with `useMemo(() => [...], [orbit])`. Since `MOCK_SATELLITES` is a module-level constant, the memo never recomputes during a session. After issue #69 introduces dynamic satellite data from a backend, the memo will still be correct — orbit parameters change rarely (reboost manoeuvres), not every frame.
+
 ## Consequences
 
 - `@satellite-control/entity-satellite` is a new workspace package; any app in the monorepo can depend on it
