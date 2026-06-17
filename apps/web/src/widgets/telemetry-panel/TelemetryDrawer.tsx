@@ -16,7 +16,7 @@ import type { SelectedSatelliteInfo } from "./types";
 
 interface TelemetryDrawerProps {
   selectedSatellite?: SelectedSatelliteInfo | null;
-  satellites?: Satellite[];
+  satellites?: Satellite[] | undefined;
 }
 
 export function TelemetryDrawer({ selectedSatellite, satellites }: TelemetryDrawerProps) {

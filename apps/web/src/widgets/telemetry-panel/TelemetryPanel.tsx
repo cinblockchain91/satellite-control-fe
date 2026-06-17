@@ -86,7 +86,7 @@ function StatusCountRow({ status, label, count }: StatusCountRowProps) {
 interface TelemetryPanelProps {
   className?: string;
   selectedSatellite?: SelectedSatelliteInfo | null;
-  satellites?: Satellite[];
+  satellites?: Satellite[] | undefined;
 }
 
 export function TelemetryPanel({
