@@ -25,6 +25,8 @@
     "battery": "Pin",
     "environment": "Môi trường",
     "temperature": "Nhiệt độ",
+    "degraded": "Suy giảm",
+    "offline": "Ngoại tuyến",
     "status": {
       "nominal": "Bình thường",
       "warning": "Cảnh báo",
@@ -51,6 +53,9 @@
     "title": "Bản sao số",
     "subtitle": "Xem đội vệ tinh",
     "legendPlaceholder": "Chú giải đội",
+    "legend": {
+      "title": "Trạng thái"
+    },
     "cameraControls": {
       "hint": "Kéo để xoay · Cuộn để thu phóng",
       "hintTouch": "Kéo để xoay · Chụm để thu phóng",

@@ -1,6 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import type { Satellite } from "@satellite-control/entity-satellite";
 import { Badge } from "@/shared/components/ui/badge";
 import {
   Card,
@@ -11,6 +12,7 @@ import {
 import { Separator } from "@/shared/components/ui/separator";
 import { cn } from "@/shared/components/lib/utils";
 import { useLiveTelemetry, type SystemStatus } from "./telemetry.mock";
+import { countByStatus } from "./count-by-status";
 import type { SelectedSatelliteInfo } from "./types";
 import { healthScoreVariant } from "./health-score.utils";
 
@@ -18,6 +20,13 @@ const FLEET_STATUS_CLASS: Record<SystemStatus, string> = {
   nominal: "border-green-500/40 bg-green-500/10 text-green-400",
   warning: "border-yellow-500/40 bg-yellow-500/10 text-yellow-400",
   critical: "border-red-500/40 bg-red-500/10 text-red-400",
+};
+
+const STATUS_DOT_CLASS: Record<"online" | "warning" | "degraded" | "offline", string> = {
+  online: "bg-green-500",
+  warning: "bg-yellow-500",
+  degraded: "bg-orange-500",
+  offline: "bg-red-500",
 };
 
 const SAT_STATUS_CLASS: Record<
@@ -56,18 +65,39 @@ function MetricRow({
   );
 }
 
+interface StatusCountRowProps {
+  status: "online" | "warning" | "degraded" | "offline";
+  label: string;
+  count: number;
+}
+
+function StatusCountRow({ status, label, count }: StatusCountRowProps) {
+  return (
+    <div className="flex items-center justify-between py-0.5">
+      <div className="flex items-center gap-1.5">
+        <span className={`inline-block h-2 w-2 shrink-0 rounded-full ${STATUS_DOT_CLASS[status]}`} />
+        <span className="text-xs text-muted-foreground">{label}</span>
+      </div>
+      <span className="text-sm font-mono font-semibold text-foreground">{count}</span>
+    </div>
+  );
+}
+
 interface TelemetryPanelProps {
   className?: string;
   selectedSatellite?: SelectedSatelliteInfo | null;
+  satellites?: Satellite[] | undefined;
 }
 
 export function TelemetryPanel({
   className,
   selectedSatellite,
+  satellites,
 }: TelemetryPanelProps) {
   const t = useTranslations("telemetryPanel");
   const td = useTranslations("satelliteDetail");
   const telemetry = useLiveTelemetry();
+  const counts = satellites ? countByStatus(satellites) : null;
 
   return (
     <aside
@@ -179,11 +209,20 @@ export function TelemetryPanel({
                 label={t("totalSatellites")}
                 value={String(telemetry.satelliteCount)}
               />
-              <MetricRow
-                label={t("online")}
-                value={`${telemetry.onlineCount} / ${telemetry.satelliteCount}`}
-                valueClass="text-green-400"
-              />
+
+              {counts && (
+                <>
+                  <Separator />
+                  <div className="flex flex-col gap-0.5 py-2" data-testid="fleet-status-breakdown">
+                    <StatusCountRow status="online" label={td("status.online")} count={counts.online} />
+                    <StatusCountRow status="warning" label={td("status.warning")} count={counts.warning} />
+                    <StatusCountRow status="degraded" label={td("status.degraded")} count={counts.degraded} />
+                    <StatusCountRow status="offline" label={td("status.offline")} count={counts.offline} />
+                  </div>
+                  <Separator />
+                </>
+              )}
+
               <div className="flex items-center justify-between py-2">
                 <span className="text-xs text-muted-foreground uppercase tracking-wider">
                   {t("system")}

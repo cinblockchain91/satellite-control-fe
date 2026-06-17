@@ -91,10 +91,32 @@ The chosen approach:
 
 **i18n:** All hint and button text lives under `digitalTwin.cameraControls.*` in shared i18n messages.
 
+### 8. Fleet legend is a DOM overlay, not a Three.js object
+
+The status color legend is rendered as a fixed DOM overlay (bottom-left) using standard React + Tailwind. It is NOT rendered via `<Html>` from `@react-three/drei` or as any Three.js object.
+
+**Why:** The legend is a fixed-position UI element — it has no 3D position, no depth relationship with scene objects. Using `<Html>` for it would tie a UI widget to the R3F renderer context unnecessarily, complicating testing and accessibility.
+
+`FleetLegend` lives in `widgets/mission-control-scene/` because it is conceptually tied to the scene's visual vocabulary (status colors), even though it is a DOM component. It imports `STATUS_COLORS` from `satellites.data.ts` as the single source of truth for color values.
+
+### 9. Fleet summary uses 4 buckets, not 3
+
+The summary breakdown shows `online / warning / degraded / offline` as four separate counts. The issue spec uses the term "healthy" which maps to `online`. Grouping `warning + degraded` into one bucket was rejected because:
+
+- `warning` = needs monitoring (ADR section 2)
+- `degraded` = intervention likely needed (ADR section 2)
+
+These have different operational urgency. Collapsing them removes the signal that operators need. A single "Warning" number masks whether the fleet is under routine watch or actively degrading.
+
+`countByStatus()` is extracted as a pure function in `widgets/telemetry-panel/count-by-status.ts` for unit-testability independent of React.
+
+`TelemetryPanel` accepts a `satellites?: Satellite[]` prop. Counts are computed from it directly — not from `useLiveTelemetry` — so the breakdown always reflects actual satellite states rather than simulated drift averages.
+
 ## Consequences
 
 - `@satellite-control/entity-satellite` is a new workspace package; any app in the monorepo can depend on it
 - `SatelliteStatus` and `SelectedSatelliteInfo` must stay in sync — `SAT_STATUS_CLASS` in `TelemetryPanel` and i18n `satelliteDetail.status.*` keys must cover all four statuses
-- The `DigitalTwinShell` layout reserves a legend zone (bottom-left overlay) for future implementation (fleet legend — ADR not yet written)
+- `FleetLegend` replaces the `legendPlaceholder` div in `DigitalTwinShell`; the placeholder comment and `digitalTwin.legendPlaceholder` i18n key are now obsolete but kept for backwards compat until a full cleanup pass
 - All 3D visual logic remains in `widgets/mission-control-scene/` — no Three.js code in the entity or feature layers
 - `MissionControlScene` is now a `forwardRef` component; consumers must type their ref as `CameraControlsHandle` from the widget index
+- `TelemetryPanel` and `TelemetryDrawer` now accept an optional `satellites` prop; when omitted, the status breakdown is hidden
