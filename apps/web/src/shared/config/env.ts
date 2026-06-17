@@ -5,4 +5,5 @@ export const env = createEnv({
   wsUrl: process.env.NEXT_PUBLIC_WS_URL,
   appEnv: process.env.NEXT_PUBLIC_APP_ENV,
   featureDigitalTwin: process.env.NEXT_PUBLIC_FEATURE_DIGITAL_TWIN,
+  featureTelemetryTunnel: process.env.NEXT_PUBLIC_FEATURE_TELEMETRY_TUNNEL,
 });

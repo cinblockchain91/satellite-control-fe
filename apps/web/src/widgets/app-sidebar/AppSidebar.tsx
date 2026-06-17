@@ -44,6 +44,7 @@ import {
   CalendarDays,
   Radio,
   Globe,
+  Zap,
 } from "lucide-react";
 import { env } from "@/shared/config/env";
 
@@ -71,6 +72,9 @@ export function AppSidebar() {
     { title: t("dashboard"), url: "/dashboard", icon: LayoutDashboard },
     ...(env.featureDigitalTwin
       ? [{ title: t("digitalTwin"), url: "/digital-twin", icon: Globe }]
+      : []),
+    ...(env.featureTelemetryTunnel
+      ? [{ title: t("telemetryTunnel"), url: "/telemetry-tunnel", icon: Zap }]
       : []),
   ];
 

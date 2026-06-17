@@ -3,6 +3,7 @@ export interface AppEnv {
   wsUrl: string;
   appEnv: "development" | "staging" | "production";
   featureDigitalTwin: boolean;
+  featureTelemetryTunnel: boolean;
 }
 
 interface EnvInput {
@@ -10,6 +11,7 @@ interface EnvInput {
   wsUrl?: string | undefined;
   appEnv?: string | undefined;
   featureDigitalTwin?: string | undefined;
+  featureTelemetryTunnel?: string | undefined;
 }
 
 const VALID_APP_ENVS = ["development", "staging", "production"] as const;
@@ -26,5 +28,6 @@ export function createEnv(input: EnvInput = {}): AppEnv {
     wsUrl: input.wsUrl ?? "ws://localhost:4000",
     appEnv: (appEnv as AppEnv["appEnv"]) ?? "development",
     featureDigitalTwin: input.featureDigitalTwin === "true",
+    featureTelemetryTunnel: input.featureTelemetryTunnel === "true",
   };
 }
