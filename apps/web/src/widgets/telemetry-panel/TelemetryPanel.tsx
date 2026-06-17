@@ -94,7 +94,7 @@ interface TelemetryPanelProps {
   className?: string;
   selectedSatellite?: SelectedSatelliteInfo | null;
   satellites?: Satellite[] | undefined;
-  conjunctionIds?: Set<string>;
+  conjunctionIds?: Set<string> | undefined;
 }
 
 export function TelemetryPanel({
