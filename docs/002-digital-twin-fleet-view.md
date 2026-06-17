@@ -145,6 +145,21 @@ The scene already runs at 60 FPS with 6 satellites and no optimization was neede
 
 **`<Stats>`** from drei remains development-only for real-time debugging overlay. `PerformanceMonitor` handles warning in any environment.
 
+### 12. Milestone 2 — Deferred improvements for future milestones
+
+The following items were evaluated and intentionally deferred. They do not block the Milestone 2 internal demo.
+
+| # | Item | Milestone |
+|---|------|-----------|
+| 1 | Real backend — replace `useLiveTelemetry` with TanStack Query | 3 |
+| 2 | Keplerian orbit path rendering (actual elliptical paths) | 3 |
+| 3 | Time-series telemetry chart in `TelemetryPanel` | 3 |
+| 4 | Mobile `TelemetryDrawer` UX refinement (swipe-to-close, peek state) | 3 |
+| 5 | Keyboard navigation in 3D scene (Tab to cycle satellites) | Accessibility milestone |
+| 6 | Multi-satellite comparison (multi-select) | Requires UX spec |
+
+**Known layout note:** `LowFpsWarning` badge stacks below `TelemetryDrawer` trigger on mobile (`top-14`) and moves to `top-4` on desktop where the drawer trigger is hidden. This is intentional — both elements share the right-edge column without overlapping.
+
 ## Consequences
 
 - `@satellite-control/entity-satellite` is a new workspace package; any app in the monorepo can depend on it
