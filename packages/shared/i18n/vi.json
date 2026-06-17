@@ -60,7 +60,8 @@
       "hint": "Kéo để xoay · Cuộn để thu phóng",
       "hintTouch": "Kéo để xoay · Chụm để thu phóng",
       "reset": "Đặt lại góc nhìn"
-    }
+    },
+    "lowFpsWarning": "Tốc độ khung hình thấp"
   },
   "auth": {
     "title": "Satellite Control",

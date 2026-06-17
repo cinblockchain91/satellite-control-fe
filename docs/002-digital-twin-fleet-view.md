@@ -120,6 +120,31 @@ The hook no longer contains hardcoded snapshots. `buildSnapshot(satellites, tick
 
 **Swap point for real API:** When a backend is available, replace `useLiveTelemetry` with a TanStack Query hook (`useQuery`) that fetches from the satellite telemetry endpoint. The `TelemetrySnapshot` interface is the contract — `TelemetryPanel` does not need to change.
 
+### 11. Performance monitoring: PerformanceMonitor + low-FPS warning
+
+The scene already runs at 60 FPS with 6 satellites and no optimization was needed. The deliverable is monitoring infrastructure to detect degradation before a demo is affected.
+
+**Performance budget:**
+
+| Resource | Budget | Current |
+|----------|--------|---------|
+| Meshes | ≤ 50 | 16 (6 sats × 2 + 3 rings + 1 Earth) |
+| Lights | ≤ 2 | 2 (ambient + directional) |
+| Stars | ≤ 5000 | 4000 |
+| FPS target | 60 | 60+ ✅ |
+
+**Warning threshold:** < 30 FPS sustained over 3 consecutive ticks (~3 seconds).
+
+**Architecture:** `PerformanceMonitor` lives inside the R3F `<Canvas>` in `MissionControlScene` and uses `useFrame` to sample FPS every 60 frames (~1s). It emits an `onLowFps(boolean)` callback to the shell. `DigitalTwinShell` owns a `isLowFps` state and renders a DOM badge overlay when true.
+
+**Accumulator pattern:** `setState` is called at most once per second (every 60 frames), never every frame. All intermediate state is held in `useRef` to avoid React reconciler pressure at 60 fps.
+
+**`computeFps(elapsed, frameCount)`** is extracted as a pure function in `compute-fps.ts` for unit-testability independent of R3F.
+
+**Warning suppression:** The badge only appears after 3 consecutive low-FPS ticks to avoid false positives when the tab loses and regains focus.
+
+**`<Stats>`** from drei remains development-only for real-time debugging overlay. `PerformanceMonitor` handles warning in any environment.
+
 ## Consequences
 
 - `@satellite-control/entity-satellite` is a new workspace package; any app in the monorepo can depend on it

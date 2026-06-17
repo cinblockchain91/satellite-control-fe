@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { SceneCanvasLazy } from "@/shared/3d";
 import {
   CameraControlsOverlay,
@@ -14,7 +15,9 @@ import type { SelectedSatelliteInfo } from "@/widgets/telemetry-panel";
 
 export function DigitalTwinShell() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [isLowFps, setIsLowFps] = useState(false);
   const sceneRef = useRef<CameraControlsHandle>(null);
+  const t = useTranslations("digitalTwin");
 
   const found = selectedId
     ? (MOCK_SATELLITES.find((s) => s.id === selectedId) ?? null)
@@ -33,7 +36,7 @@ export function DigitalTwinShell() {
     <main data-testid="digital-twin-shell" className="flex h-[calc(100svh-4rem)] w-full overflow-hidden">
       <div className="relative flex-1 min-w-0">
         <SceneCanvasLazy className="h-full w-full" onPointerMissed={() => setSelectedId(null)}>
-          <MissionControlScene ref={sceneRef} selectedId={selectedId} onSelect={setSelectedId} />
+          <MissionControlScene ref={sceneRef} selectedId={selectedId} onSelect={setSelectedId} onLowFps={setIsLowFps} />
         </SceneCanvasLazy>
 
         {/* Camera controls hint — bottom-center of canvas area */}
@@ -45,6 +48,15 @@ export function DigitalTwinShell() {
         <div className="absolute bottom-4 left-4 hidden lg:block">
           <FleetLegend />
         </div>
+
+        {isLowFps && (
+          <div
+            data-testid="low-fps-warning"
+            className="absolute top-4 right-4 flex items-center gap-1.5 rounded-md border border-yellow-500/40 bg-yellow-500/10 px-2.5 py-1.5 text-xs text-yellow-400"
+          >
+            {t("lowFpsWarning")}
+          </div>
+        )}
 
         <TelemetryDrawer selectedSatellite={selectedSatellite} satellites={MOCK_SATELLITES} />
       </div>

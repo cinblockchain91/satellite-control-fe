@@ -5,6 +5,7 @@ import { CameraControls, Stars, Stats } from "@react-three/drei";
 import * as THREE from "three";
 import { Earth } from "./Earth";
 import { OrbitalRings } from "./OrbitalRings";
+import { PerformanceMonitor } from "./PerformanceMonitor";
 import { Satellite } from "./Satellite";
 import { MOCK_SATELLITES } from "./satellites.data";
 
@@ -15,10 +16,11 @@ export interface CameraControlsHandle {
 interface MissionControlSceneProps {
   selectedId: string | null;
   onSelect: (id: string | null) => void;
+  onLowFps?: ((isLow: boolean) => void) | undefined;
 }
 
 export const MissionControlScene = forwardRef<CameraControlsHandle, MissionControlSceneProps>(
-  function MissionControlScene({ selectedId, onSelect }, ref) {
+  function MissionControlScene({ selectedId, onSelect, onLowFps }, ref) {
     const controlsRef = useRef<React.ComponentRef<typeof CameraControls>>(null);
 
     useImperativeHandle(
@@ -75,6 +77,7 @@ export const MissionControlScene = forwardRef<CameraControlsHandle, MissionContr
           dampingFactor={0.05}
         />
         {process.env.NODE_ENV === "development" && <Stats />}
+        {onLowFps && <PerformanceMonitor onLowFps={onLowFps} />}
       </>
     );
   },
