@@ -60,7 +60,8 @@
       "hint": "Drag to rotate · Scroll to zoom",
       "hintTouch": "Drag to rotate · Pinch to zoom",
       "reset": "Reset view"
-    }
+    },
+    "lowFpsWarning": "Low frame rate detected"
   },
   "auth": {
     "title": "Satellite Control",
