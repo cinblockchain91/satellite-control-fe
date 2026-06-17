@@ -195,7 +195,7 @@ where i = inclination in radians, Ω = raan in radians.
 
 #### `predictedPosition` is not a data field
 
-The issue spec listed "next predicted position" as a field. It is intentionally NOT stored in the entity — a stored value would be stale on every tick. Instead, `computeOrbitPosition(orbit, t + PREDICTION_WINDOW)` is the predicted position function. `PREDICTION_WINDOW` (300 s demo-time, labeled "+5 min") is defined as a constant in the widget layer (issue #69).
+The issue spec listed "next predicted position" as a field. It is intentionally NOT stored in the entity — a stored value would be stale on every tick. Instead, `computeOrbitPosition(orbit, t + PREDICTION_WINDOW)` is the predicted position function. `PREDICTION_WINDOW = 300` (demo-seconds, labeled "+5 min") is exported from `PredictedMarker.tsx` in the widget layer.
 
 #### `radius` and `telemetry.altitude` are independent
 
@@ -256,6 +256,22 @@ Visual hierarchy:
 #### `useMemo` keyed to `orbit`
 
 Points are memoised with `useMemo(() => [...], [orbit])`. Since `MOCK_SATELLITES` is a module-level constant, the memo never recomputes during a session. After issue #69 introduces dynamic satellite data from a backend, the memo will still be correct — orbit parameters change rarely (reboost manoeuvres), not every frame.
+
+### 15. Predicted position marker — `PredictedMarker` component
+
+Each satellite has a `<PredictedMarker orbit={sat.orbit} color={...} />` mounted in `MissionControlScene` between the orbit path and the satellite mesh.
+
+**Formula:** `computeOrbitPosition(orbit, state.clock.elapsedTime + PREDICTION_WINDOW)` — the same orbit math, shifted 300 demo-seconds forward.
+
+**`PREDICTION_WINDOW = 300`** is exported from `PredictedMarker.tsx`. It is a widget-layer constant (rendering/demo concern), not an entity-layer concern.
+
+**Visual:** Wireframe octahedron, radius 0.06, opacity 0.45, same status color as the satellite. Octahedron shape distinguishes the predicted marker from the satellite cube at a glance.
+
+**Always visible** — shown for all satellites regardless of selection state. The predicted marker moves along the orbit in real time, staying exactly `PREDICTION_WINDOW` seconds ahead of the satellite.
+
+**Trail deferred** — "display a trail" was considered and deferred. A trail requires storing N past positions in a ref array and re-uploading a BufferGeometry each frame. The single lookahead marker satisfies the acceptance criteria ("visually understandable") at lower complexity.
+
+**Initial position prop:** `position={computeOrbitPosition(orbit, PREDICTION_WINDOW)}` sets the t=0 starting point before `useFrame` fires on the first frame — no position flash on mount.
 
 ## Consequences
 

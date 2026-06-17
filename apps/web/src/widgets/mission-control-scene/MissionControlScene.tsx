@@ -6,6 +6,7 @@ import * as THREE from "three";
 import { Earth } from "./Earth";
 import { OrbitPath } from "./OrbitPath";
 import { PerformanceMonitor } from "./PerformanceMonitor";
+import { PredictedMarker } from "./PredictedMarker";
 import { Satellite } from "./Satellite";
 import { MOCK_SATELLITES, STATUS_COLORS } from "./satellites.data";
 
@@ -65,6 +66,14 @@ export const MissionControlScene = forwardRef<CameraControlsHandle, MissionContr
             orbit={sat.orbit}
             color={STATUS_COLORS[sat.status]}
             isSelected={selectedId === sat.id}
+          />
+        ))}
+
+        {MOCK_SATELLITES.map((sat) => (
+          <PredictedMarker
+            key={sat.id}
+            orbit={sat.orbit}
+            color={STATUS_COLORS[sat.status]}
           />
         ))}
 

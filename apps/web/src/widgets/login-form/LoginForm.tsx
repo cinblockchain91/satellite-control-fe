@@ -47,7 +47,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
       const account = await authAdapter.login(username, password);
       setAccount(account);
       onSuccess?.();
-      router.push("/dashboard");
+      router.replace("/dashboard");
     } catch (err) {
       setError(err instanceof Error ? err.message : t("errorFailed"));
     } finally {
