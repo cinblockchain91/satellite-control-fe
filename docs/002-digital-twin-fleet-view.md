@@ -191,7 +191,7 @@ where i = inclination in radians, Ω = raan in radians.
 
 #### `position` field is derived, not independent
 
-`Satellite.position` stores `computeOrbitPosition(orbit, 0)` — the t=0 position. It exists for camera focus use in `MissionControlScene` without needing to re-compute. After issue #69 enables animation, `Satellite.tsx` will call `computeOrbitPosition` directly inside `useFrame` and `position` becomes the initial camera target only.
+`Satellite.position` stores `computeOrbitPosition(orbit, 0)` — the t=0 position. It is used as the initial camera focus target in `MissionControlScene`. At runtime, `Satellite.tsx` calls `computeOrbitPosition(data.orbit, state.clock.elapsedTime)` inside `useFrame` and updates the group position imperatively — `position` is only the starting point before the first frame.
 
 #### `predictedPosition` is not a data field
 
@@ -200,6 +200,27 @@ The issue spec listed "next predicted position" as a field. It is intentionally 
 #### `radius` and `telemetry.altitude` are independent
 
 `radius` is in scene units; `telemetry.altitude` is in km. They are related by scene scale (Earth radius = 1 unit ≈ 6371 km) but are not kept in sync — they serve different purposes (3D rendering vs. telemetry display). A future backend will provide both fields independently.
+
+#### Satellite animation — `useFrame` imperative update
+
+`Satellite.tsx` animates each satellite by updating its Three.js group position directly inside `useFrame`:
+
+```ts
+useFrame((state, delta) => {
+  if (groupRef.current) {
+    const [x, y, z] = computeOrbitPosition(data.orbit, state.clock.elapsedTime);
+    groupRef.current.position.set(x, y, z);
+  }
+  // … pulse animation unchanged
+});
+```
+
+Key decisions:
+- **Imperative update via ref** — `groupRef.current.position.set(...)` bypasses React reconciler. No `useState`, no re-render. This is the correct R3F pattern for per-frame updates.
+- **`state.clock.elapsedTime`** — scene clock starts at 0 when the canvas mounts. All 6 satellites share the same clock, so relative phases (set by `initialAngle`) are preserved correctly.
+- **`position={data.position}` as initial prop** — the group starts at the t=0 orbit position before `useFrame` fires on the first frame. No position flash.
+- **Camera follow not implemented** — when a satellite is selected, `MissionControlScene` sets the camera to look at `sat.position` (t=0). The camera does not track the satellite as it moves. This is a known limitation; camera tracking is a separate feature.
+- **Visual emphasis** — existing pulse animation (degraded: 3 Hz, warning: 1.5 Hz) and selection ring already provide per-status visual emphasis. No additional effect added.
 
 #### Backend consideration
 
