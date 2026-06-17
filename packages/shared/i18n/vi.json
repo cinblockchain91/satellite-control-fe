@@ -50,7 +50,12 @@
   "digitalTwin": {
     "title": "Bản sao số",
     "subtitle": "Xem đội vệ tinh",
-    "legendPlaceholder": "Chú giải đội"
+    "legendPlaceholder": "Chú giải đội",
+    "cameraControls": {
+      "hint": "Kéo để xoay · Cuộn để thu phóng",
+      "hintTouch": "Kéo để xoay · Chụm để thu phóng",
+      "reset": "Đặt lại góc nhìn"
+    }
   },
   "auth": {
     "title": "Satellite Control",
