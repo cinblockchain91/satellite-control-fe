@@ -4,10 +4,10 @@ import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
 import { CameraControls, Stars, Stats } from "@react-three/drei";
 import * as THREE from "three";
 import { Earth } from "./Earth";
-import { OrbitalRings } from "./OrbitalRings";
+import { OrbitPath } from "./OrbitPath";
 import { PerformanceMonitor } from "./PerformanceMonitor";
 import { Satellite } from "./Satellite";
-import { MOCK_SATELLITES } from "./satellites.data";
+import { MOCK_SATELLITES, STATUS_COLORS } from "./satellites.data";
 
 export interface CameraControlsHandle {
   resetView(): void;
@@ -59,7 +59,14 @@ export const MissionControlScene = forwardRef<CameraControlsHandle, MissionContr
 
         <Earth />
 
-        <OrbitalRings />
+        {MOCK_SATELLITES.map((sat) => (
+          <OrbitPath
+            key={sat.id}
+            orbit={sat.orbit}
+            color={STATUS_COLORS[sat.status]}
+            isSelected={selectedId === sat.id}
+          />
+        ))}
 
         {MOCK_SATELLITES.map((sat) => (
           <Satellite
