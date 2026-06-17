@@ -356,3 +356,4 @@ onConjunctionChange?.(newIds);  // external — lifted to shell
 - `OrbitLegend` is the counterpart to `FleetLegend` — both are DOM overlays on the canvas. `FleetLegend` explains status colours; `OrbitLegend` explains orbit visual elements (paths, position markers, risk indicators)
 - `TelemetryPanel` and `TelemetryDrawer` now accept an optional `conjunctionIds` prop; when omitted, the Orbit Alerts card shows "No active alerts"
 - `onConjunctionChange` on `MissionControlScene` is optional — the scene works without it; `DigitalTwinShell` opts in to receive updates for display in `TelemetryPanel`
+- Demo badge and auto-pilot are implemented entirely in `DigitalTwinShell` — no new components. Auto-pilot is opt-in (off by default); any manual interaction turns it off.

@@ -66,6 +66,9 @@
       "reset": "Đặt lại góc nhìn"
     },
     "lowFpsWarning": "Tốc độ khung hình thấp",
+    "demoBadge": "Demo",
+    "autoPilotStart": "Tự động",
+    "autoPilotStop": "Dừng",
     "orbitLegend": {
       "title": "Chú giải quỹ đạo",
       "orbitPath": "Đường quỹ đạo",

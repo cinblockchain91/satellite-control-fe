@@ -66,6 +66,9 @@
       "reset": "Reset view"
     },
     "lowFpsWarning": "Low frame rate detected",
+    "demoBadge": "Demo",
+    "autoPilotStart": "Auto Pilot",
+    "autoPilotStop": "Stop",
     "orbitLegend": {
       "title": "Orbit Legend",
       "orbitPath": "Orbit path",
