@@ -128,7 +128,7 @@ The scene already runs at 60 FPS with 6 satellites and no optimization was neede
 
 | Resource | Budget | Current |
 |----------|--------|---------|
-| Meshes | ≤ 50 | 16 (6 sats × 2 + 3 rings + 1 Earth) |
+| Meshes | ≤ 50 | 19 minimum (6 sats × 2 + 6 predicted markers + 1 Earth); up to 31 with selection/risk rings |
 | Lights | ≤ 2 | 2 (ambient + directional) |
 | Stars | ≤ 5000 | 4000 |
 | FPS target | 60 | 60+ ✅ |
@@ -156,6 +156,9 @@ The following items were evaluated and intentionally deferred. They do not block
 | 3 | Mobile `TelemetryDrawer` UX refinement (swipe-to-close, peek state) | 3 |
 | 4 | Keyboard navigation in 3D scene (Tab to cycle satellites) | Accessibility milestone |
 | 5 | Multi-satellite comparison (multi-select) | Requires UX spec |
+| 6 | Camera tracking — follow selected satellite as it moves along orbit | 3 |
+| 7 | Predicted marker trail — store N past positions in ref, render BufferGeometry arc | 3 |
+| 8 | Segment-level orbit highlighting — click a point on the orbit to inspect position/time data | Requires UX spec |
 
 **Known layout note:** `LowFpsWarning` badge stacks below `TelemetryDrawer` trigger on mobile (`top-14`) and moves to `top-4` on desktop where the drawer trigger is hidden. This is intentional — both elements share the right-edge column without overlapping.
 
@@ -357,7 +360,7 @@ onConjunctionChange?.(newIds);  // external — lifted to shell
 
 - `@satellite-control/entity-satellite` is a new workspace package; any app in the monorepo can depend on it
 - `SatelliteStatus` and `SelectedSatelliteInfo` must stay in sync — `SAT_STATUS_CLASS` in `TelemetryPanel` and i18n `satelliteDetail.status.*` keys must cover all four statuses
-- `FleetLegend` replaces the `legendPlaceholder` div in `DigitalTwinShell`; the placeholder comment and `digitalTwin.legendPlaceholder` i18n key are now obsolete but kept for backwards compat until a full cleanup pass
+- `FleetLegend` replaces the former `legendPlaceholder` div in `DigitalTwinShell`; no placeholder key exists in the i18n files
 - All 3D visual logic remains in `widgets/mission-control-scene/` — no Three.js code in the entity or feature layers
 - `MissionControlScene` is now a `forwardRef` component; consumers must type their ref as `CameraControlsHandle` from the widget index
 - `TelemetryPanel` and `TelemetryDrawer` now accept an optional `satellites` prop; when omitted, the status breakdown is hidden

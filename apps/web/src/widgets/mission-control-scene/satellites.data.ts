@@ -11,7 +11,6 @@ export const STATUS_COLORS: Record<SatelliteStatus, string> = {
 };
 
 // Positions are computeOrbitPosition(orbit, 0) — kept as literals for camera focus.
-// In issue #69, Satellite.tsx will derive positions dynamically via useFrame.
 export const MOCK_SATELLITES: Satellite[] = [
   {
     id: SatelliteId("sat-1"),
