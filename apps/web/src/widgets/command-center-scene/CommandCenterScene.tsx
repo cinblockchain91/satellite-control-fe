@@ -18,9 +18,11 @@ import {
   SCREEN_CONFIGS,
 } from "./scene-config";
 import type { CameraPreset } from "./scene-config";
+import type { CommandType, MockCommand } from "./command-actions";
 import { WorkStation } from "./WorkStation";
 import { ControlPanel } from "./ControlPanel";
 import { StatusScreen } from "./StatusScreen";
+import type { SatelliteId } from "@satellite-control/entity-satellite";
 
 export interface CommandCenterSceneHandle {
   resetView: () => void;
@@ -29,10 +31,13 @@ export interface CommandCenterSceneHandle {
 interface CommandCenterSceneProps {
   cameraPreset: CameraPreset;
   onLowFps: (isLow: boolean) => void;
+  selectedSatelliteId: SatelliteId | null;
+  onDispatch: (type: CommandType) => void;
+  commands: MockCommand[];
 }
 
 export const CommandCenterScene = forwardRef<CommandCenterSceneHandle, CommandCenterSceneProps>(
-  function CommandCenterScene({ cameraPreset, onLowFps }, ref) {
+  function CommandCenterScene({ cameraPreset, onLowFps, selectedSatelliteId, onDispatch, commands }, ref) {
     const controlsRef = useRef<React.ComponentRef<typeof CameraControls>>(null);
     const isMountedRef = useRef(false);
 
@@ -73,7 +78,11 @@ export const CommandCenterScene = forwardRef<CommandCenterSceneHandle, CommandCe
           <WorkStation key={i} position={cfg.position} rotationY={cfg.rotationY} />
         ))}
 
-        <ControlPanel />
+        <ControlPanel
+          selectedSatelliteId={selectedSatelliteId}
+          onDispatch={onDispatch}
+          commands={commands}
+        />
 
         {SCREEN_CONFIGS.map((cfg, i) => (
           <StatusScreen key={i} position={cfg.position} />
