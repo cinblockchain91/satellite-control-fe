@@ -72,24 +72,29 @@ SAT-Delta is intentionally designed to demonstrate a counterintuitive scenario: 
 
 This issue defines the data contract only. Ground stations, animated beams, and the tunnel scene are separate issues. The widget directory `widgets/telemetry-tunnel/` is created now to establish the FSD boundary — future components will live alongside `telemetry-stream.ts`.
 
-### 6. Dual-channel visualization: beam vs. particles
+### 6. Multi-channel visualization: beam, particles, and anomaly indicators
 
-Two independent visual channels carry different semantic information:
+Three independent visual channels carry different semantic information:
 
-- **Beam** (`TelemetryBeam`) — colour driven by `SatelliteStatus` (`online / warning / degraded / offline`). Answers: "is the communication link operational?"
-- **Particles** (`FlowParticles`) — colour and speed driven by `TelemetryStreamState` (`nominal / warning / critical`) via `classifyStream(satellite.telemetry)`. Answers: "what is the quality of data flowing through the link?"
+- **Beam colour** (`TelemetryBeam`) — driven by `SatelliteStatus` (`online / warning / degraded / offline`). Answers: "is the communication link operational?"
+- **Particles** (`FlowParticles`) — colour and speed driven by `TelemetryStreamState` via `classifyStream(satellite.telemetry)`. Answers: "what is the quality of data flowing through the link?"
+- **Beam lineWidth + flash** (`TelemetryBeam`) — driven by `TelemetryStreamState`. Answers: "how urgent is the anomaly?" Critical beams are 3× wider and flash at 4 Hz; warning beams are 1.8× wider and pulse at 1.25 Hz.
 
-This separation is intentional. A satellite can be `status: "online"` while its telemetry stream is `"critical"` — SAT-Delta demonstrates this: strong signal, high anomaly score. Conflating both into a single colour would lose that distinction.
+This layering is intentional. A satellite can be `status: "online"` while its telemetry stream is `"critical"` — SAT-Delta demonstrates this. Conflating beam colour with stream state would lose the operational-vs-quality distinction.
 
-| Stream state | Particle color | Speed (units/s) | Signal |
-|-------------|---------------|----------------|--------|
-| `nominal` | `#7dd3fc` sky-400 | 0.4 | healthy data flow |
-| `warning` | `#fbbf24` amber-400 | 0.8 | degraded metrics |
-| `critical` | `#f87171` red-400 | 1.4 | immediate attention needed |
+| Stream state | Particle color | Speed (units/s) | Beam width | Flash interval |
+|-------------|---------------|----------------|------------|---------------|
+| `nominal` | `#7dd3fc` sky-400 | 0.4 | 1.0 | none (static) |
+| `warning` | `#fbbf24` amber-400 | 0.8 | 1.8 | 800 ms |
+| `critical` | `#f87171` red-400 | 1.4 | 3.0 | 250 ms |
 
-Speed encodes urgency kinetically — a critical stream pulses faster without the user needing to read any number.
+**Flash implementation:** `setInterval` + `useState` toggles opacity between `maxOpacity` and `minOpacity` at the configured interval. `useEffect` cleanup calls `clearInterval` on unmount or dependency change. `setBright(true)` resets on every `streamState` transition to prevent a stuck dim state.
 
-**Known limitation:** When `streamState` transitions, particle positions jump one frame because `progress = (t * speed + offset) % 1` is discontinuous at speed changes. With static mock data this is imperceptible. When real-time streaming arrives, replace `t * speed` with accumulated delta time (`ref += delta * speed` per frame) to avoid the discontinuity.
+**Why `setInterval` over `useFrame`:** drei's `<Line>` component does not expose a direct ref to its internal `LineMaterial`, making imperative per-frame opacity updates impractical without private API access. `setInterval` at 250–800 ms is sufficiently coarse-grained that React's batching keeps re-renders cheap — typically 3–4 critical beams × 4 Hz = ~12–16 re-renders/second in the demo scenario.
+
+**Known limitation:** Re-render count scales linearly with the number of critical beams. When connecting a real-time backend with many simultaneous critical streams, consider replacing `setInterval` with a `useRef`-based `useFrame` approach once drei exposes stable `LineMaterial` access.
+
+**Known limitation (particles):** When `streamState` transitions, particle positions jump one frame because `progress = (t * speed + offset) % 1` is discontinuous at speed changes. With static mock data this is imperceptible. When real-time streaming arrives, replace `t * speed` with accumulated delta time (`ref += delta * speed` per frame) to avoid the discontinuity.
 
 ## Consequences
 
