@@ -4,13 +4,16 @@ import { useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { SceneCanvasLazy } from "@/shared/3d";
 import type { CommandCenterSceneHandle, CameraPreset } from "@/widgets/command-center-scene";
-import { CommandCenterScene } from "@/widgets/command-center-scene";
+import { CommandCenterScene, useMockCommandDispatch } from "@/widgets/command-center-scene";
+import type { SatelliteId } from "@satellite-control/entity-satellite";
 
 export function CommandCenterShell() {
   const [cameraPreset] = useState<CameraPreset>("overview");
   const [isLowFps, setIsLowFps] = useState(false);
+  const [selectedSatelliteId] = useState<SatelliteId | null>(null);
   const sceneRef = useRef<CommandCenterSceneHandle>(null);
   const t = useTranslations("commandCenter");
+  const { commands, dispatch } = useMockCommandDispatch();
 
   return (
     <main data-testid="command-center-shell" className="flex h-[calc(100svh-4rem)] w-full overflow-hidden">
@@ -20,6 +23,11 @@ export function CommandCenterShell() {
             ref={sceneRef}
             cameraPreset={cameraPreset}
             onLowFps={setIsLowFps}
+            selectedSatelliteId={selectedSatelliteId}
+            onDispatch={(type) => {
+              if (selectedSatelliteId !== null) dispatch(selectedSatelliteId, type);
+            }}
+            commands={commands}
           />
         </SceneCanvasLazy>
 
