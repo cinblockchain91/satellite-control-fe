@@ -6,14 +6,17 @@ import { SceneCanvasLazy } from "@/shared/3d";
 import type { CommandCenterSceneHandle, CameraPreset } from "@/widgets/command-center-scene";
 import { CommandCenterScene, useMockCommandDispatch } from "@/widgets/command-center-scene";
 import type { SatelliteId } from "@satellite-control/entity-satellite";
+import { MOCK_SATELLITES } from "@/widgets/mission-control-scene";
+import { useTunnelMockTelemetry } from "@/widgets/telemetry-tunnel";
 
 export function CommandCenterShell() {
   const [cameraPreset] = useState<CameraPreset>("overview");
   const [isLowFps, setIsLowFps] = useState(false);
-  const [selectedSatelliteId] = useState<SatelliteId | null>(null);
+  const [selectedSatelliteId, setSelectedSatelliteId] = useState<SatelliteId | null>(null);
   const sceneRef = useRef<CommandCenterSceneHandle>(null);
   const t = useTranslations("commandCenter");
   const { commands, dispatch } = useMockCommandDispatch();
+  const satellites = useTunnelMockTelemetry(MOCK_SATELLITES);
 
   return (
     <main data-testid="command-center-shell" className="flex h-[calc(100svh-4rem)] w-full overflow-hidden">
@@ -28,6 +31,8 @@ export function CommandCenterShell() {
               if (selectedSatelliteId !== null) dispatch(selectedSatelliteId, type);
             }}
             commands={commands}
+            satellites={satellites}
+            onSelectSatellite={setSelectedSatelliteId}
           />
         </SceneCanvasLazy>
 

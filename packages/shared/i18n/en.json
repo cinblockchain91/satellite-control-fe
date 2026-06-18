@@ -122,7 +122,17 @@
     }
   },
   "commandCenter": {
-    "lowFpsWarning": "Low frame rate detected"
+    "lowFpsWarning": "Low frame rate detected",
+    "screenSignal": "Signal",
+    "screenBattery": "Battery",
+    "screenTemp": "Temp",
+    "screenHealth": "Health",
+    "status": {
+      "online": "Online",
+      "warning": "Warning",
+      "degraded": "Degraded",
+      "offline": "Offline"
+    }
   },
   "auth": {
     "title": "Satellite Control",

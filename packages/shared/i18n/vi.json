@@ -122,7 +122,17 @@
     }
   },
   "commandCenter": {
-    "lowFpsWarning": "Tốc độ khung hình thấp"
+    "lowFpsWarning": "Tốc độ khung hình thấp",
+    "screenSignal": "Tín hiệu",
+    "screenBattery": "Pin",
+    "screenTemp": "Nhiệt độ",
+    "screenHealth": "Sức khỏe",
+    "status": {
+      "online": "Trực tuyến",
+      "warning": "Cảnh báo",
+      "degraded": "Suy giảm",
+      "offline": "Ngoại tuyến"
+    }
   },
   "auth": {
     "title": "Satellite Control",
