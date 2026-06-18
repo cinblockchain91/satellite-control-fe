@@ -7,7 +7,7 @@ A modern web-based control interface for managing and monitoring satellite opera
 ---
 
 [Kanban Board](https://github.com/users/cinblockchain91/projects/4/views/1): Track development progress here.  
-[satellitecontrol.com](https://web-5c4j18jbh-hoang-van-cuongs-projects.vercel.app) : Production preview with testing credentials: (**admin**/**admin123**)
+[satellitecontrol.com](https://web-xi-orpin-46.vercel.app) : Production preview with testing credentials: (**admin**/**admin123**)
 
 ## Overview
 
