@@ -88,6 +88,7 @@ export function TelemetryTunnelScene({
                 from={sat.position}
                 to={gs.position}
                 color={SAT_STATUS_COLORS[sat.status]}
+                streamState={streamState}
                 isOffline={isOffline}
               />
               <FlowParticles
