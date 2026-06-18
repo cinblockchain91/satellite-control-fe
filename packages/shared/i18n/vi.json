@@ -141,7 +141,13 @@
     },
     "commandPending": "{satellite}: {command} đang xử lý…",
     "commandAcknowledged": "{satellite}: {command} đã xác nhận",
-    "commandFailed": "{satellite}: {command} thất bại"
+    "commandFailed": "{satellite}: {command} thất bại",
+    "cameraPreset": {
+      "overview": "Toàn cảnh",
+      "panels":   "Bảng lệnh",
+      "screens":  "Màn hình"
+    },
+    "cameraPresetLabel": "Chế độ xem"
   },
   "auth": {
     "title": "Satellite Control",
