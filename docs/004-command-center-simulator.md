@@ -151,6 +151,46 @@ views/command-center/
 - Camera presets replace orbit controls — `CameraControls` from drei is still used, but driven programmatically rather than by user drag/scroll
 - `@/shared/3d/PerformanceMonitor` is reused — no new monitoring code needed
 
+## Implementation notes (Issues 5–8)
+
+### `<Html>` breaks React context
+
+drei's `<Html>` renders into a separate DOM portal outside the React tree. Any context that wraps the app (e.g., `NextIntlClientProvider`) is **not** accessible inside `<Html>`. This means `useTranslations()` cannot be called inside a component rendered via `<Html>`.
+
+**Workaround:** Call `useTranslations` in the parent component (normal React tree), compute all translated strings into a `labels` object, and pass them as a plain prop to the component inside `<Html>`.
+
+```
+StatusScreen (normal tree) → useTranslations() → labels: SatelliteStatusPanelLabels
+  └─ <Html> → <SatelliteStatusPanel labels={labels} /> ← no hooks, no context
+```
+
+Any future component rendered inside `<Html>` must follow this pattern.
+
+### Selection triggers camera transition
+
+Camera preset auto-changes on user interaction:
+
+| Trigger | Camera moves to |
+|---|---|
+| Click a status screen | `screens` preset + satellite selected |
+| Click control panel body | `panels` preset |
+| Click "Overview" in switcher | `overview` preset + satellite deselected |
+| Click other preset buttons | preset changes, selection unchanged |
+
+This state lives entirely in `CommandCenterShell` (`cameraPreset` + `selectedSatelliteId`). The scene receives both as props and does not own selection state.
+
+### Mock satellite status coverage
+
+`MOCK_SATELLITES` has 6 satellites; `SCREEN_CONFIGS` has 4 screens. Screens render `satellites[i]` — only the first 4 are visible. sat-4 is set to `degraded` so all four statuses (online / warning / offline / degraded) are always visible on screen simultaneously.
+
+### Pre-seeded command history
+
+`useMockCommandDispatch` initialises with 4 settled commands (3 acknowledged + 1 failed) spread 30 s apart. This ensures the command history panel is never empty on first load, making the demo immediately readable without the user having to dispatch any commands first.
+
+### Camera preset switcher accessibility
+
+The preset switcher `<div>` carries `role="group"` + `aria-label` (i18n key `cameraPresetLabel`). Each `<Button>` carries `aria-pressed={cameraPreset === preset}` so screen readers can identify the active preset.
+
 ## Deferred items
 
 | # | Item | Status |
