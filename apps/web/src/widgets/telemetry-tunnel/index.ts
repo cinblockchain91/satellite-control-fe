@@ -5,4 +5,5 @@ export { MOCK_GROUND_STATIONS, GROUND_STATION_COLORS } from "./ground-stations.d
 export { TelemetryTunnelScene } from "./TelemetryTunnelScene";
 export { FlowParticles } from "./FlowParticles";
 export { TelemetryDetailPanel } from "./TelemetryDetailPanel";
+export { TelemetryFilterBar } from "./TelemetryFilterBar";
 export { useTunnelMockTelemetry } from "./telemetry-mock";

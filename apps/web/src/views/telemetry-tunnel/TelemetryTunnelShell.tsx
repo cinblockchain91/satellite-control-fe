@@ -7,12 +7,15 @@ import type { SatelliteId } from "@satellite-control/entity-satellite";
 import {
   MOCK_GROUND_STATIONS,
   TelemetryDetailPanel,
+  TelemetryFilterBar,
   TelemetryTunnelScene,
   useTunnelMockTelemetry,
 } from "@/widgets/telemetry-tunnel";
+import type { TelemetryStreamState } from "@/widgets/telemetry-tunnel";
 
 export function TelemetryTunnelShell() {
   const [selectedSatelliteId, setSelectedSatelliteId] = useState<SatelliteId | null>(null);
+  const [streamFilter, setStreamFilter] = useState<TelemetryStreamState | null>(null);
   const satellites = useTunnelMockTelemetry(MOCK_SATELLITES);
 
   return (
@@ -27,8 +30,12 @@ export function TelemetryTunnelShell() {
             groundStations={MOCK_GROUND_STATIONS}
             selectedSatelliteId={selectedSatelliteId}
             onSelectSatellite={setSelectedSatelliteId}
+            streamFilter={streamFilter}
           />
         </SceneCanvasLazy>
+        <div className="absolute left-4 top-4">
+          <TelemetryFilterBar streamFilter={streamFilter} onChange={setStreamFilter} />
+        </div>
       </div>
       <TelemetryDetailPanel
         selectedSatelliteId={selectedSatelliteId}

@@ -85,6 +85,9 @@
       "warning": "Warning",
       "degraded": "Degraded",
       "offline": "Offline"
+    },
+    "filter": {
+      "all": "All"
     }
   },
   "digitalTwin": {

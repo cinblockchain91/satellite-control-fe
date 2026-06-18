@@ -7,6 +7,7 @@ import type { TelemetryStreamState } from "./telemetry-stream";
 
 const FLOW_PARTICLE_COUNT = 4;
 const FLOW_PARTICLE_RADIUS = 0.02;
+const DIM_PARTICLE_OPACITY = 0.1;
 
 const STREAM_STATE_COLORS: Record<TelemetryStreamState, string> = {
   nominal: "#7dd3fc",  // sky-400
@@ -25,9 +26,10 @@ interface FlowParticlesProps {
   to: [number, number, number];
   streamState: TelemetryStreamState;
   isOffline?: boolean;
+  isActive?: boolean;
 }
 
-export function FlowParticles({ from, to, streamState, isOffline = false }: FlowParticlesProps) {
+export function FlowParticles({ from, to, streamState, isOffline = false, isActive = true }: FlowParticlesProps) {
   const particleRefs = useRef<(THREE.Group | null)[]>(
     Array.from({ length: FLOW_PARTICLE_COUNT }, () => null),
   );
@@ -60,7 +62,7 @@ export function FlowParticles({ from, to, streamState, isOffline = false }: Flow
         >
           <mesh>
             <sphereGeometry args={[FLOW_PARTICLE_RADIUS, 6, 6]} />
-            <meshBasicMaterial color={color} transparent opacity={0.9} />
+            <meshBasicMaterial color={color} transparent opacity={isActive ? 0.9 : DIM_PARTICLE_OPACITY} />
           </mesh>
         </group>
       ))}

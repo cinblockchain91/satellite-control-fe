@@ -85,6 +85,9 @@
       "warning": "Cảnh báo",
       "degraded": "Suy giảm",
       "offline": "Ngoại tuyến"
+    },
+    "filter": {
+      "all": "Tất cả"
     }
   },
   "digitalTwin": {
