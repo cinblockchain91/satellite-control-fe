@@ -4,6 +4,7 @@ export interface AppEnv {
   appEnv: "development" | "staging" | "production";
   featureDigitalTwin: boolean;
   featureTelemetryTunnel: boolean;
+  featureCommandCenter: boolean;
 }
 
 interface EnvInput {
@@ -12,6 +13,7 @@ interface EnvInput {
   appEnv?: string | undefined;
   featureDigitalTwin?: string | undefined;
   featureTelemetryTunnel?: string | undefined;
+  featureCommandCenter?: string | undefined;
 }
 
 const VALID_APP_ENVS = ["development", "staging", "production"] as const;
@@ -29,5 +31,6 @@ export function createEnv(input: EnvInput = {}): AppEnv {
     appEnv: (appEnv as AppEnv["appEnv"]) ?? "development",
     featureDigitalTwin: input.featureDigitalTwin === "true",
     featureTelemetryTunnel: input.featureTelemetryTunnel === "true",
+    featureCommandCenter: input.featureCommandCenter === "true",
   };
 }
