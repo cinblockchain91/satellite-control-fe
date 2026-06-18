@@ -121,6 +121,9 @@
       "signalLost": "Mất tín hiệu (ngoại tuyến)"
     }
   },
+  "commandCenter": {
+    "lowFpsWarning": "Tốc độ khung hình thấp"
+  },
   "auth": {
     "title": "Satellite Control",
     "subtitle": "Đăng nhập vào tài khoản",

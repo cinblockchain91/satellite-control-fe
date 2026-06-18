@@ -121,6 +121,9 @@
       "signalLost": "Signal lost (offline)"
     }
   },
+  "commandCenter": {
+    "lowFpsWarning": "Low frame rate detected"
+  },
   "auth": {
     "title": "Satellite Control",
     "subtitle": "Sign in to your account",
