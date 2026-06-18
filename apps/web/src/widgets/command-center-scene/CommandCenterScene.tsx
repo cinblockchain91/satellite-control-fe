@@ -36,10 +36,11 @@ interface CommandCenterSceneProps {
   commands: MockCommand[];
   satellites: Satellite[];
   onSelectSatellite: (id: SatelliteId) => void;
+  onFocusPanel: () => void;
 }
 
 export const CommandCenterScene = forwardRef<CommandCenterSceneHandle, CommandCenterSceneProps>(
-  function CommandCenterScene({ cameraPreset, onLowFps, selectedSatelliteId, onDispatch, commands, satellites, onSelectSatellite }, ref) {
+  function CommandCenterScene({ cameraPreset, onLowFps, selectedSatelliteId, onDispatch, commands, satellites, onSelectSatellite, onFocusPanel }, ref) {
     const controlsRef = useRef<React.ComponentRef<typeof CameraControls>>(null);
     const isMountedRef = useRef(false);
 
@@ -84,6 +85,7 @@ export const CommandCenterScene = forwardRef<CommandCenterSceneHandle, CommandCe
           selectedSatelliteId={selectedSatelliteId}
           onDispatch={onDispatch}
           commands={commands}
+          onFocusPanel={onFocusPanel}
         />
 
         {SCREEN_CONFIGS.map((cfg, i) => {

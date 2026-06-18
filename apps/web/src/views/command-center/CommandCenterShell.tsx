@@ -1,30 +1,39 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { SceneCanvasLazy } from "@/shared/3d";
-import type { CommandCenterSceneHandle, CameraPreset } from "@/widgets/command-center-scene";
-import { CommandCenterScene, useMockCommandDispatch } from "@/widgets/command-center-scene";
+import { Button } from "@/shared/components/ui/button";
+import type { CameraPreset } from "@/widgets/command-center-scene";
+import { CommandCenterScene, useMockCommandDispatch, CAMERA_PRESETS } from "@/widgets/command-center-scene";
 import type { SatelliteId } from "@satellite-control/entity-satellite";
 import { MOCK_SATELLITES } from "@/widgets/mission-control-scene";
 import { useTunnelMockTelemetry } from "@/widgets/telemetry-tunnel";
 import { toast } from "sonner";
 
 export function CommandCenterShell() {
-  const [cameraPreset] = useState<CameraPreset>("overview");
+  const [cameraPreset, setCameraPreset] = useState<CameraPreset>("overview");
   const [isLowFps, setIsLowFps] = useState(false);
   const [selectedSatelliteId, setSelectedSatelliteId] = useState<SatelliteId | null>(null);
-  const sceneRef = useRef<CommandCenterSceneHandle>(null);
   const t = useTranslations("commandCenter");
   const { commands, dispatch } = useMockCommandDispatch();
   const satellites = useTunnelMockTelemetry(MOCK_SATELLITES);
+
+  function handleSelectSatellite(id: SatelliteId) {
+    setSelectedSatelliteId(id);
+    setCameraPreset("screens");
+  }
+
+  function handleSetCameraPreset(preset: CameraPreset) {
+    setCameraPreset(preset);
+    if (preset === "overview") setSelectedSatelliteId(null);
+  }
 
   return (
     <main data-testid="command-center-shell" className="flex h-[calc(100svh-4rem)] w-full overflow-hidden">
       <div className="relative min-w-0 flex-1">
         <SceneCanvasLazy className="h-full w-full">
           <CommandCenterScene
-            ref={sceneRef}
             cameraPreset={cameraPreset}
             onLowFps={setIsLowFps}
             selectedSatelliteId={selectedSatelliteId}
@@ -42,7 +51,8 @@ export function CommandCenterShell() {
             }}
             commands={commands}
             satellites={satellites}
-            onSelectSatellite={setSelectedSatelliteId}
+            onSelectSatellite={handleSelectSatellite}
+            onFocusPanel={() => setCameraPreset("panels")}
           />
         </SceneCanvasLazy>
 
@@ -55,6 +65,24 @@ export function CommandCenterShell() {
             {t("lowFpsWarning")}
           </div>
         )}
+
+        <div
+          role="group"
+          aria-label={t("cameraPresetLabel")}
+          className="absolute bottom-4 left-1/2 flex -translate-x-1/2 gap-1.5 rounded-lg border border-white/10 bg-black/40 p-1 backdrop-blur-sm"
+        >
+          {CAMERA_PRESETS.map((preset) => (
+            <Button
+              key={preset}
+              size="sm"
+              variant={cameraPreset === preset ? "default" : "ghost"}
+              aria-pressed={cameraPreset === preset}
+              onClick={() => handleSetCameraPreset(preset)}
+            >
+              {t(`cameraPreset.${preset}`)}
+            </Button>
+          ))}
+        </div>
       </div>
     </main>
   );

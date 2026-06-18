@@ -141,7 +141,13 @@
     },
     "commandPending": "{satellite}: {command} pending…",
     "commandAcknowledged": "{satellite}: {command} acknowledged",
-    "commandFailed": "{satellite}: {command} failed"
+    "commandFailed": "{satellite}: {command} failed",
+    "cameraPreset": {
+      "overview": "Overview",
+      "panels":   "Panels",
+      "screens":  "Screens"
+    },
+    "cameraPresetLabel": "Camera view"
   },
   "auth": {
     "title": "Satellite Control",

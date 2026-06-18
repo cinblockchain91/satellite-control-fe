@@ -26,8 +26,17 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
   const [username, setUsername] = useState("");
 
   useEffect(() => {
-    // TODO: remove after Vercel env var is confirmed
-    console.log("[env] NEXT_PUBLIC_FEATURE_DIGITAL_TWIN =", process.env.NEXT_PUBLIC_FEATURE_DIGITAL_TWIN);
+    // TODO: remove after Vercel env vars are confirmed
+    console.group("[env] Runtime config");
+    console.log("url             ", window.location.href);
+    console.log("APP_ENV         ", process.env.NEXT_PUBLIC_APP_ENV);
+    console.log("USE_MOCK        ", process.env.NEXT_PUBLIC_USE_MOCK);
+    console.log("API_URL         ", process.env.NEXT_PUBLIC_API_URL);
+    console.log("WS_URL          ", process.env.NEXT_PUBLIC_WS_URL);
+    console.log("FEATURE_COMMAND_CENTER  ", process.env.NEXT_PUBLIC_FEATURE_COMMAND_CENTER);
+    console.log("FEATURE_TELEMETRY_TUNNEL", process.env.NEXT_PUBLIC_FEATURE_TELEMETRY_TUNNEL);
+    console.log("FEATURE_DIGITAL_TWIN    ", process.env.NEXT_PUBLIC_FEATURE_DIGITAL_TWIN);
+    console.groupEnd();
   }, []);
   const [password, setPassword] = useState("");
   const { isLoading, error, setLoading, setError, setAccount } = useAuthStore();

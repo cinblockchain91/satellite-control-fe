@@ -91,6 +91,7 @@ interface ControlPanelProps {
   selectedSatelliteId: SatelliteId | null;
   onDispatch: (type: CommandType) => void;
   commands: MockCommand[];
+  onFocusPanel: () => void;
 }
 
 function latestStatus(commands: MockCommand[], type: CommandType): CommandStatus | null {
@@ -100,9 +101,12 @@ function latestStatus(commands: MockCommand[], type: CommandType): CommandStatus
   return sorted[0]?.status ?? null;
 }
 
-export function ControlPanel({ selectedSatelliteId, onDispatch, commands }: ControlPanelProps) {
+export function ControlPanel({ selectedSatelliteId, onDispatch, commands, onFocusPanel }: ControlPanelProps) {
   return (
-    <group position={[0, 0, 0]}>
+    <group
+      position={[0, 0, 0]}
+      onClick={(e) => { e.stopPropagation(); onFocusPanel(); }}
+    >
       {/* Console body */}
       <mesh position={[0, CONSOLE_HEIGHT / 2, 0]}>
         <boxGeometry args={[CONSOLE_WIDTH, CONSOLE_HEIGHT, CONSOLE_DEPTH]} />
