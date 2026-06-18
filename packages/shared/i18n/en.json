@@ -132,7 +132,16 @@
       "warning": "Warning",
       "degraded": "Degraded",
       "offline": "Offline"
-    }
+    },
+    "commandType": {
+      "hibernate": "Hibernate",
+      "wake": "Wake",
+      "reset": "Reset",
+      "boost": "Boost"
+    },
+    "commandPending": "{satellite}: {command} pending…",
+    "commandAcknowledged": "{satellite}: {command} acknowledged",
+    "commandFailed": "{satellite}: {command} failed"
   },
   "auth": {
     "title": "Satellite Control",

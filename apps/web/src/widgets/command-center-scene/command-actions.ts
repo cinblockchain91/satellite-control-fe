@@ -22,10 +22,11 @@ export function useMockCommandDispatch() {
   const timeoutsRef = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   useEffect(() => {
-    return () => timeoutsRef.current.forEach(clearTimeout);
+    const timeouts = timeoutsRef.current;
+    return () => timeouts.forEach(clearTimeout);
   }, []);
 
-  function dispatch(satelliteId: SatelliteId, type: CommandType) {
+  function dispatch(satelliteId: SatelliteId, type: CommandType): Promise<void> {
     const cmd: MockCommand = {
       id: crypto.randomUUID(),
       satelliteId,
@@ -34,11 +35,18 @@ export function useMockCommandDispatch() {
       dispatchedAt: Date.now(),
     };
     setCommands((prev) => [...prev, cmd]);
-    const timer = setTimeout(() => {
-      const settled: CommandStatus = Math.random() < ACKNOWLEDGED_PROBABILITY ? "acknowledged" : "failed";
-      setCommands((prev) => prev.map((c) => (c.id === cmd.id ? { ...c, status: settled } : c)));
-    }, COMMAND_SETTLE_MS);
-    timeoutsRef.current.push(timer);
+    return new Promise((resolve, reject) => {
+      const timer = setTimeout(() => {
+        const settled: CommandStatus =
+          Math.random() < ACKNOWLEDGED_PROBABILITY ? "acknowledged" : "failed";
+        setCommands((prev) =>
+          prev.map((c) => (c.id === cmd.id ? { ...c, status: settled } : c)),
+        );
+        if (settled === "acknowledged") resolve();
+        else reject(new Error("Command failed"));
+      }, COMMAND_SETTLE_MS);
+      timeoutsRef.current.push(timer);
+    });
   }
 
   return { commands, dispatch };

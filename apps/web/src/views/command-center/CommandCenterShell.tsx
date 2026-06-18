@@ -8,6 +8,7 @@ import { CommandCenterScene, useMockCommandDispatch } from "@/widgets/command-ce
 import type { SatelliteId } from "@satellite-control/entity-satellite";
 import { MOCK_SATELLITES } from "@/widgets/mission-control-scene";
 import { useTunnelMockTelemetry } from "@/widgets/telemetry-tunnel";
+import { toast } from "sonner";
 
 export function CommandCenterShell() {
   const [cameraPreset] = useState<CameraPreset>("overview");
@@ -28,7 +29,16 @@ export function CommandCenterShell() {
             onLowFps={setIsLowFps}
             selectedSatelliteId={selectedSatelliteId}
             onDispatch={(type) => {
-              if (selectedSatelliteId !== null) dispatch(selectedSatelliteId, type);
+              if (selectedSatelliteId === null) return;
+              const satName =
+                satellites.find((s) => s.id === selectedSatelliteId)?.name ??
+                String(selectedSatelliteId);
+              const command = t(`commandType.${type}`);
+              toast.promise(dispatch(selectedSatelliteId, type), {
+                loading: t("commandPending",      { satellite: satName, command }),
+                success: t("commandAcknowledged", { satellite: satName, command }),
+                error:   t("commandFailed",       { satellite: satName, command }),
+              });
             }}
             commands={commands}
             satellites={satellites}

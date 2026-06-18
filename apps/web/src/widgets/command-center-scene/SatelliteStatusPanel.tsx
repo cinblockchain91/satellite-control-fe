@@ -1,6 +1,3 @@
-"use client";
-
-import { useTranslations } from "next-intl";
 import type { Satellite, SatelliteStatus } from "@satellite-control/entity-satellite";
 
 const STATUS_COLOR: Record<SatelliteStatus, string> = {
@@ -46,12 +43,20 @@ function MetricRow({ label, value, unit, status }: MetricRowProps) {
   );
 }
 
-interface SatelliteStatusPanelProps {
-  satellite: Satellite;
+export interface SatelliteStatusPanelLabels {
+  signal: string;
+  battery: string;
+  temp: string;
+  health: string;
+  statusLabel: string;
 }
 
-export function SatelliteStatusPanel({ satellite }: SatelliteStatusPanelProps) {
-  const t = useTranslations("commandCenter");
+interface SatelliteStatusPanelProps {
+  satellite: Satellite;
+  labels: SatelliteStatusPanelLabels;
+}
+
+export function SatelliteStatusPanel({ satellite, labels }: SatelliteStatusPanelProps) {
   const statusColor = STATUS_COLOR[satellite.status];
   const { telemetry, status } = satellite;
 
@@ -92,18 +97,18 @@ export function SatelliteStatusPanel({ satellite }: SatelliteStatusPanelProps) {
             letterSpacing: "0.08em",
           }}
         >
-          {t(`status.${status}`)}
+          {labels.statusLabel}
         </span>
       </div>
 
       {/* Metrics */}
-      <MetricRow label={t("screenSignal")}  value={telemetry.signalStrength} unit="%" status={status} />
-      <MetricRow label={t("screenBattery")} value={telemetry.battery}        unit="%" status={status} />
-      <MetricRow label={t("screenHealth")}  value={telemetry.healthScore}    unit="%" status={status} />
+      <MetricRow label={labels.signal}  value={telemetry.signalStrength} unit="%" status={status} />
+      <MetricRow label={labels.battery} value={telemetry.battery}        unit="%" status={status} />
+      <MetricRow label={labels.health}  value={telemetry.healthScore}    unit="%" status={status} />
 
       {/* Temperature — no bar */}
       <div style={{ display: "flex", justifyContent: "space-between", marginTop: "4px" }}>
-        <span style={{ opacity: 0.6, fontSize: "9px" }}>{t("screenTemp")}</span>
+        <span style={{ opacity: 0.6, fontSize: "9px" }}>{labels.temp}</span>
         <span style={{ fontSize: "9px" }}>{Math.round(telemetry.temperature)} K</span>
       </div>
     </div>
