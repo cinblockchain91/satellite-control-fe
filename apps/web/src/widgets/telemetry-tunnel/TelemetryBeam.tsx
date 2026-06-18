@@ -6,6 +6,8 @@ import type { TelemetryStreamState } from "./telemetry-stream";
 
 const OFFLINE_BEAM_WIDTH = 1;
 const OFFLINE_BEAM_OPACITY = 0.08;
+const DIM_BEAM_WIDTH = 0.5;
+const DIM_BEAM_OPACITY = 0.04;
 
 const BEAM_CONFIG: Record<TelemetryStreamState, {
   lineWidth: number;
@@ -24,6 +26,7 @@ interface TelemetryBeamProps {
   color?: string;
   streamState: TelemetryStreamState;
   isOffline?: boolean;
+  isActive?: boolean;
 }
 
 export function TelemetryBeam({
@@ -32,6 +35,7 @@ export function TelemetryBeam({
   color = "#38bdf8",
   streamState,
   isOffline = false,
+  isActive = true,
 }: TelemetryBeamProps) {
   const [bright, setBright] = useState(true);
 
@@ -43,6 +47,19 @@ export function TelemetryBeam({
     const id = setInterval(() => setBright((v) => !v), config.flashInterval);
     return () => clearInterval(id);
   }, [config.flashInterval, isOffline]);
+
+  if (!isActive) {
+    return (
+      <Line
+        points={[from, to]}
+        color={color}
+        lineWidth={DIM_BEAM_WIDTH}
+        opacity={DIM_BEAM_OPACITY}
+        transparent
+        depthWrite={false}
+      />
+    );
+  }
 
   if (isOffline) {
     return (

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { CameraControls, Stars } from "@react-three/drei";
 import type { Satellite, SatelliteId, SatelliteStatus } from "@satellite-control/entity-satellite";
 import { Earth } from "@/shared/3d";
@@ -11,6 +11,7 @@ import { FlowParticles } from "./FlowParticles";
 import type { GroundStation } from "./ground-stations.data";
 import { GROUND_STATION_COLORS } from "./ground-stations.data";
 import { classifyStream } from "./telemetry-stream";
+import type { TelemetryStreamState } from "./telemetry-stream";
 
 const TUNNEL_CAMERA_POSITION = [2, 3, 5] as const;
 
@@ -26,6 +27,7 @@ interface TelemetryTunnelSceneProps {
   groundStations: GroundStation[];
   selectedSatelliteId: SatelliteId | null;
   onSelectSatellite: (id: SatelliteId | null) => void;
+  streamFilter: TelemetryStreamState | null;
 }
 
 export function TelemetryTunnelScene({
@@ -33,8 +35,23 @@ export function TelemetryTunnelScene({
   groundStations,
   selectedSatelliteId,
   onSelectSatellite,
+  streamFilter,
 }: TelemetryTunnelSceneProps) {
   const controlsRef = useRef<React.ComponentRef<typeof CameraControls>>(null);
+
+  const activeSatIds = useMemo(() => {
+    const ids = new Set<string>();
+    for (const sat of satellites) {
+      if (
+        sat.id === selectedSatelliteId ||
+        streamFilter === null ||
+        classifyStream(sat.telemetry) === streamFilter
+      ) {
+        ids.add(sat.id as string);
+      }
+    }
+    return ids;
+  }, [satellites, selectedSatelliteId, streamFilter]);
 
   useEffect(() => {
     const [cx, cy, cz] = TUNNEL_CAMERA_POSITION;
@@ -61,6 +78,7 @@ export function TelemetryTunnelScene({
           color={SAT_STATUS_COLORS[sat.status]}
           streamState={classifyStream(sat.telemetry)}
           isSelected={selectedSatelliteId === sat.id}
+          isActive={activeSatIds.has(sat.id as string)}
           onSelect={() => onSelectSatellite(sat.id)}
         />
       ))}
@@ -70,6 +88,7 @@ export function TelemetryTunnelScene({
           key={gs.id}
           data={gs}
           color={GROUND_STATION_COLORS[gs.status]}
+          isActive={gs.linkedSatelliteIds.some((id) => activeSatIds.has(id))}
         />
       ))}
 
@@ -79,6 +98,7 @@ export function TelemetryTunnelScene({
           if (!sat) return null;
           const isOffline = sat.status === "offline";
           const streamState = classifyStream(sat.telemetry);
+          const isActive = activeSatIds.has(satId);
           return (
             <group
               key={`${satId}-${gs.id}`}
@@ -90,12 +110,14 @@ export function TelemetryTunnelScene({
                 color={SAT_STATUS_COLORS[sat.status]}
                 streamState={streamState}
                 isOffline={isOffline}
+                isActive={isActive}
               />
               <FlowParticles
                 from={sat.position}
                 to={gs.position}
                 streamState={streamState}
                 isOffline={isOffline}
+                isActive={isActive}
               />
             </group>
           );

@@ -10,6 +10,7 @@ import type { TelemetryStreamState } from "./telemetry-stream";
 const SELECTION_RING_RADIUS = 0.14;  // outside the pulse ring (0.1) so both are visible simultaneously
 const SELECTION_RING_TUBE = 0.004;
 const SELECTION_RING_OPACITY = 0.7;
+const DIM_NODE_OPACITY = 0.12;
 
 const PULSE_CONFIG: Record<Exclude<TelemetryStreamState, "nominal">, {
   frequency: number;
@@ -26,10 +27,11 @@ interface SatelliteNodeProps {
   color: string;
   streamState: TelemetryStreamState;
   isSelected: boolean;
+  isActive?: boolean;
   onSelect: () => void;
 }
 
-export function SatelliteNode({ data, color, streamState, isSelected, onSelect }: SatelliteNodeProps) {
+export function SatelliteNode({ data, color, streamState, isSelected, isActive = true, onSelect }: SatelliteNodeProps) {
   const [hovered, setHovered] = useState(false);
   const ringRef = useRef<THREE.Mesh>(null);
 
@@ -55,14 +57,14 @@ export function SatelliteNode({ data, color, streamState, isSelected, onSelect }
         <meshStandardMaterial
           color={color}
           emissive={color}
-          emissiveIntensity={isSelected ? 0.9 : hovered ? 0.6 : 0.25}
-          opacity={data.status === "offline" ? 0.45 : 1}
-          transparent={data.status === "offline"}
+          emissiveIntensity={isActive ? (isSelected ? 0.9 : hovered ? 0.6 : 0.25) : 0}
+          opacity={isActive ? (data.status === "offline" ? 0.45 : 1) : DIM_NODE_OPACITY}
+          transparent={!isActive || data.status === "offline"}
         />
       </mesh>
       <mesh rotation={[0, 0, Math.PI / 2]}>
         <boxGeometry args={[0.04, 0.32, 0.08]} />
-        <meshStandardMaterial color={color} opacity={0.7} transparent emissive={color} emissiveIntensity={0.15} />
+        <meshStandardMaterial color={color} opacity={isActive ? 0.7 : DIM_NODE_OPACITY} transparent emissive={color} emissiveIntensity={isActive ? 0.15 : 0} />
       </mesh>
       {isSelected && (
         <mesh>
@@ -70,7 +72,7 @@ export function SatelliteNode({ data, color, streamState, isSelected, onSelect }
           <meshBasicMaterial color="#ffffff" transparent opacity={SELECTION_RING_OPACITY} depthWrite={false} />
         </mesh>
       )}
-      {pulseConfig !== null && (
+      {isActive && pulseConfig !== null && (
         <mesh ref={ringRef}>
           <torusGeometry args={[0.1, 0.006, 6, 32]} />
           <meshBasicMaterial
@@ -81,7 +83,7 @@ export function SatelliteNode({ data, color, streamState, isSelected, onSelect }
           />
         </mesh>
       )}
-      {hovered && (
+      {isActive && hovered && (
         <Html position={[0, 0.25, 0]} center distanceFactor={8}>
           <div className="pointer-events-none flex items-center gap-1.5 whitespace-nowrap rounded border border-border bg-background/90 px-2 py-0.5 text-xs font-semibold text-foreground shadow-md backdrop-blur-sm">
             <span className="inline-block h-1.5 w-1.5 shrink-0 rounded-full" style={{ backgroundColor: color }} />

@@ -98,6 +98,38 @@ This layering is intentional. A satellite can be `status: "online"` while its te
 
 **Known limitation (particles):** When `streamState` transitions, particle positions jump one frame because `progress = (t * speed + offset) % 1` is discontinuous at speed changes. With static mock data this is imperceptible. When real-time streaming arrives, replace `t * speed` with accumulated delta time (`ref += delta * speed` per frame) to avoid the discontinuity.
 
+### 7. Interaction and filtering: `isActive` prop thread
+
+Two complementary interaction modes allow the user to isolate a telemetry path:
+
+**Focus mode (selection-based):** When `selectedSatelliteId` is non-null, unrelated nodes and beams dim automatically. The selected satellite and any ground station linked to it remain at full opacity.
+
+**Stream state filter:** `TelemetryFilterBar` (HTML overlay on the canvas) offers four mutually exclusive states — All / Nominal / Warning / Critical. Satellites not matching the active filter are dimmed. Clicking an already-active filter button deselects it (returns to All).
+
+**`isActive` boolean prop** — all four 3D components (`SatelliteNode`, `GroundStationNode`, `TelemetryBeam`, `FlowParticles`) accept `isActive?: boolean` (default `true`). Each component owns its dim values rather than accepting raw opacity from the parent, so dim appearance is consistent and the parent stays free of visual constants.
+
+**`activeSatIds` computed in `TelemetryTunnelScene`** with `useMemo([satellites, selectedSatelliteId, streamFilter])`:
+
+```
+isActive(sat) = sat.id === selectedSatelliteId
+                || streamFilter === null
+                || classifyStream(sat.telemetry) === streamFilter
+```
+
+Selection supersedes the filter — a selected satellite is always active even when the filter would otherwise exclude it. Ground station active status is derived: a station is active if at least one of its linked satellites is active.
+
+**Dim values:**
+
+| Surface | Active opacity | Inactive opacity |
+|---------|---------------|-----------------|
+| Satellite / station mesh | 1.0 (or 0.45 if offline) | 0.12 |
+| Beam (`TelemetryBeam`) | per `BEAM_CONFIG` | lineWidth 0.5, opacity 0.04 |
+| Particles (`FlowParticles`) | 0.9 | 0.1 |
+
+Inactive beams skip flash animation (no `setInterval`). Inactive nodes suppress pulse rings, ping rings, and hover tooltips to reduce visual noise.
+
+**Filter UI placement:** `TelemetryFilterBar` is an HTML element absolutely positioned over the 3D canvas inside `TelemetryTunnelShell`. It lives outside the Three.js `<canvas>` so it receives native pointer events without R3F event propagation. Filter state (`streamFilter`) is co-located with `selectedSatelliteId` in the Shell.
+
 ## Consequences
 
 - `SatelliteTelemetry` now has 7 fields; all consumers (`MOCK_SATELLITES`, `SelectedSatelliteInfo`, `SatelliteTelemetrySchema`, test fixtures) are updated
