@@ -8,10 +8,12 @@ import {
   MOCK_GROUND_STATIONS,
   TelemetryDetailPanel,
   TelemetryTunnelScene,
+  useTunnelMockTelemetry,
 } from "@/widgets/telemetry-tunnel";
 
 export function TelemetryTunnelShell() {
   const [selectedSatelliteId, setSelectedSatelliteId] = useState<SatelliteId | null>(null);
+  const satellites = useTunnelMockTelemetry(MOCK_SATELLITES);
 
   return (
     <main data-testid="telemetry-tunnel-shell" className="flex h-[calc(100svh-4rem)] w-full overflow-hidden">
@@ -21,7 +23,7 @@ export function TelemetryTunnelShell() {
           onPointerMissed={() => setSelectedSatelliteId(null)}
         >
           <TelemetryTunnelScene
-            satellites={MOCK_SATELLITES}
+            satellites={satellites}
             groundStations={MOCK_GROUND_STATIONS}
             selectedSatelliteId={selectedSatelliteId}
             onSelectSatellite={setSelectedSatelliteId}
@@ -30,7 +32,7 @@ export function TelemetryTunnelShell() {
       </div>
       <TelemetryDetailPanel
         selectedSatelliteId={selectedSatelliteId}
-        satellites={MOCK_SATELLITES}
+        satellites={satellites}
         groundStations={MOCK_GROUND_STATIONS}
       />
     </main>
