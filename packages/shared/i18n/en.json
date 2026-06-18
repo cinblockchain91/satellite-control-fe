@@ -4,6 +4,7 @@
     "dashboard": "Dashboard",
     "digitalTwin": "Digital Twin",
     "telemetryTunnel": "Telemetry Tunnel",
+    "commandCenter": "Command Center",
     "satellites": "Satellites",
     "active": "Active",
     "idle": "Idle",

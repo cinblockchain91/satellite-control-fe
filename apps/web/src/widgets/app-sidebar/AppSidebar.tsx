@@ -29,6 +29,7 @@ import {
   ChevronsUpDown,
   LogOut,
   Globe,
+  Monitor,
   Zap,
 } from "lucide-react";
 import { env } from "@/shared/config/env";
@@ -60,6 +61,9 @@ export function AppSidebar() {
       : []),
     ...(env.featureTelemetryTunnel
       ? [{ title: t("telemetryTunnel"), url: "/telemetry-tunnel", icon: Zap }]
+      : []),
+    ...(env.featureCommandCenter
+      ? [{ title: t("commandCenter"), url: "/command-center", icon: Monitor }]
       : []),
   ];
 

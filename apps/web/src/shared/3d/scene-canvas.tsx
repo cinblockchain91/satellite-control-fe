@@ -6,7 +6,7 @@ import { Suspense } from "react";
 import { SceneLoaderOverlay } from "./scene-loader-overlay";
 
 export interface SceneCanvasProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   className?: string;
   onPointerMissed?: () => void;
 }
