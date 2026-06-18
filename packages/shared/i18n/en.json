@@ -149,7 +149,10 @@
     },
     "cameraPresetLabel": "Camera view",
     "hintNoSelection": "Click a screen to select a satellite",
-    "hintSelected": "{name} selected — click a button to dispatch"
+    "hintSelected": "{name} selected — click a button to dispatch",
+    "demoBadge": "Demo",
+    "autoPilotStart": "Auto Tour",
+    "autoPilotStop": "Stop"
   },
   "auth": {
     "title": "Satellite Control",

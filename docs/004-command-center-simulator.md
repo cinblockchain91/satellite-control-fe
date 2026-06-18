@@ -199,6 +199,32 @@ Text labels also forward pointer events (`onClick`, `onPointerEnter`, `onPointer
 
 The preset switcher `<div>` carries `role="group"` + `aria-label` (i18n key `cameraPresetLabel`). Each `<Button>` carries `aria-pressed={cameraPreset === preset}` so screen readers can identify the active preset.
 
+## v1 feature checklist
+
+Everything below was shipped as part of Milestone 3. Items marked ✓ are live on the demo deployment.
+
+| Feature | Status |
+|---------|--------|
+| Procedural room geometry (floor, walls, ceiling, desks, screen wall) | ✓ |
+| 4 status screens with live telemetry via `<Html>` | ✓ |
+| All 4 satellite statuses visible simultaneously (online / warning / degraded / offline) | ✓ |
+| Satellite selection by clicking a status screen | ✓ |
+| Camera auto-moves to `screens` on satellite select | ✓ |
+| Control panel with 4 command buttons (Hibernate / Wake / Reset / Boost) | ✓ |
+| Button labels rendered via `<Text>` (SDF mesh, within `<Html>` budget) | ✓ |
+| Mock command dispatch: pending → acknowledged (90%) / failed (10%) | ✓ |
+| Pre-seeded command history (4 commands visible on first load) | ✓ |
+| Toast notifications for command lifecycle | ✓ |
+| Cinematic camera preset switcher (Overview / Panels / Screens) | ✓ |
+| Camera auto-moves to `panels` on control panel click | ✓ |
+| Overview preset deselects satellite | ✓ |
+| Demo badge + Auto Tour (cycles camera presets every 5 s) | ✓ |
+| FPS monitor + low-FPS warning badge | ✓ |
+| Interaction hint overlay with `role="status"` + `aria-live="polite"` | ✓ |
+| Camera preset switcher with `role="group"` + `aria-pressed` | ✓ |
+| Full i18n (English + Vietnamese) | ✓ |
+| Feature-flagged behind `NEXT_PUBLIC_FEATURE_COMMAND_CENTER` | ✓ |
+
 ## Deferred items
 
 | # | Item | Status |
