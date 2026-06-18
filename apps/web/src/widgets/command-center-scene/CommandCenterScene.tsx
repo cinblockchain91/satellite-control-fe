@@ -22,7 +22,7 @@ import type { CommandType, MockCommand } from "./command-actions";
 import { WorkStation } from "./WorkStation";
 import { ControlPanel } from "./ControlPanel";
 import { StatusScreen } from "./StatusScreen";
-import type { SatelliteId } from "@satellite-control/entity-satellite";
+import type { Satellite, SatelliteId } from "@satellite-control/entity-satellite";
 
 export interface CommandCenterSceneHandle {
   resetView: () => void;
@@ -34,10 +34,12 @@ interface CommandCenterSceneProps {
   selectedSatelliteId: SatelliteId | null;
   onDispatch: (type: CommandType) => void;
   commands: MockCommand[];
+  satellites: Satellite[];
+  onSelectSatellite: (id: SatelliteId) => void;
 }
 
 export const CommandCenterScene = forwardRef<CommandCenterSceneHandle, CommandCenterSceneProps>(
-  function CommandCenterScene({ cameraPreset, onLowFps, selectedSatelliteId, onDispatch, commands }, ref) {
+  function CommandCenterScene({ cameraPreset, onLowFps, selectedSatelliteId, onDispatch, commands, satellites, onSelectSatellite }, ref) {
     const controlsRef = useRef<React.ComponentRef<typeof CameraControls>>(null);
     const isMountedRef = useRef(false);
 
@@ -84,9 +86,18 @@ export const CommandCenterScene = forwardRef<CommandCenterSceneHandle, CommandCe
           commands={commands}
         />
 
-        {SCREEN_CONFIGS.map((cfg, i) => (
-          <StatusScreen key={i} position={cfg.position} />
-        ))}
+        {SCREEN_CONFIGS.map((cfg, i) => {
+          const sat = satellites[i];
+          return (
+            <StatusScreen
+              key={i}
+              position={cfg.position}
+              satellite={sat}
+              isSelected={sat !== undefined && sat.id === selectedSatelliteId}
+              onSelect={() => { if (sat !== undefined) onSelectSatellite(sat.id); }}
+            />
+          );
+        })}
 
         <CameraControls
           ref={controlsRef}
