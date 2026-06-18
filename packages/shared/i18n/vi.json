@@ -88,7 +88,13 @@
     },
     "filter": {
       "all": "Tất cả"
-    }
+    },
+    "demoBadge": "Demo",
+    "autoPilotStart": "Tự động",
+    "autoPilotStop": "Dừng",
+    "lowFpsWarning": "Tốc độ khung hình thấp",
+    "cameraHint": "Kéo để xoay · Cuộn để thu phóng",
+    "cameraReset": "Đặt lại góc nhìn"
   },
   "digitalTwin": {
     "title": "Bản sao số",

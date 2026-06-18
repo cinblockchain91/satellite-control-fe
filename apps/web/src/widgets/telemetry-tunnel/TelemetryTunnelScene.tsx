@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef } from "react";
 import { CameraControls, Stars } from "@react-three/drei";
 import type { Satellite, SatelliteId, SatelliteStatus } from "@satellite-control/entity-satellite";
-import { Earth } from "@/shared/3d";
+import { Earth, PerformanceMonitor } from "@/shared/3d";
 import { GroundStationNode } from "./GroundStationNode";
 import { SatelliteNode } from "./SatelliteNode";
 import { TelemetryBeam } from "./TelemetryBeam";
@@ -22,114 +22,127 @@ const SAT_STATUS_COLORS: Record<SatelliteStatus, string> = {
   offline: "#ef4444",
 };
 
+export interface TelemetryTunnelSceneHandle {
+  resetView: () => void;
+}
+
 interface TelemetryTunnelSceneProps {
   satellites: Satellite[];
   groundStations: GroundStation[];
   selectedSatelliteId: SatelliteId | null;
   onSelectSatellite: (id: SatelliteId | null) => void;
+  onLowFps: (isLow: boolean) => void;
   streamFilter: TelemetryStreamState | null;
 }
 
-export function TelemetryTunnelScene({
-  satellites,
-  groundStations,
-  selectedSatelliteId,
-  onSelectSatellite,
-  streamFilter,
-}: TelemetryTunnelSceneProps) {
-  const controlsRef = useRef<React.ComponentRef<typeof CameraControls>>(null);
+export const TelemetryTunnelScene = forwardRef<TelemetryTunnelSceneHandle, TelemetryTunnelSceneProps>(
+  function TelemetryTunnelScene(
+    { satellites, groundStations, selectedSatelliteId, onSelectSatellite, onLowFps, streamFilter },
+    ref,
+  ) {
+    const controlsRef = useRef<React.ComponentRef<typeof CameraControls>>(null);
 
-  const activeSatIds = useMemo(() => {
-    const ids = new Set<string>();
-    for (const sat of satellites) {
-      if (
-        sat.id === selectedSatelliteId ||
-        streamFilter === null ||
-        classifyStream(sat.telemetry) === streamFilter
-      ) {
-        ids.add(sat.id as string);
+    useImperativeHandle(ref, () => ({
+      resetView() {
+        const [cx, cy, cz] = TUNNEL_CAMERA_POSITION;
+        void controlsRef.current?.setLookAt(cx, cy, cz, 0, 0, 0, true);
+      },
+    }), []);
+
+    const activeSatIds = useMemo(() => {
+      const ids = new Set<string>();
+      for (const sat of satellites) {
+        if (
+          sat.id === selectedSatelliteId ||
+          streamFilter === null ||
+          classifyStream(sat.telemetry) === streamFilter
+        ) {
+          ids.add(sat.id as string);
+        }
       }
-    }
-    return ids;
-  }, [satellites, selectedSatelliteId, streamFilter]);
+      return ids;
+    }, [satellites, selectedSatelliteId, streamFilter]);
 
-  useEffect(() => {
-    const [cx, cy, cz] = TUNNEL_CAMERA_POSITION;
-    void controlsRef.current?.setLookAt(cx, cy, cz, 0, 0, 0, false);
-  }, []);
+    useEffect(() => {
+      const [cx, cy, cz] = TUNNEL_CAMERA_POSITION;
+      void controlsRef.current?.setLookAt(cx, cy, cz, 0, 0, 0, false);
+    }, []);
 
-  return (
-    <>
-      <color attach="background" args={["#080c14"]} />
+    return (
+      <>
+        <color attach="background" args={["#080c14"]} />
 
-      <ambientLight intensity={0.3} />
-      <directionalLight position={[5, 5, 5]} intensity={2} color="#fff8e7" />
+        <ambientLight intensity={0.3} />
+        <directionalLight position={[5, 5, 5]} intensity={2} color="#fff8e7" />
 
-      <Stars radius={200} depth={60} count={4000} factor={4} fade />
+        <Stars radius={200} depth={60} count={4000} factor={4} fade />
 
-      <group onClick={(e) => { e.stopPropagation(); onSelectSatellite(null); }}>
-        <Earth />
-      </group>
+        <PerformanceMonitor onLowFps={onLowFps} />
 
-      {satellites.map((sat) => (
-        <SatelliteNode
-          key={sat.id}
-          data={sat}
-          color={SAT_STATUS_COLORS[sat.status]}
-          streamState={classifyStream(sat.telemetry)}
-          isSelected={selectedSatelliteId === sat.id}
-          isActive={activeSatIds.has(sat.id as string)}
-          onSelect={() => onSelectSatellite(sat.id)}
+        <group onClick={(e) => { e.stopPropagation(); onSelectSatellite(null); }}>
+          <Earth />
+        </group>
+
+        {satellites.map((sat) => (
+          <SatelliteNode
+            key={sat.id}
+            data={sat}
+            color={SAT_STATUS_COLORS[sat.status]}
+            streamState={classifyStream(sat.telemetry)}
+            isSelected={selectedSatelliteId === sat.id}
+            isActive={activeSatIds.has(sat.id as string)}
+            onSelect={() => onSelectSatellite(sat.id)}
+          />
+        ))}
+
+        {groundStations.map((gs) => (
+          <GroundStationNode
+            key={gs.id}
+            data={gs}
+            color={GROUND_STATION_COLORS[gs.status]}
+            isActive={gs.linkedSatelliteIds.some((id) => activeSatIds.has(id))}
+          />
+        ))}
+
+        {groundStations.flatMap((gs) =>
+          gs.linkedSatelliteIds.map((satId) => {
+            const sat = satellites.find((s) => s.id === satId);
+            if (!sat) return null;
+            const isOffline = sat.status === "offline";
+            const streamState = classifyStream(sat.telemetry);
+            const isActive = activeSatIds.has(satId);
+            return (
+              <group
+                key={`${satId}-${gs.id}`}
+                onClick={(e) => { e.stopPropagation(); onSelectSatellite(sat.id); }}
+              >
+                <TelemetryBeam
+                  from={sat.position}
+                  to={gs.position}
+                  color={SAT_STATUS_COLORS[sat.status]}
+                  streamState={streamState}
+                  isOffline={isOffline}
+                  isActive={isActive}
+                />
+                <FlowParticles
+                  from={sat.position}
+                  to={gs.position}
+                  streamState={streamState}
+                  isOffline={isOffline}
+                  isActive={isActive}
+                />
+              </group>
+            );
+          }),
+        )}
+
+        <CameraControls
+          ref={controlsRef}
+          minDistance={0.5}
+          maxDistance={20}
+          dampingFactor={0.05}
         />
-      ))}
-
-      {groundStations.map((gs) => (
-        <GroundStationNode
-          key={gs.id}
-          data={gs}
-          color={GROUND_STATION_COLORS[gs.status]}
-          isActive={gs.linkedSatelliteIds.some((id) => activeSatIds.has(id))}
-        />
-      ))}
-
-      {groundStations.flatMap((gs) =>
-        gs.linkedSatelliteIds.map((satId) => {
-          const sat = satellites.find((s) => s.id === satId);
-          if (!sat) return null;
-          const isOffline = sat.status === "offline";
-          const streamState = classifyStream(sat.telemetry);
-          const isActive = activeSatIds.has(satId);
-          return (
-            <group
-              key={`${satId}-${gs.id}`}
-              onClick={(e) => { e.stopPropagation(); onSelectSatellite(sat.id); }}
-            >
-              <TelemetryBeam
-                from={sat.position}
-                to={gs.position}
-                color={SAT_STATUS_COLORS[sat.status]}
-                streamState={streamState}
-                isOffline={isOffline}
-                isActive={isActive}
-              />
-              <FlowParticles
-                from={sat.position}
-                to={gs.position}
-                streamState={streamState}
-                isOffline={isOffline}
-                isActive={isActive}
-              />
-            </group>
-          );
-        }),
-      )}
-
-      <CameraControls
-        ref={controlsRef}
-        minDistance={0.5}
-        maxDistance={20}
-        dampingFactor={0.05}
-      />
-    </>
-  );
-}
+      </>
+    );
+  },
+);

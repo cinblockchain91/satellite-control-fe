@@ -130,6 +130,20 @@ Inactive beams skip flash animation (no `setInterval`). Inactive nodes suppress 
 
 **Filter UI placement:** `TelemetryFilterBar` is an HTML element absolutely positioned over the 3D canvas inside `TelemetryTunnelShell`. It lives outside the Three.js `<canvas>` so it receives native pointer events without R3F event propagation. Filter state (`streamFilter`) is co-located with `selectedSatelliteId` in the Shell.
 
+### 8. Demo experience: auto-pilot, FPS monitor, and camera reset
+
+`TelemetryTunnelShell` adds four demo-readiness features mirroring the Digital Twin shell pattern:
+
+**Auto-pilot:** A `setInterval` cycles through all mock satellite IDs every 5 seconds when active. Starting auto-pilot clears the active stream filter (`setStreamFilter(null)`) so all satellites are visible during the tour. Any manual click or camera reset stops auto-pilot.
+
+**FPS monitor:** `PerformanceMonitor` from `@/shared/3d` renders inside the scene. It samples 60 frames and requires 3 sustained ticks below 30 FPS before emitting `onLowFps(true)`. The yellow warning badge appears top-right of the canvas and recovers automatically.
+
+**Camera reset:** `TelemetryTunnelScene` is wrapped in `forwardRef`, exposing `TelemetryTunnelSceneHandle.resetView()` via `useImperativeHandle`. `resetView` calls `setLookAt` with `animate=true` for a smooth transition back to the default position. `handleCameraReset` in the Shell calls `resetView()`, clears selection, and stops auto-pilot.
+
+**Overlay layout:** The top-left overlay becomes a `flex-col gap-2` container — demo badge + auto-pilot button row on top, `TelemetryFilterBar` below. The bottom-center shows a camera hint and reset button inline.
+
+**`PerformanceMonitor` extraction:** The component is moved to `@/shared/3d` so both `TelemetryTunnelScene` and `MissionControlScene` can use it without a widget-to-widget import. `mission-control-scene/PerformanceMonitor.tsx` becomes a one-line re-export shim so `MissionControlScene.tsx`'s existing import path is unchanged.
+
 ## Consequences
 
 - `SatelliteTelemetry` now has 7 fields; all consumers (`MOCK_SATELLITES`, `SelectedSatelliteInfo`, `SatelliteTelemetrySchema`, test fixtures) are updated
@@ -150,3 +164,4 @@ Inactive beams skip flash animation (no `setInterval`). Inactive nodes suppress 
 | 5 | Per-metric breakdown in sidebar panel | Requires UX spec |
 | 6 | `useLiveTelemetry` drift simulation for `latency` and `anomalyLevel` | Done (Issue 8) |
 | 7 | Fleet-level aggregates for new metrics in `buildSnapshot` | After tunnel scene lands |
+| 8 | Demo experience: auto-pilot, FPS monitor, camera reset | Done (Issue 10) |
