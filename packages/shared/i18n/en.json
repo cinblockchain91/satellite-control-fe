@@ -147,7 +147,9 @@
       "panels":   "Panels",
       "screens":  "Screens"
     },
-    "cameraPresetLabel": "Camera view"
+    "cameraPresetLabel": "Camera view",
+    "hintNoSelection": "Click a screen to select a satellite",
+    "hintSelected": "{name} selected — click a button to dispatch"
   },
   "auth": {
     "title": "Satellite Control",

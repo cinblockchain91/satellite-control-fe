@@ -19,6 +19,9 @@ export function CommandCenterShell() {
   // Swap point: replace useMockCommandDispatch with a real dispatch hook when backend is ready
   const { commands, dispatch } = useMockCommandDispatch();
   const satellites = useTunnelMockTelemetry(MOCK_SATELLITES);
+  const selectedSatName = selectedSatelliteId !== null
+    ? satellites.find((s) => s.id === selectedSatelliteId)?.name ?? String(selectedSatelliteId)
+    : null;
 
   function handleSelectSatellite(id: SatelliteId) {
     setSelectedSatelliteId(id);
@@ -66,6 +69,12 @@ export function CommandCenterShell() {
             {t("lowFpsWarning")}
           </div>
         )}
+
+        <p role="status" aria-live="polite" className="pointer-events-none absolute bottom-4 left-4 text-xs text-white/40">
+          {selectedSatName === null
+            ? t("hintNoSelection")
+            : t("hintSelected", { name: selectedSatName })}
+        </p>
 
         <div
           role="group"
