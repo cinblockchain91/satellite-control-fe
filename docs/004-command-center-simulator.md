@@ -187,6 +187,14 @@ This state lives entirely in `CommandCenterShell` (`cameraPreset` + `selectedSat
 
 `useMockCommandDispatch` initialises with 4 settled commands (3 acknowledged + 1 failed) spread 30 s apart. This ensures the command history panel is never empty on first load, making the demo immediately readable without the user having to dispatch any commands first.
 
+### Button labels use `<Text>` (drei), not `<Html>`
+
+The `<Html>` budget was fully allocated (4 instances — one per status screen). Adding button labels via `<Html>` would exceed the budget and degrade performance.
+
+`<Text>` from drei renders text as SDF mesh geometry via troika-three-text. It is part of the normal R3F scene tree (not a DOM portal), so React context propagation is unaffected — `useTranslations` works inside `ControlPanel` without the workaround required by `<Html>`. Font is fetched asynchronously on first render; labels are invisible for ~100–500 ms until the font loads.
+
+Text labels also forward pointer events (`onClick`, `onPointerEnter`, `onPointerLeave`) to maintain the same interaction surface as the underlying button mesh.
+
 ### Camera preset switcher accessibility
 
 The preset switcher `<div>` carries `role="group"` + `aria-label` (i18n key `cameraPresetLabel`). Each `<Button>` carries `aria-pressed={cameraPreset === preset}` so screen readers can identify the active preset.
