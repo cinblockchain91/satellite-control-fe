@@ -15,16 +15,8 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarMenuSubButton,
-  SidebarMenuSubItem,
   SidebarRail,
 } from "@/shared/components/ui/sidebar";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/shared/components/ui/collapsible";
 import { Avatar, AvatarFallback } from "@/shared/components/ui/avatar";
 import {
   DropdownMenu,
@@ -34,16 +26,10 @@ import {
 } from "@/shared/components/ui/dropdown-menu";
 import {
   LayoutDashboard,
-  Satellite,
-  Activity,
-  Terminal,
-  Settings,
-  ChevronRight,
   ChevronsUpDown,
   LogOut,
-  CalendarDays,
-  Radio,
   Globe,
+  Zap,
 } from "lucide-react";
 import { env } from "@/shared/config/env";
 
@@ -72,25 +58,9 @@ export function AppSidebar() {
     ...(env.featureDigitalTwin
       ? [{ title: t("digitalTwin"), url: "/digital-twin", icon: Globe }]
       : []),
-  ];
-
-  const satellitesSubNav = [
-    { title: t("active"), url: "/dashboard/satellites/active", icon: Radio },
-    { title: t("idle"), url: "/dashboard/satellites/idle", icon: Satellite },
-    {
-      title: t("schedule"),
-      url: "/dashboard/satellites/schedule",
-      icon: CalendarDays,
-    },
-  ];
-
-  const operationsNav = [
-    { title: t("telemetry"), url: "/dashboard/telemetry", icon: Activity },
-    { title: t("commands"), url: "/dashboard/commands", icon: Terminal },
-  ];
-
-  const systemNav = [
-    { title: t("settings"), url: "/dashboard/settings", icon: Settings },
+    ...(env.featureTelemetryTunnel
+      ? [{ title: t("telemetryTunnel"), url: "/telemetry-tunnel", icon: Zap }]
+      : []),
   ];
 
   return (
@@ -116,91 +86,11 @@ export function AppSidebar() {
       </SidebarHeader>
 
       <SidebarContent>
-        {/* Platform */}
         <SidebarGroup>
           <SidebarGroupLabel>{t("platform")}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {platformNav.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton
-                    asChild
-                    isActive={pathname === item.url}
-                    tooltip={item.title}
-                  >
-                    <Link href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-
-              {/* Satellites collapsible */}
-              <Collapsible
-                defaultOpen={pathname.startsWith("/dashboard/satellites")}
-                className="group/collapsible"
-              >
-                <SidebarMenuItem>
-                  <CollapsibleTrigger asChild>
-                    <SidebarMenuButton tooltip={t("satellites")}>
-                      <Satellite />
-                      <span>{t("satellites")}</span>
-                      <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-                    </SidebarMenuButton>
-                  </CollapsibleTrigger>
-                  <CollapsibleContent>
-                    <SidebarMenuSub>
-                      {satellitesSubNav.map((sub) => (
-                        <SidebarMenuSubItem key={sub.title}>
-                          <SidebarMenuSubButton
-                            asChild
-                            isActive={pathname === sub.url}
-                          >
-                            <Link href={sub.url}>
-                              <sub.icon />
-                              <span>{sub.title}</span>
-                            </Link>
-                          </SidebarMenuSubButton>
-                        </SidebarMenuSubItem>
-                      ))}
-                    </SidebarMenuSub>
-                  </CollapsibleContent>
-                </SidebarMenuItem>
-              </Collapsible>
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-
-        {/* Operations */}
-        <SidebarGroup>
-          <SidebarGroupLabel>{t("operations")}</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {operationsNav.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton
-                    asChild
-                    isActive={pathname === item.url}
-                    tooltip={item.title}
-                  >
-                    <Link href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-
-        {/* System */}
-        <SidebarGroup>
-          <SidebarGroupLabel>{t("system")}</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {systemNav.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
                     asChild

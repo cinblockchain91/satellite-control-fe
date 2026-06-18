@@ -6,6 +6,8 @@ export const SatelliteTelemetrySchema = z.object({
   temperature: z.number().min(-100).max(200),
   altitude: z.number().min(0),
   healthScore: z.number().min(0).max(100),
+  latency: z.number().min(0),
+  anomalyLevel: z.number().min(0).max(100),
 });
 
 export const SatelliteOrbitSchema = z.object({

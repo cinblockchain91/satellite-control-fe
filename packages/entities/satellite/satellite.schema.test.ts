@@ -7,6 +7,8 @@ const validTelemetry = {
   temperature: 22,
   altitude: 550,
   healthScore: 88,
+  latency: 45,
+  anomalyLevel: 5,
 };
 
 const validOrbit = {
@@ -64,6 +66,30 @@ describe("SatelliteTelemetrySchema", () => {
   it("altitude không được âm", () => {
     expect(
       SatelliteTelemetrySchema.safeParse({ ...validTelemetry, altitude: -1 }).success,
+    ).toBe(false);
+  });
+
+  it("latency không được âm", () => {
+    expect(
+      SatelliteTelemetrySchema.safeParse({ ...validTelemetry, latency: -1 }).success,
+    ).toBe(false);
+  });
+
+  it("latency = 0 hợp lệ (offline satellite)", () => {
+    expect(
+      SatelliteTelemetrySchema.safeParse({ ...validTelemetry, latency: 0 }).success,
+    ).toBe(true);
+  });
+
+  it("anomalyLevel không được vượt quá 100", () => {
+    expect(
+      SatelliteTelemetrySchema.safeParse({ ...validTelemetry, anomalyLevel: 101 }).success,
+    ).toBe(false);
+  });
+
+  it("anomalyLevel không được nhỏ hơn 0", () => {
+    expect(
+      SatelliteTelemetrySchema.safeParse({ ...validTelemetry, anomalyLevel: -1 }).success,
     ).toBe(false);
   });
 });

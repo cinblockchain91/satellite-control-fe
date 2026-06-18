@@ -3,6 +3,7 @@
     "platform": "Nền tảng",
     "dashboard": "Bảng điều khiển",
     "digitalTwin": "Bản sao số",
+    "telemetryTunnel": "Đường hầm đo từ xa",
     "satellites": "Vệ tinh",
     "active": "Đang hoạt động",
     "idle": "Chờ",
@@ -53,6 +54,47 @@
       "degraded": "Suy giảm",
       "offline": "Ngoại tuyến"
     }
+  },
+  "tunnelPanel": {
+    "emptyState": "Nhấn vào vệ tinh hoặc luồng dữ liệu để xem chi tiết đo từ xa.",
+    "stream": "Luồng",
+    "metricsSection": "Chỉ số đo từ xa",
+    "groundStationsSection": "Trạm mặt đất",
+    "noLinkedStations": "Không có trạm mặt đất liên kết.",
+    "metrics": {
+      "signalStrength": "Cường độ tín hiệu",
+      "battery": "Pin",
+      "temperature": "Nhiệt độ",
+      "latency": "Độ trễ",
+      "anomalyLevel": "Mức bất thường",
+      "healthScore": "Điểm sức khỏe",
+      "altitude": "Độ cao"
+    },
+    "streamState": {
+      "nominal": "Bình thường",
+      "warning": "Cảnh báo",
+      "critical": "Nghiêm trọng"
+    },
+    "gsStatus": {
+      "active": "Hoạt động",
+      "standby": "Chờ",
+      "offline": "Ngoại tuyến"
+    },
+    "satStatus": {
+      "online": "Trực tuyến",
+      "warning": "Cảnh báo",
+      "degraded": "Suy giảm",
+      "offline": "Ngoại tuyến"
+    },
+    "filter": {
+      "all": "Tất cả"
+    },
+    "demoBadge": "Demo",
+    "autoPilotStart": "Tự động",
+    "autoPilotStop": "Dừng",
+    "lowFpsWarning": "Tốc độ khung hình thấp",
+    "cameraHint": "Kéo để xoay · Cuộn để thu phóng",
+    "cameraReset": "Đặt lại góc nhìn"
   },
   "digitalTwin": {
     "title": "Bản sao số",

@@ -3,6 +3,7 @@
     "platform": "Platform",
     "dashboard": "Dashboard",
     "digitalTwin": "Digital Twin",
+    "telemetryTunnel": "Telemetry Tunnel",
     "satellites": "Satellites",
     "active": "Active",
     "idle": "Idle",
@@ -53,6 +54,47 @@
       "degraded": "Degraded",
       "offline": "Offline"
     }
+  },
+  "tunnelPanel": {
+    "emptyState": "Click a satellite or flow path to inspect telemetry details.",
+    "stream": "Stream",
+    "metricsSection": "Telemetry Metrics",
+    "groundStationsSection": "Ground Stations",
+    "noLinkedStations": "No linked ground stations.",
+    "metrics": {
+      "signalStrength": "Signal Strength",
+      "battery": "Battery",
+      "temperature": "Temperature",
+      "latency": "Latency",
+      "anomalyLevel": "Anomaly Level",
+      "healthScore": "Health Score",
+      "altitude": "Altitude"
+    },
+    "streamState": {
+      "nominal": "Nominal",
+      "warning": "Warning",
+      "critical": "Critical"
+    },
+    "gsStatus": {
+      "active": "Active",
+      "standby": "Standby",
+      "offline": "Offline"
+    },
+    "satStatus": {
+      "online": "Online",
+      "warning": "Warning",
+      "degraded": "Degraded",
+      "offline": "Offline"
+    },
+    "filter": {
+      "all": "All"
+    },
+    "demoBadge": "Demo",
+    "autoPilotStart": "Auto Pilot",
+    "autoPilotStop": "Stop",
+    "lowFpsWarning": "Low frame rate detected",
+    "cameraHint": "Drag to rotate · Scroll to zoom",
+    "cameraReset": "Reset view"
   },
   "digitalTwin": {
     "title": "Digital Twin",
