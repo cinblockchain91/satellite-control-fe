@@ -1,16 +1,41 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Html } from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
+import * as THREE from "three";
 import type { Satellite } from "@satellite-control/entity-satellite";
+import type { TelemetryStreamState } from "./telemetry-stream";
+
+const PULSE_CONFIG: Record<Exclude<TelemetryStreamState, "nominal">, {
+  frequency: number;
+  maxScale: number;
+  maxOpacity: number;
+  color: string;
+}> = {
+  warning:  { frequency: 1.0, maxScale: 2.0, maxOpacity: 0.50, color: "#fbbf24" },
+  critical: { frequency: 2.5, maxScale: 2.8, maxOpacity: 0.85, color: "#f87171" },
+};
 
 interface SatelliteNodeProps {
   data: Satellite;
   color: string;
+  streamState: TelemetryStreamState;
 }
 
-export function SatelliteNode({ data, color }: SatelliteNodeProps) {
+export function SatelliteNode({ data, color, streamState }: SatelliteNodeProps) {
   const [hovered, setHovered] = useState(false);
+  const ringRef = useRef<THREE.Mesh>(null);
+
+  const pulseConfig = streamState === "nominal" ? null : PULSE_CONFIG[streamState];
+
+  useFrame((state) => {
+    if (!ringRef.current || !pulseConfig) return;
+    const progress = (state.clock.elapsedTime * pulseConfig.frequency) % 1;
+    ringRef.current.scale.setScalar(1.0 + (pulseConfig.maxScale - 1.0) * progress);
+    (ringRef.current.material as THREE.MeshBasicMaterial).opacity =
+      pulseConfig.maxOpacity * (1 - progress);
+  });
 
   return (
     <group
@@ -32,6 +57,17 @@ export function SatelliteNode({ data, color }: SatelliteNodeProps) {
         <boxGeometry args={[0.04, 0.32, 0.08]} />
         <meshStandardMaterial color={color} opacity={0.7} transparent emissive={color} emissiveIntensity={0.15} />
       </mesh>
+      {pulseConfig !== null && (
+        <mesh ref={ringRef}>
+          <torusGeometry args={[0.1, 0.006, 6, 32]} />
+          <meshBasicMaterial
+            color={pulseConfig.color}
+            transparent
+            opacity={pulseConfig.maxOpacity}
+            depthWrite={false}
+          />
+        </mesh>
+      )}
       {hovered && (
         <Html position={[0, 0.25, 0]} center distanceFactor={8}>
           <div className="pointer-events-none flex items-center gap-1.5 whitespace-nowrap rounded border border-border bg-background/90 px-2 py-0.5 text-xs font-semibold text-foreground shadow-md backdrop-blur-sm">

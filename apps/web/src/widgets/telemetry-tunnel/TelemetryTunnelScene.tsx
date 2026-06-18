@@ -50,6 +50,7 @@ export function TelemetryTunnelScene({ satellites, groundStations }: TelemetryTu
           key={sat.id}
           data={sat}
           color={SAT_STATUS_COLORS[sat.status]}
+          streamState={classifyStream(sat.telemetry)}
         />
       ))}
 
