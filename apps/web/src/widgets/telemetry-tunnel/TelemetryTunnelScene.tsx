@@ -10,6 +10,7 @@ import { TelemetryBeam } from "./TelemetryBeam";
 import { FlowParticles } from "./FlowParticles";
 import type { GroundStation } from "./ground-stations.data";
 import { GROUND_STATION_COLORS } from "./ground-stations.data";
+import { classifyStream } from "./telemetry-stream";
 
 const TUNNEL_CAMERA_POSITION = [2, 3, 5] as const;
 
@@ -65,6 +66,7 @@ export function TelemetryTunnelScene({ satellites, groundStations }: TelemetryTu
           const sat = satellites.find((s) => s.id === satId);
           if (!sat) return null;
           const isOffline = sat.status === "offline";
+          const streamState = classifyStream(sat.telemetry);
           return (
             <group key={`${satId}-${gs.id}`}>
               <TelemetryBeam
@@ -76,6 +78,7 @@ export function TelemetryTunnelScene({ satellites, groundStations }: TelemetryTu
               <FlowParticles
                 from={sat.position}
                 to={gs.position}
+                streamState={streamState}
                 isOffline={isOffline}
               />
             </group>
