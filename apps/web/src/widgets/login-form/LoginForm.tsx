@@ -33,9 +33,18 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
     console.log("USE_MOCK        ", process.env.NEXT_PUBLIC_USE_MOCK);
     console.log("API_URL         ", process.env.NEXT_PUBLIC_API_URL);
     console.log("WS_URL          ", process.env.NEXT_PUBLIC_WS_URL);
-    console.log("FEATURE_COMMAND_CENTER  ", process.env.NEXT_PUBLIC_FEATURE_COMMAND_CENTER);
-    console.log("FEATURE_TELEMETRY_TUNNEL", process.env.NEXT_PUBLIC_FEATURE_TELEMETRY_TUNNEL);
-    console.log("FEATURE_DIGITAL_TWIN    ", process.env.NEXT_PUBLIC_FEATURE_DIGITAL_TWIN);
+    console.log(
+      "1FEATURE_COMMAND_CENTER  ",
+      process.env.NEXT_PUBLIC_FEATURE_COMMAND_CENTER,
+    );
+    console.log(
+      "1FEATURE_TELEMETRY_TUNNEL",
+      process.env.NEXT_PUBLIC_FEATURE_TELEMETRY_TUNNEL,
+    );
+    console.log(
+      "1FEATURE_DIGITAL_TWIN    ",
+      process.env.NEXT_PUBLIC_FEATURE_DIGITAL_TWIN,
+    );
     console.groupEnd();
   }, []);
   const [password, setPassword] = useState("");
