@@ -138,7 +138,7 @@ views/command-center/
 | Resource | Budget | Composition |
 |----------|--------|-------------|
 | Meshes | ≤ 120 | Room (6) + 4 workstations (3 meshes each) + control panel (1 base + 4 buttons) + 4 screens + selection rings |
-| Lights | ≤ 6 | 1 ambient + 1 directional + 4 screen `<pointLight>` |
+| Lights | ≤ 6 | 1 ambient + 1 directional + 4 screen `<pointLight>` — **budget fully allocated after Issue 3; future issues must not add lights without removing others** |
 | `<Html>` | ≤ 4 | One per status screen |
 | FPS target | 60 | Same as other views |
 | Stars | none | Room is indoors — no starfield |
