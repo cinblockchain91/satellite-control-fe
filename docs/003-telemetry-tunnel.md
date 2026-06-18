@@ -68,6 +68,8 @@ Three-band classification mirrors the existing `SystemStatus` type in `telemetry
 
 SAT-Delta is intentionally designed to demonstrate a counterintuitive scenario: a satellite with `status: "online"` and strong signal that nonetheless has a critical anomaly. This is the key reason `anomalyLevel` exists as a separate field from `status`.
 
+**Note:** The stream states above reflect base values at tick 0. `useTunnelMockTelemetry` (Issue 8) drifts `latency` and `anomalyLevel` sinusoidally after mount, so satellites transition between bands during a live demo session.
+
 ### 5. Deferred: ground station entity, 3D beam rendering
 
 This issue defines the data contract only. Ground stations, animated beams, and the tunnel scene are separate issues. The widget directory `widgets/telemetry-tunnel/` is created now to establish the FSD boundary — future components will live alongside `telemetry-stream.ts`.
@@ -103,6 +105,7 @@ This layering is intentional. A satellite can be `status: "online"` while its te
 - `classifyStream` returns worst-case state; if per-metric breakdown is needed in the UI, call `classifyMetric` per field directly
 - When a real backend arrives: add `latency` and `anomalyLevel` to the satellite telemetry API response, run `SatelliteTelemetrySchema.parse()` at the fetch boundary — no other changes needed in the classification logic
 - `telemetry-snapshot.ts` / `useLiveTelemetry` do not yet include `latency` or `anomalyLevel` in fleet averages — this is deferred until the tunnel UI needs fleet-level aggregates for these metrics
+- `useTunnelMockTelemetry` (Issue 8) drifts `latency` and `anomalyLevel` per-satellite using sinusoidal oscillation so the scene shows state transitions during demos. Amplitudes are calibrated to cross classification thresholds (latency > 200 ms for warning; anomalyLevel > 20/50 for warning/critical). Phase offsets (`i * 0.9` for latency, `i * 1.3` for anomaly) stagger satellites so they do not transition simultaneously. When a real backend arrives, replace the hook call in `TelemetryTunnelShell` with a `useQuery` fetch — no changes required in the 3D components.
 
 ## Deferred items
 
@@ -113,5 +116,5 @@ This layering is intentional. A satellite can be `status: "online"` while its te
 | 3 | Flow particle animation — `FlowParticles` with phase-offset particles | Done (Issue 3) |
 | 4 | Metric-based visual emphasis — particle color + speed from `classifyStream` | Done (Issue 4) |
 | 5 | Per-metric breakdown in sidebar panel | Requires UX spec |
-| 6 | `useLiveTelemetry` drift simulation for `latency` and `anomalyLevel` | After tunnel scene lands |
+| 6 | `useLiveTelemetry` drift simulation for `latency` and `anomalyLevel` | Done (Issue 8) |
 | 7 | Fleet-level aggregates for new metrics in `buildSnapshot` | After tunnel scene lands |
