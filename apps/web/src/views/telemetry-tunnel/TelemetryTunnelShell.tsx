@@ -1,20 +1,38 @@
 "use client";
 
+import { useState } from "react";
 import { SceneCanvasLazy } from "@/shared/3d";
 import { MOCK_SATELLITES } from "@/widgets/mission-control-scene";
-import { MOCK_GROUND_STATIONS, TelemetryTunnelScene } from "@/widgets/telemetry-tunnel";
+import type { SatelliteId } from "@satellite-control/entity-satellite";
+import {
+  MOCK_GROUND_STATIONS,
+  TelemetryDetailPanel,
+  TelemetryTunnelScene,
+} from "@/widgets/telemetry-tunnel";
 
 export function TelemetryTunnelShell() {
+  const [selectedSatelliteId, setSelectedSatelliteId] = useState<SatelliteId | null>(null);
+
   return (
     <main data-testid="telemetry-tunnel-shell" className="flex h-[calc(100svh-4rem)] w-full overflow-hidden">
-      <div className="relative flex-1 min-w-0">
-        <SceneCanvasLazy className="h-full w-full">
+      <div className="relative min-w-0 flex-1">
+        <SceneCanvasLazy
+          className="h-full w-full"
+          onPointerMissed={() => setSelectedSatelliteId(null)}
+        >
           <TelemetryTunnelScene
             satellites={MOCK_SATELLITES}
             groundStations={MOCK_GROUND_STATIONS}
+            selectedSatelliteId={selectedSatelliteId}
+            onSelectSatellite={setSelectedSatelliteId}
           />
         </SceneCanvasLazy>
       </div>
+      <TelemetryDetailPanel
+        selectedSatelliteId={selectedSatelliteId}
+        satellites={MOCK_SATELLITES}
+        groundStations={MOCK_GROUND_STATIONS}
+      />
     </main>
   );
 }

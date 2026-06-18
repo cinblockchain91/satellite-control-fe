@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { CameraControls, Stars } from "@react-three/drei";
-import type { Satellite, SatelliteStatus } from "@satellite-control/entity-satellite";
+import type { Satellite, SatelliteId, SatelliteStatus } from "@satellite-control/entity-satellite";
 import { Earth } from "@/shared/3d";
 import { GroundStationNode } from "./GroundStationNode";
 import { SatelliteNode } from "./SatelliteNode";
@@ -24,9 +24,16 @@ const SAT_STATUS_COLORS: Record<SatelliteStatus, string> = {
 interface TelemetryTunnelSceneProps {
   satellites: Satellite[];
   groundStations: GroundStation[];
+  selectedSatelliteId: SatelliteId | null;
+  onSelectSatellite: (id: SatelliteId | null) => void;
 }
 
-export function TelemetryTunnelScene({ satellites, groundStations }: TelemetryTunnelSceneProps) {
+export function TelemetryTunnelScene({
+  satellites,
+  groundStations,
+  selectedSatelliteId,
+  onSelectSatellite,
+}: TelemetryTunnelSceneProps) {
   const controlsRef = useRef<React.ComponentRef<typeof CameraControls>>(null);
 
   useEffect(() => {
@@ -43,7 +50,9 @@ export function TelemetryTunnelScene({ satellites, groundStations }: TelemetryTu
 
       <Stars radius={200} depth={60} count={4000} factor={4} fade />
 
-      <Earth />
+      <group onClick={(e) => { e.stopPropagation(); onSelectSatellite(null); }}>
+        <Earth />
+      </group>
 
       {satellites.map((sat) => (
         <SatelliteNode
@@ -51,6 +60,8 @@ export function TelemetryTunnelScene({ satellites, groundStations }: TelemetryTu
           data={sat}
           color={SAT_STATUS_COLORS[sat.status]}
           streamState={classifyStream(sat.telemetry)}
+          isSelected={selectedSatelliteId === sat.id}
+          onSelect={() => onSelectSatellite(sat.id)}
         />
       ))}
 
@@ -69,7 +80,10 @@ export function TelemetryTunnelScene({ satellites, groundStations }: TelemetryTu
           const isOffline = sat.status === "offline";
           const streamState = classifyStream(sat.telemetry);
           return (
-            <group key={`${satId}-${gs.id}`}>
+            <group
+              key={`${satId}-${gs.id}`}
+              onClick={(e) => { e.stopPropagation(); onSelectSatellite(sat.id); }}
+            >
               <TelemetryBeam
                 from={sat.position}
                 to={gs.position}

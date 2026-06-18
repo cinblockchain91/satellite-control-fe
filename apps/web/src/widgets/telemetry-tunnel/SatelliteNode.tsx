@@ -7,6 +7,10 @@ import * as THREE from "three";
 import type { Satellite } from "@satellite-control/entity-satellite";
 import type { TelemetryStreamState } from "./telemetry-stream";
 
+const SELECTION_RING_RADIUS = 0.14;  // outside the pulse ring (0.1) so both are visible simultaneously
+const SELECTION_RING_TUBE = 0.004;
+const SELECTION_RING_OPACITY = 0.7;
+
 const PULSE_CONFIG: Record<Exclude<TelemetryStreamState, "nominal">, {
   frequency: number;
   maxScale: number;
@@ -21,9 +25,11 @@ interface SatelliteNodeProps {
   data: Satellite;
   color: string;
   streamState: TelemetryStreamState;
+  isSelected: boolean;
+  onSelect: () => void;
 }
 
-export function SatelliteNode({ data, color, streamState }: SatelliteNodeProps) {
+export function SatelliteNode({ data, color, streamState, isSelected, onSelect }: SatelliteNodeProps) {
   const [hovered, setHovered] = useState(false);
   const ringRef = useRef<THREE.Mesh>(null);
 
@@ -40,6 +46,7 @@ export function SatelliteNode({ data, color, streamState }: SatelliteNodeProps) 
   return (
     <group
       position={data.position}
+      onClick={(e) => { e.stopPropagation(); onSelect(); }}
       onPointerOver={(e) => { e.stopPropagation(); setHovered(true); document.body.style.cursor = "pointer"; }}
       onPointerOut={() => { setHovered(false); document.body.style.cursor = "default"; }}
     >
@@ -48,7 +55,7 @@ export function SatelliteNode({ data, color, streamState }: SatelliteNodeProps) 
         <meshStandardMaterial
           color={color}
           emissive={color}
-          emissiveIntensity={hovered ? 0.6 : 0.25}
+          emissiveIntensity={isSelected ? 0.9 : hovered ? 0.6 : 0.25}
           opacity={data.status === "offline" ? 0.45 : 1}
           transparent={data.status === "offline"}
         />
@@ -57,6 +64,12 @@ export function SatelliteNode({ data, color, streamState }: SatelliteNodeProps) 
         <boxGeometry args={[0.04, 0.32, 0.08]} />
         <meshStandardMaterial color={color} opacity={0.7} transparent emissive={color} emissiveIntensity={0.15} />
       </mesh>
+      {isSelected && (
+        <mesh>
+          <torusGeometry args={[SELECTION_RING_RADIUS, SELECTION_RING_TUBE, 6, 32]} />
+          <meshBasicMaterial color="#ffffff" transparent opacity={SELECTION_RING_OPACITY} depthWrite={false} />
+        </mesh>
+      )}
       {pulseConfig !== null && (
         <mesh ref={ringRef}>
           <torusGeometry args={[0.1, 0.006, 6, 32]} />
