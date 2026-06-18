@@ -2,6 +2,7 @@ export type { TelemetryStreamState, TelemetryMetric } from "./telemetry-stream";
 export { METRIC_THRESHOLDS, classifyMetric, classifyStream } from "./telemetry-stream";
 export type { GroundStation, GroundStationStatus } from "./ground-stations.data";
 export { MOCK_GROUND_STATIONS, GROUND_STATION_COLORS } from "./ground-stations.data";
+export type { TelemetryTunnelSceneHandle } from "./TelemetryTunnelScene";
 export { TelemetryTunnelScene } from "./TelemetryTunnelScene";
 export { FlowParticles } from "./FlowParticles";
 export { TelemetryDetailPanel } from "./TelemetryDetailPanel";

@@ -88,7 +88,13 @@
     },
     "filter": {
       "all": "All"
-    }
+    },
+    "demoBadge": "Demo",
+    "autoPilotStart": "Auto Pilot",
+    "autoPilotStop": "Stop",
+    "lowFpsWarning": "Low frame rate detected",
+    "cameraHint": "Drag to rotate · Scroll to zoom",
+    "cameraReset": "Reset view"
   },
   "digitalTwin": {
     "title": "Digital Twin",
