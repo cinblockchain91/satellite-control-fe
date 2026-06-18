@@ -1,5 +1,8 @@
+"use client";
+
 import { useState } from "react";
 import { Html, useCursor } from "@react-three/drei";
+import { useTranslations } from "next-intl";
 import type { Satellite } from "@satellite-control/entity-satellite";
 import { SCREEN_WIDTH, SCREEN_HEIGHT } from "./scene-config";
 import { SatelliteStatusPanel } from "./SatelliteStatusPanel";
@@ -26,6 +29,7 @@ interface StatusScreenProps {
 export function StatusScreen({ position, satellite, isSelected, onSelect }: StatusScreenProps) {
   const [hovered, setHovered] = useState(false);
   useCursor(hovered && satellite !== undefined);
+  const t = useTranslations("commandCenter");
 
   return (
     <group position={position}>
@@ -66,7 +70,16 @@ export function StatusScreen({ position, satellite, isSelected, onSelect }: Stat
           distanceFactor={6}
           position={[0, 0, BEZEL_DEPTH / 2 + 0.01]}
         >
-          <SatelliteStatusPanel satellite={satellite} />
+          <SatelliteStatusPanel
+            satellite={satellite}
+            labels={{
+              signal:      t("screenSignal"),
+              battery:     t("screenBattery"),
+              temp:        t("screenTemp"),
+              health:      t("screenHealth"),
+              statusLabel: t(`status.${satellite.status}`),
+            }}
+          />
         </Html>
       )}
     </group>

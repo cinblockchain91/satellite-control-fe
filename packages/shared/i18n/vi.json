@@ -132,7 +132,16 @@
       "warning": "Cảnh báo",
       "degraded": "Suy giảm",
       "offline": "Ngoại tuyến"
-    }
+    },
+    "commandType": {
+      "hibernate": "Ngủ đông",
+      "wake": "Đánh thức",
+      "reset": "Khởi động lại",
+      "boost": "Tăng tốc"
+    },
+    "commandPending": "{satellite}: {command} đang xử lý…",
+    "commandAcknowledged": "{satellite}: {command} đã xác nhận",
+    "commandFailed": "{satellite}: {command} thất bại"
   },
   "auth": {
     "title": "Satellite Control",
