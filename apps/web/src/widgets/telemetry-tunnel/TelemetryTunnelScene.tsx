@@ -7,6 +7,7 @@ import { Earth } from "@/shared/3d";
 import { GroundStationNode } from "./GroundStationNode";
 import { SatelliteNode } from "./SatelliteNode";
 import { TelemetryBeam } from "./TelemetryBeam";
+import { FlowParticles } from "./FlowParticles";
 import type { GroundStation } from "./ground-stations.data";
 import { GROUND_STATION_COLORS } from "./ground-stations.data";
 
@@ -63,14 +64,21 @@ export function TelemetryTunnelScene({ satellites, groundStations }: TelemetryTu
         gs.linkedSatelliteIds.map((satId) => {
           const sat = satellites.find((s) => s.id === satId);
           if (!sat) return null;
+          const isOffline = sat.status === "offline";
           return (
-            <TelemetryBeam
-              key={`${satId}-${gs.id}`}
-              from={sat.position}
-              to={gs.position}
-              color={SAT_STATUS_COLORS[sat.status]}
-              isOffline={sat.status === "offline"}
-            />
+            <group key={`${satId}-${gs.id}`}>
+              <TelemetryBeam
+                from={sat.position}
+                to={gs.position}
+                color={SAT_STATUS_COLORS[sat.status]}
+                isOffline={isOffline}
+              />
+              <FlowParticles
+                from={sat.position}
+                to={gs.position}
+                isOffline={isOffline}
+              />
+            </group>
           );
         }),
       )}
