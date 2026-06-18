@@ -22,7 +22,8 @@ export function useMockCommandDispatch() {
   const timeoutsRef = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   useEffect(() => {
-    return () => timeoutsRef.current.forEach(clearTimeout);
+    const timeouts = timeoutsRef.current;
+    return () => timeouts.forEach(clearTimeout);
   }, []);
 
   function dispatch(satelliteId: SatelliteId, type: CommandType): Promise<void> {
