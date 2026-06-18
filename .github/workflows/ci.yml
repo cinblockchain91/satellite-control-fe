@@ -104,8 +104,12 @@ jobs:
 
       - name: Set public feature flags
         run: |
-          sed -i '/^NEXT_PUBLIC_FEATURE_DIGITAL_TWIN=/d' .vercel/.env.preview.local
-          echo "NEXT_PUBLIC_FEATURE_DIGITAL_TWIN=true" >> .vercel/.env.preview.local
+          sed -i '/^NEXT_PUBLIC_FEATURE_COMMAND_CENTER=/d'   .vercel/.env.preview.local
+          sed -i '/^NEXT_PUBLIC_FEATURE_TELEMETRY_TUNNEL=/d' .vercel/.env.preview.local
+          sed -i '/^NEXT_PUBLIC_FEATURE_DIGITAL_TWIN=/d'     .vercel/.env.preview.local
+          echo "NEXT_PUBLIC_FEATURE_COMMAND_CENTER=true"   >> .vercel/.env.preview.local
+          echo "NEXT_PUBLIC_FEATURE_TELEMETRY_TUNNEL=true" >> .vercel/.env.preview.local
+          echo "NEXT_PUBLIC_FEATURE_DIGITAL_TWIN=true"     >> .vercel/.env.preview.local
 
       - name: Build workspace packages
         run: pnpm turbo run build --filter=@satellite-control/web^...
@@ -187,8 +191,12 @@ jobs:
 
       - name: Set public feature flags
         run: |
-          sed -i '/^NEXT_PUBLIC_FEATURE_DIGITAL_TWIN=/d' .vercel/.env.production.local
-          echo "NEXT_PUBLIC_FEATURE_DIGITAL_TWIN=true" >> .vercel/.env.production.local
+          sed -i '/^NEXT_PUBLIC_FEATURE_COMMAND_CENTER=/d'   .vercel/.env.production.local
+          sed -i '/^NEXT_PUBLIC_FEATURE_TELEMETRY_TUNNEL=/d' .vercel/.env.production.local
+          sed -i '/^NEXT_PUBLIC_FEATURE_DIGITAL_TWIN=/d'     .vercel/.env.production.local
+          echo "NEXT_PUBLIC_FEATURE_COMMAND_CENTER=true"   >> .vercel/.env.production.local
+          echo "NEXT_PUBLIC_FEATURE_TELEMETRY_TUNNEL=true" >> .vercel/.env.production.local
+          echo "NEXT_PUBLIC_FEATURE_DIGITAL_TWIN=true"     >> .vercel/.env.production.local
 
       - name: Build workspace packages
         run: pnpm turbo run build --filter=@satellite-control/web^...
