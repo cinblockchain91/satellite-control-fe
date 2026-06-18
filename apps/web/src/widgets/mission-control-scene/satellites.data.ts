@@ -40,9 +40,9 @@ export const MOCK_SATELLITES: Satellite[] = [
     id: SatelliteId("sat-4"),
     name: "SAT-Delta",
     position: [2.6, 0, -1.5],
-    status: "online",
+    status: "degraded",
     orbit: { radius: 3.0, inclination: 30, raan: 210, speed: 0.23, initialAngle: Math.PI },
-    telemetry: { signalStrength: 78, battery: 91, temperature: 19, altitude: 560, healthScore: 89, latency: 88, anomalyLevel: 67 },
+    telemetry: { signalStrength: 34, battery: 41, temperature: 48, altitude: 560, healthScore: 35, latency: 180, anomalyLevel: 55 },
   },
   {
     id: SatelliteId("sat-5"),

@@ -16,6 +16,7 @@ export function CommandCenterShell() {
   const [isLowFps, setIsLowFps] = useState(false);
   const [selectedSatelliteId, setSelectedSatelliteId] = useState<SatelliteId | null>(null);
   const t = useTranslations("commandCenter");
+  // Swap point: replace useMockCommandDispatch with a real dispatch hook when backend is ready
   const { commands, dispatch } = useMockCommandDispatch();
   const satellites = useTunnelMockTelemetry(MOCK_SATELLITES);
 
