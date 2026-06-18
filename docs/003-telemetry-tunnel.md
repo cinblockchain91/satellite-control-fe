@@ -72,6 +72,25 @@ SAT-Delta is intentionally designed to demonstrate a counterintuitive scenario: 
 
 This issue defines the data contract only. Ground stations, animated beams, and the tunnel scene are separate issues. The widget directory `widgets/telemetry-tunnel/` is created now to establish the FSD boundary — future components will live alongside `telemetry-stream.ts`.
 
+### 6. Dual-channel visualization: beam vs. particles
+
+Two independent visual channels carry different semantic information:
+
+- **Beam** (`TelemetryBeam`) — colour driven by `SatelliteStatus` (`online / warning / degraded / offline`). Answers: "is the communication link operational?"
+- **Particles** (`FlowParticles`) — colour and speed driven by `TelemetryStreamState` (`nominal / warning / critical`) via `classifyStream(satellite.telemetry)`. Answers: "what is the quality of data flowing through the link?"
+
+This separation is intentional. A satellite can be `status: "online"` while its telemetry stream is `"critical"` — SAT-Delta demonstrates this: strong signal, high anomaly score. Conflating both into a single colour would lose that distinction.
+
+| Stream state | Particle color | Speed (units/s) | Signal |
+|-------------|---------------|----------------|--------|
+| `nominal` | `#7dd3fc` sky-400 | 0.4 | healthy data flow |
+| `warning` | `#fbbf24` amber-400 | 0.8 | degraded metrics |
+| `critical` | `#f87171` red-400 | 1.4 | immediate attention needed |
+
+Speed encodes urgency kinetically — a critical stream pulses faster without the user needing to read any number.
+
+**Known limitation:** When `streamState` transitions, particle positions jump one frame because `progress = (t * speed + offset) % 1` is discontinuous at speed changes. With static mock data this is imperceptible. When real-time streaming arrives, replace `t * speed` with accumulated delta time (`ref += delta * speed` per frame) to avoid the discontinuity.
+
 ## Consequences
 
 - `SatelliteTelemetry` now has 7 fields; all consumers (`MOCK_SATELLITES`, `SelectedSatelliteInfo`, `SatelliteTelemetrySchema`, test fixtures) are updated
@@ -82,10 +101,12 @@ This issue defines the data contract only. Ground stations, animated beams, and 
 
 ## Deferred items
 
-| # | Item | Milestone |
-|---|------|-----------|
-| 1 | Ground station entity — `GroundStation` type, `GroundStationStatus`, mock positions | Next issue |
-| 2 | 3D beam rendering — animated line from satellite to ground station | Next issue |
-| 3 | Per-metric breakdown in sidebar panel | Requires UX spec |
-| 4 | `useLiveTelemetry` drift simulation for `latency` and `anomalyLevel` | After tunnel scene lands |
-| 5 | Fleet-level aggregates for new metrics in `buildSnapshot` | After tunnel scene lands |
+| # | Item | Status |
+|---|------|--------|
+| 1 | Ground station entity — `GroundStation` type, `GroundStationStatus`, mock positions | Done (Issue 2) |
+| 2 | 3D beam rendering — animated line from satellite to ground station | Done (Issue 2) |
+| 3 | Flow particle animation — `FlowParticles` with phase-offset particles | Done (Issue 3) |
+| 4 | Metric-based visual emphasis — particle color + speed from `classifyStream` | Done (Issue 4) |
+| 5 | Per-metric breakdown in sidebar panel | Requires UX spec |
+| 6 | `useLiveTelemetry` drift simulation for `latency` and `anomalyLevel` | After tunnel scene lands |
+| 7 | Fleet-level aggregates for new metrics in `buildSnapshot` | After tunnel scene lands |
