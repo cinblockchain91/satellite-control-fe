@@ -102,11 +102,6 @@ jobs:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
-      - name: Set public feature flags
-        run: |
-          sed -i '/^NEXT_PUBLIC_FEATURE_DIGITAL_TWIN=/d' .vercel/.env.preview.local
-          echo "NEXT_PUBLIC_FEATURE_DIGITAL_TWIN=true" >> .vercel/.env.preview.local
-
       - name: Build workspace packages
         run: pnpm turbo run build --filter=@satellite-control/web^...
 
@@ -184,11 +179,6 @@ jobs:
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-
-      - name: Set public feature flags
-        run: |
-          sed -i '/^NEXT_PUBLIC_FEATURE_DIGITAL_TWIN=/d' .vercel/.env.production.local
-          echo "NEXT_PUBLIC_FEATURE_DIGITAL_TWIN=true" >> .vercel/.env.production.local
 
       - name: Build workspace packages
         run: pnpm turbo run build --filter=@satellite-control/web^...

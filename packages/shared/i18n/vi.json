@@ -4,6 +4,7 @@
     "dashboard": "Bảng điều khiển",
     "digitalTwin": "Bản sao số",
     "telemetryTunnel": "Đường hầm đo từ xa",
+    "commandCenter": "Trung tâm điều khiển",
     "satellites": "Vệ tinh",
     "active": "Đang hoạt động",
     "idle": "Chờ",
@@ -119,6 +120,34 @@
       "conjunctionRisk": "Nguy cơ va chạm",
       "signalLost": "Mất tín hiệu (ngoại tuyến)"
     }
+  },
+  "commandCenter": {
+    "lowFpsWarning": "Tốc độ khung hình thấp",
+    "screenSignal": "Tín hiệu",
+    "screenBattery": "Pin",
+    "screenTemp": "Nhiệt độ",
+    "screenHealth": "Sức khỏe",
+    "status": {
+      "online": "Trực tuyến",
+      "warning": "Cảnh báo",
+      "degraded": "Suy giảm",
+      "offline": "Ngoại tuyến"
+    },
+    "commandType": {
+      "hibernate": "Ngủ đông",
+      "wake": "Đánh thức",
+      "reset": "Khởi động lại",
+      "boost": "Tăng tốc"
+    },
+    "commandPending": "{satellite}: {command} đang xử lý…",
+    "commandAcknowledged": "{satellite}: {command} đã xác nhận",
+    "commandFailed": "{satellite}: {command} thất bại",
+    "cameraPreset": {
+      "overview": "Toàn cảnh",
+      "panels":   "Bảng lệnh",
+      "screens":  "Màn hình"
+    },
+    "cameraPresetLabel": "Chế độ xem"
   },
   "auth": {
     "title": "Satellite Control",

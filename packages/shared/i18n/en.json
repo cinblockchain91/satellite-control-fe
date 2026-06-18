@@ -4,6 +4,7 @@
     "dashboard": "Dashboard",
     "digitalTwin": "Digital Twin",
     "telemetryTunnel": "Telemetry Tunnel",
+    "commandCenter": "Command Center",
     "satellites": "Satellites",
     "active": "Active",
     "idle": "Idle",
@@ -119,6 +120,34 @@
       "conjunctionRisk": "Conjunction risk",
       "signalLost": "Signal lost (offline)"
     }
+  },
+  "commandCenter": {
+    "lowFpsWarning": "Low frame rate detected",
+    "screenSignal": "Signal",
+    "screenBattery": "Battery",
+    "screenTemp": "Temp",
+    "screenHealth": "Health",
+    "status": {
+      "online": "Online",
+      "warning": "Warning",
+      "degraded": "Degraded",
+      "offline": "Offline"
+    },
+    "commandType": {
+      "hibernate": "Hibernate",
+      "wake": "Wake",
+      "reset": "Reset",
+      "boost": "Boost"
+    },
+    "commandPending": "{satellite}: {command} pending…",
+    "commandAcknowledged": "{satellite}: {command} acknowledged",
+    "commandFailed": "{satellite}: {command} failed",
+    "cameraPreset": {
+      "overview": "Overview",
+      "panels":   "Panels",
+      "screens":  "Screens"
+    },
+    "cameraPresetLabel": "Camera view"
   },
   "auth": {
     "title": "Satellite Control",
