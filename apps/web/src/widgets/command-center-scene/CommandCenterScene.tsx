@@ -14,8 +14,13 @@ import {
   CAMERA_MIN_DISTANCE,
   CAMERA_MAX_DISTANCE,
   CAMERA_DAMPING_FACTOR,
+  WORKSTATION_CONFIGS,
+  SCREEN_CONFIGS,
 } from "./scene-config";
 import type { CameraPreset } from "./scene-config";
+import { WorkStation } from "./WorkStation";
+import { ControlPanel } from "./ControlPanel";
+import { StatusScreen } from "./StatusScreen";
 
 export interface CommandCenterSceneHandle {
   resetView: () => void;
@@ -63,6 +68,16 @@ export const CommandCenterScene = forwardRef<CommandCenterSceneHandle, CommandCe
         <PerformanceMonitor onLowFps={onLowFps} />
 
         <RoomGeometry />
+
+        {WORKSTATION_CONFIGS.map((cfg, i) => (
+          <WorkStation key={i} position={cfg.position} rotationY={cfg.rotationY} />
+        ))}
+
+        <ControlPanel />
+
+        {SCREEN_CONFIGS.map((cfg, i) => (
+          <StatusScreen key={i} position={cfg.position} />
+        ))}
 
         <CameraControls
           ref={controlsRef}

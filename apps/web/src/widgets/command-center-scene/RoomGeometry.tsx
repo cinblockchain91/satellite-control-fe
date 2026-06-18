@@ -2,9 +2,9 @@ const ROOM_WIDTH = 16;
 const ROOM_DEPTH = 12;
 const ROOM_HEIGHT = 4;
 
-const FLOOR_COLOR = "#1a1a2e";
-const WALL_COLOR = "#0d0d1a";
-const CEILING_COLOR = "#111122";
+const FLOOR_COLOR = "#1e2340";
+const WALL_COLOR = "#141828";
+const CEILING_COLOR = "#141828";
 
 export function RoomGeometry() {
   return (
@@ -12,7 +12,7 @@ export function RoomGeometry() {
       {/* Floor */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
         <planeGeometry args={[ROOM_WIDTH, ROOM_DEPTH]} />
-        <meshStandardMaterial color={FLOOR_COLOR} metalness={0.8} roughness={0.2} />
+        <meshStandardMaterial color={FLOOR_COLOR} metalness={0.3} roughness={0.6} />
       </mesh>
 
       {/* Ceiling */}
