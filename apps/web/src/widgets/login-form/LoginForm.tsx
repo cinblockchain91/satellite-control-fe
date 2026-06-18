@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Button } from "@/shared/components/ui/button";
@@ -25,28 +25,6 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
   const t = useTranslations("auth");
   const [username, setUsername] = useState("");
 
-  useEffect(() => {
-    // TODO: remove after Vercel env vars are confirmed
-    console.group("[env] Runtime config");
-    console.log("url             ", window.location.href);
-    console.log("APP_ENV         ", process.env.NEXT_PUBLIC_APP_ENV);
-    console.log("USE_MOCK        ", process.env.NEXT_PUBLIC_USE_MOCK);
-    console.log("API_URL         ", process.env.NEXT_PUBLIC_API_URL);
-    console.log("WS_URL          ", process.env.NEXT_PUBLIC_WS_URL);
-    console.log(
-      "1FEATURE_COMMAND_CENTER  ",
-      process.env.NEXT_PUBLIC_FEATURE_COMMAND_CENTER,
-    );
-    console.log(
-      "1FEATURE_TELEMETRY_TUNNEL",
-      process.env.NEXT_PUBLIC_FEATURE_TELEMETRY_TUNNEL,
-    );
-    console.log(
-      "1FEATURE_DIGITAL_TWIN    ",
-      process.env.NEXT_PUBLIC_FEATURE_DIGITAL_TWIN,
-    );
-    console.groupEnd();
-  }, []);
   const [password, setPassword] = useState("");
   const { isLoading, error, setLoading, setError, setAccount } = useAuthStore();
   const router = useRouter();

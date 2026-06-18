@@ -151,6 +151,80 @@ views/command-center/
 - Camera presets replace orbit controls — `CameraControls` from drei is still used, but driven programmatically rather than by user drag/scroll
 - `@/shared/3d/PerformanceMonitor` is reused — no new monitoring code needed
 
+## Implementation notes (Issues 5–8)
+
+### `<Html>` breaks React context
+
+drei's `<Html>` renders into a separate DOM portal outside the React tree. Any context that wraps the app (e.g., `NextIntlClientProvider`) is **not** accessible inside `<Html>`. This means `useTranslations()` cannot be called inside a component rendered via `<Html>`.
+
+**Workaround:** Call `useTranslations` in the parent component (normal React tree), compute all translated strings into a `labels` object, and pass them as a plain prop to the component inside `<Html>`.
+
+```
+StatusScreen (normal tree) → useTranslations() → labels: SatelliteStatusPanelLabels
+  └─ <Html> → <SatelliteStatusPanel labels={labels} /> ← no hooks, no context
+```
+
+Any future component rendered inside `<Html>` must follow this pattern.
+
+### Selection triggers camera transition
+
+Camera preset auto-changes on user interaction:
+
+| Trigger | Camera moves to |
+|---|---|
+| Click a status screen | `screens` preset + satellite selected |
+| Click control panel body | `panels` preset |
+| Click "Overview" in switcher | `overview` preset + satellite deselected |
+| Click other preset buttons | preset changes, selection unchanged |
+
+This state lives entirely in `CommandCenterShell` (`cameraPreset` + `selectedSatelliteId`). The scene receives both as props and does not own selection state.
+
+### Mock satellite status coverage
+
+`MOCK_SATELLITES` has 6 satellites; `SCREEN_CONFIGS` has 4 screens. Screens render `satellites[i]` — only the first 4 are visible. sat-4 is set to `degraded` so all four statuses (online / warning / offline / degraded) are always visible on screen simultaneously.
+
+### Pre-seeded command history
+
+`useMockCommandDispatch` initialises with 4 settled commands (3 acknowledged + 1 failed) spread 30 s apart. This ensures the command history panel is never empty on first load, making the demo immediately readable without the user having to dispatch any commands first.
+
+### Button labels use `<Text>` (drei), not `<Html>`
+
+The `<Html>` budget was fully allocated (4 instances — one per status screen). Adding button labels via `<Html>` would exceed the budget and degrade performance.
+
+`<Text>` from drei renders text as SDF mesh geometry via troika-three-text. It is part of the normal R3F scene tree (not a DOM portal), so React context propagation is unaffected — `useTranslations` works inside `ControlPanel` without the workaround required by `<Html>`. Font is fetched asynchronously on first render; labels are invisible for ~100–500 ms until the font loads.
+
+Text labels also forward pointer events (`onClick`, `onPointerEnter`, `onPointerLeave`) to maintain the same interaction surface as the underlying button mesh.
+
+### Camera preset switcher accessibility
+
+The preset switcher `<div>` carries `role="group"` + `aria-label` (i18n key `cameraPresetLabel`). Each `<Button>` carries `aria-pressed={cameraPreset === preset}` so screen readers can identify the active preset.
+
+## v1 feature checklist
+
+Everything below was shipped as part of Milestone 3. Items marked ✓ are live on the demo deployment.
+
+| Feature | Status |
+|---------|--------|
+| Procedural room geometry (floor, walls, ceiling, desks, screen wall) | ✓ |
+| 4 status screens with live telemetry via `<Html>` | ✓ |
+| All 4 satellite statuses visible simultaneously (online / warning / degraded / offline) | ✓ |
+| Satellite selection by clicking a status screen | ✓ |
+| Camera auto-moves to `screens` on satellite select | ✓ |
+| Control panel with 4 command buttons (Hibernate / Wake / Reset / Boost) | ✓ |
+| Button labels rendered via `<Text>` (SDF mesh, within `<Html>` budget) | ✓ |
+| Mock command dispatch: pending → acknowledged (90%) / failed (10%) | ✓ |
+| Pre-seeded command history (4 commands visible on first load) | ✓ |
+| Toast notifications for command lifecycle | ✓ |
+| Cinematic camera preset switcher (Overview / Panels / Screens) | ✓ |
+| Camera auto-moves to `panels` on control panel click | ✓ |
+| Overview preset deselects satellite | ✓ |
+| Demo badge + Auto Tour (cycles camera presets every 5 s) | ✓ |
+| FPS monitor + low-FPS warning badge | ✓ |
+| Interaction hint overlay with `role="status"` + `aria-live="polite"` | ✓ |
+| Camera preset switcher with `role="group"` + `aria-pressed` | ✓ |
+| Full i18n (English + Vietnamese) | ✓ |
+| Feature-flagged behind `NEXT_PUBLIC_FEATURE_COMMAND_CENTER` | ✓ |
+
 ## Deferred items
 
 | # | Item | Status |

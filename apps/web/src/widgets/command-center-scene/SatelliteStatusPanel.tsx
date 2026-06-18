@@ -109,7 +109,7 @@ export function SatelliteStatusPanel({ satellite, labels }: SatelliteStatusPanel
       {/* Temperature — no bar */}
       <div style={{ display: "flex", justifyContent: "space-between", marginTop: "4px" }}>
         <span style={{ opacity: 0.6, fontSize: "9px" }}>{labels.temp}</span>
-        <span style={{ fontSize: "9px" }}>{Math.round(telemetry.temperature)} K</span>
+        <span style={{ fontSize: "9px" }}>{Math.round(telemetry.temperature)} °C</span>
       </div>
     </div>
   );

@@ -1,5 +1,8 @@
+"use client";
+
 import { useState } from "react";
-import { useCursor } from "@react-three/drei";
+import { useCursor, Text } from "@react-three/drei";
+import { useTranslations } from "next-intl";
 import type { SatelliteId } from "@satellite-control/entity-satellite";
 import type { CommandType, CommandStatus, MockCommand } from "./command-actions";
 
@@ -48,15 +51,20 @@ const STATUS_EMISSIVE: Record<CommandStatus, string> = {
   failed:       "#c02020",
 };
 
+const TEXT_COLOR = "#c0d0f0";
+const TEXT_COLOR_DISABLED = "#4a5068";
+const TEXT_FONT_SIZE = 0.045;
+
 interface CommandButtonProps {
   type: CommandType;
   position: [number, number, number];
   status: CommandStatus | null;
   isDisabled: boolean;
   onDispatch: () => void;
+  label: string;
 }
 
-function CommandButton({ type, position, status, isDisabled, onDispatch }: CommandButtonProps) {
+function CommandButton({ type, position, status, isDisabled, onDispatch, label }: CommandButtonProps) {
   const [hovered, setHovered] = useState(false);
   useCursor(hovered && !isDisabled);
 
@@ -68,22 +76,35 @@ function CommandButton({ type, position, status, isDisabled, onDispatch }: Comma
 
   const emissiveIntensity = status ? STATUS_EMISSIVE_INTENSITY : hovered && !isDisabled ? HOVER_EMISSIVE_INTENSITY : 0;
 
+  const handleClick = (e: { stopPropagation: () => void }) => { e.stopPropagation(); if (!isDisabled) onDispatch(); };
+  const handleEnter = (e: { stopPropagation: () => void }) => { e.stopPropagation(); setHovered(true); };
+  const handleLeave = () => setHovered(false);
+
   return (
-    <mesh
-      position={position}
-      onClick={(e) => { e.stopPropagation(); if (!isDisabled) onDispatch(); }}
-      onPointerEnter={(e) => { e.stopPropagation(); setHovered(true); }}
-      onPointerLeave={() => setHovered(false)}
-    >
-      <boxGeometry args={[BUTTON_WIDTH, BUTTON_HEIGHT, BUTTON_DEPTH]} />
-      <meshStandardMaterial
-        color={BUTTON_BASE_COLOR[type]}
-        emissive={emissive}
-        emissiveIntensity={emissiveIntensity}
-        metalness={0.4}
-        roughness={0.6}
-      />
-    </mesh>
+    <group position={position}>
+      <mesh onClick={handleClick} onPointerEnter={handleEnter} onPointerLeave={handleLeave}>
+        <boxGeometry args={[BUTTON_WIDTH, BUTTON_HEIGHT, BUTTON_DEPTH]} />
+        <meshStandardMaterial
+          color={BUTTON_BASE_COLOR[type]}
+          emissive={emissive}
+          emissiveIntensity={emissiveIntensity}
+          metalness={0.4}
+          roughness={0.6}
+        />
+      </mesh>
+      <Text
+        position={[0, 0, BUTTON_DEPTH / 2 + 0.002]}
+        fontSize={TEXT_FONT_SIZE}
+        color={isDisabled ? TEXT_COLOR_DISABLED : TEXT_COLOR}
+        anchorX="center"
+        anchorY="middle"
+        onClick={handleClick}
+        onPointerEnter={handleEnter}
+        onPointerLeave={handleLeave}
+      >
+        {label}
+      </Text>
+    </group>
   );
 }
 
@@ -102,6 +123,7 @@ function latestStatus(commands: MockCommand[], type: CommandType): CommandStatus
 }
 
 export function ControlPanel({ selectedSatelliteId, onDispatch, commands, onFocusPanel }: ControlPanelProps) {
+  const t = useTranslations("commandCenter");
   return (
     <group
       position={[0, 0, 0]}
@@ -146,6 +168,7 @@ export function ControlPanel({ selectedSatelliteId, onDispatch, commands, onFocu
           status={latestStatus(commands, type)}
           isDisabled={selectedSatelliteId === null}
           onDispatch={() => onDispatch(type)}
+          label={t(`commandType.${type}`)}
         />
       ))}
     </group>

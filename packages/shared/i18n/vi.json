@@ -147,7 +147,12 @@
       "panels":   "Bảng lệnh",
       "screens":  "Màn hình"
     },
-    "cameraPresetLabel": "Chế độ xem"
+    "cameraPresetLabel": "Chế độ xem",
+    "hintNoSelection": "Nhấn vào màn hình để chọn vệ tinh",
+    "hintSelected": "{name} đã chọn — nhấn nút lệnh để gửi",
+    "demoBadge": "Demo",
+    "autoPilotStart": "Tự động",
+    "autoPilotStop": "Dừng"
   },
   "auth": {
     "title": "Satellite Control",

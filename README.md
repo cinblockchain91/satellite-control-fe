@@ -9,6 +9,18 @@ A modern web-based control interface for managing and monitoring satellite opera
 [Kanban Board](https://github.com/users/cinblockchain91/projects/4/views/1): Track development progress here.  
 [satellitecontrol.com](https://web-xi-orpin-46.vercel.app) : Production preview with testing credentials: (**admin**/**admin123**)
 
+---
+
+> [!NOTE]
+> **Architecture Decision Records**
+>
+> | # | Title |
+> |---|---|
+> | ADR 001 | [3D Engine Selection](docs/001-3d-engine-selection.md) |
+> | ADR 002 | [Digital Twin Fleet View](docs/002-digital-twin-fleet-view.md) |
+> | ADR 003 | [Telemetry Tunnel](docs/003-telemetry-tunnel.md) |
+> | ADR 004 | [Command Center Simulator](docs/004-command-center-simulator.md) |
+
 ## Overview
 
 Satellite Control FE is the frontend layer of the Satellite Control Platform — a mission-critical system designed for aerospace engineers and operators. The interface provides:
@@ -88,7 +100,9 @@ NEXT_PUBLIC_USE_MOCK=true
 NEXT_PUBLIC_APP_ENV=development
 NEXT_PUBLIC_API_URL=http://localhost:4000
 NEXT_PUBLIC_WS_URL=ws://localhost:4000
-NEXT_PUBLIC_FEATURE_DIGITAL_TWIN=false
+NEXT_PUBLIC_FEATURE_DIGITAL_TWIN=true
+NEXT_PUBLIC_FEATURE_TELEMETRY_TUNNEL=true
+NEXT_PUBLIC_FEATURE_COMMAND_CENTER=true
 ```
 
 ### Run Development Server
