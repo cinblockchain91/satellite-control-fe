@@ -9,3 +9,4 @@ export { AnomalyArenaScene } from "./AnomalyArenaScene";
 export type { AnomalyArenaSceneHandle } from "./AnomalyArenaScene";
 export { AnomalySatellite } from "./AnomalySatellite";
 export { AlertRegion } from "./AlertRegion";
+export { SeverityBadge } from "./SeverityBadge";

@@ -153,13 +153,28 @@ All pulse constants are hardcoded inline; Issue #114 extracts them as named anim
 
 **No post-processing bloom:** emissive intensity on a `#04060d` background provides sufficient glow illusion without the GPU cost of a full-screen Bloom pass. Bloom can be evaluated in #114 once a performance baseline is established.
 
+### 10. Severity badge for issue #110
+
+`SeverityBadge` is a `"use client"` presentational component in `widgets/anomaly-arena/` that renders `AnomalySeverity` as a shadcn `Badge`:
+
+| Severity | Badge variant | Color | Icon |
+|---|---|---|---|
+| `warning` | `outline` + yellow override | `border-yellow-500/40 bg-yellow-500/10 text-yellow-600` | `AlertTriangleIcon` |
+| `critical` | `destructive` (built-in) | `bg-destructive/10 text-destructive` | `AlertOctagonIcon` |
+
+Icons carry `aria-hidden="true"` — the translated text label is the accessible content. The component owns its own `useTranslations("anomalyArena")` call to ensure every consumer uses the same `severity.{warning|critical}` key; callers must not supply their own label string.
+
+**Intentional decision — 2 levels, not 4:** The issue description listed `low / medium / high / critical`. The implementation keeps `warning / critical` to preserve the `AnomalySeverity` contract from Issue #107. Extending to 4 levels would require re-calibrating `detectAnomalies()` thresholds — a scope that belongs to a dedicated ADR revision, not a visualization issue. Stakeholder mapping: `low ≈ medium ≈ warning`; `high ≈ critical`.
+
+**Consistency:** `SeverityBadge` is the single rendering path for severity in all 2D surfaces (detail panel #112, timeline #111, filter chips #115). 3D surfaces continue to use type-identity colors (`ANOMALY_VISUAL_RULES`) so operators know *what* is wrong; 2D surfaces use severity colors so operators know *how urgent* it is.
+
 ## Deferred items
 
 | # | Item | Status |
 |---|------|--------|
 | 1 | Anomaly arena scene / mode toggle | ✅ Done — Issue #108 |
 | 2 | 3D satellite + orbit highlighting | ✅ Done — Issue #109 |
-| 3 | Severity level UI (badges, chips) | Issue #110 |
+| 3 | Severity level UI (badges, chips) | ✅ Done — Issue #110 |
 | 4 | Alert timeline / event stream | Issue #111 |
 | 5 | Anomaly detail panel | Issue #112 |
 | 6 | Mock anomaly events (includes unstableOrbit satellite) | Issue #113 |
