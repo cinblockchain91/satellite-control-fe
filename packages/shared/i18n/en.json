@@ -154,6 +154,18 @@
     "autoPilotStart": "Auto Tour",
     "autoPilotStop": "Stop"
   },
+  "anomalyArena": {
+    "type": {
+      "signalDrop": "Signal Drop",
+      "overheating": "Overheating",
+      "unstableOrbit": "Unstable Orbit",
+      "communicationLoss": "Communication Loss"
+    },
+    "severity": {
+      "warning": "Warning",
+      "critical": "Critical"
+    }
+  },
   "auth": {
     "title": "Satellite Control",
     "subtitle": "Sign in to your account",

@@ -154,6 +154,18 @@
     "autoPilotStart": "Tự động",
     "autoPilotStop": "Dừng"
   },
+  "anomalyArena": {
+    "type": {
+      "signalDrop": "Mất tín hiệu",
+      "overheating": "Quá nhiệt",
+      "unstableOrbit": "Quỹ đạo bất ổn",
+      "communicationLoss": "Mất liên lạc"
+    },
+    "severity": {
+      "warning": "Cảnh báo",
+      "critical": "Nghiêm trọng"
+    }
+  },
   "auth": {
     "title": "Satellite Control",
     "subtitle": "Đăng nhập vào tài khoản",

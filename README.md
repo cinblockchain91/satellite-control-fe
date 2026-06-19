@@ -20,6 +20,7 @@ A modern web-based control interface for managing and monitoring satellite opera
 > | ADR 002 | [Digital Twin Fleet View](docs/002-digital-twin-fleet-view.md) |
 > | ADR 003 | [Telemetry Tunnel](docs/003-telemetry-tunnel.md) |
 > | ADR 004 | [Command Center Simulator](docs/004-command-center-simulator.md) |
+> | ADR 005 | [Anomaly Detection Arena](docs/005-anomaly-detection-arena.md) |
 
 ## Overview
 
