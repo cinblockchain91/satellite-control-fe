@@ -139,12 +139,26 @@ Route page.tsx (Server Component, sets metadata)
 
 **`AnomalyArenaSceneHandle`:** Exposes `resetView()` so the shell's "Reset view" button can fly the camera back to `[0, 4, 7]` without the shell knowing R3F internals.
 
+### 9. Visual highlighting for issue #109
+
+**Pulse animation** — all anomalous satellites animate continuously to draw pre-attentive attention:
+
+- **`AnomalySatellite` body glow:** emissive intensity oscillates via sine wave between `PULSE_EMISSIVE_MIN (0.15)` and `PULSE_EMISSIVE_MAX (0.45)` at rest. Interaction states override: hovered → `EMISSIVE_HOVERED (0.5)`, selected → `EMISSIVE_SELECTED (0.9)`.
+- **`AlertRegion` ring breathe:** scale oscillates `1.0 → 1.15` and opacity `0.3 → 0.5` in sync with the satellite's pulse.
+- **Severity-driven frequency:** `warning → 0.5 Hz` (pulse every 2 s); `critical → 1.2 Hz` (pulse every ~0.8 s). Faster rhythm for critical anomalies exploits pre-attentive temporal contrast — the eye is drawn to the highest-frequency motion first.
+
+All pulse constants are hardcoded inline; Issue #114 extracts them as named animation constants once the full animation budget is known.
+
+**`AnomalyArenaScene` change:** `satelliteAnomalies` useMemo now captures `anomalySeverity: AnomalySeverity | null` alongside `anomalyColor`. Both `AnomalySatellite` and `AlertRegion` receive severity as a prop. `AlertRegion` only renders when `anomalySeverity !== null` — TypeScript-safe narrowing, no assertions needed.
+
+**No post-processing bloom:** emissive intensity on a `#04060d` background provides sufficient glow illusion without the GPU cost of a full-screen Bloom pass. Bloom can be evaluated in #114 once a performance baseline is established.
+
 ## Deferred items
 
 | # | Item | Status |
 |---|------|--------|
 | 1 | Anomaly arena scene / mode toggle | ✅ Done — Issue #108 |
-| 2 | 3D satellite + orbit highlighting | Issue #109 |
+| 2 | 3D satellite + orbit highlighting | ✅ Done — Issue #109 |
 | 3 | Severity level UI (badges, chips) | Issue #110 |
 | 4 | Alert timeline / event stream | Issue #111 |
 | 5 | Anomaly detail panel | Issue #112 |
