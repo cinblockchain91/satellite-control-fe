@@ -20,6 +20,7 @@ A modern web-based control interface for managing and monitoring satellite opera
 > | ADR 002 | [Digital Twin Fleet View](docs/002-digital-twin-fleet-view.md) |
 > | ADR 003 | [Telemetry Tunnel](docs/003-telemetry-tunnel.md) |
 > | ADR 004 | [Command Center Simulator](docs/004-command-center-simulator.md) |
+> | ADR 005 | [Anomaly Detection Arena](docs/005-anomaly-detection-arena.md) |
 
 ## Overview
 
@@ -103,6 +104,7 @@ NEXT_PUBLIC_WS_URL=ws://localhost:4000
 NEXT_PUBLIC_FEATURE_DIGITAL_TWIN=true
 NEXT_PUBLIC_FEATURE_TELEMETRY_TUNNEL=true
 NEXT_PUBLIC_FEATURE_COMMAND_CENTER=true
+NEXT_PUBLIC_FEATURE_ANOMALY_ARENA=true
 ```
 
 ### Run Development Server
@@ -202,7 +204,10 @@ Preview URLs are posted automatically as PR comments.
 | `NEXT_PUBLIC_APP_ENV`              | Application environment     | `development`           |
 | `NEXT_PUBLIC_API_URL`              | Backend REST API base URL   | `http://localhost:4000` |
 | `NEXT_PUBLIC_WS_URL`               | WebSocket server URL        | `ws://localhost:4000`   |
-| `NEXT_PUBLIC_FEATURE_DIGITAL_TWIN` | Enable digital twin feature | `false`                 |
+| `NEXT_PUBLIC_FEATURE_DIGITAL_TWIN`     | Enable digital twin feature        | `false`                 |
+| `NEXT_PUBLIC_FEATURE_TELEMETRY_TUNNEL` | Enable telemetry tunnel feature    | `false`                 |
+| `NEXT_PUBLIC_FEATURE_COMMAND_CENTER`   | Enable command center feature      | `false`                 |
+| `NEXT_PUBLIC_FEATURE_ANOMALY_ARENA`    | Enable anomaly detection arena     | `false`                 |
 
 ---
 

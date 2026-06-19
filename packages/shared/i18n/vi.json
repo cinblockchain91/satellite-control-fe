@@ -14,7 +14,8 @@
     "commands": "Lệnh",
     "system": "Hệ thống",
     "settings": "Cài đặt",
-    "signOut": "Đăng xuất"
+    "signOut": "Đăng xuất",
+    "anomalyArena": "Vùng bất thường"
   },
   "telemetryPanel": {
     "title": "Đo từ xa",
@@ -153,6 +154,47 @@
     "demoBadge": "Demo",
     "autoPilotStart": "Tự động",
     "autoPilotStop": "Dừng"
+  },
+  "anomalyArena": {
+    "title": "Vùng phát hiện bất thường",
+    "subtitle": "Mối đe dọa đang hoạt động",
+    "demoBadge": "Demo",
+    "lowFpsWarning": "Tốc độ khung hình thấp",
+    "cameraHint": "Kéo để xoay · Cuộn để thu phóng",
+    "cameraReset": "Đặt lại góc nhìn",
+    "type": {
+      "signalDrop": "Mất tín hiệu",
+      "overheating": "Quá nhiệt",
+      "unstableOrbit": "Quỹ đạo bất ổn",
+      "communicationLoss": "Mất liên lạc"
+    },
+    "severity": {
+      "warning": "Cảnh báo",
+      "critical": "Nghiêm trọng"
+    },
+    "timeline": {
+      "title": "Lịch sử cảnh báo",
+      "empty": "Không có bất thường nào"
+    },
+    "detail": {
+      "title": "Chi tiết bất thường",
+      "noSelection": "Chọn vệ tinh để kiểm tra",
+      "close": "Đóng bảng",
+      "detectedLabel": "Phát hiện lúc",
+      "threshold": "Ngưỡng",
+      "status": {
+        "online": "Trực tuyến",
+        "warning": "Cảnh báo",
+        "degraded": "Suy giảm",
+        "offline": "Ngoại tuyến"
+      },
+      "action": {
+        "signalDrop": "Kiểm tra căn chỉnh ăng-ten hoặc nhiễu tín hiệu",
+        "overheating": "Giảm tải tính toán hoặc điều chỉnh hệ thống quản lý nhiệt",
+        "unstableOrbit": "Lên kế hoạch hiệu chỉnh quỹ đạo",
+        "communicationLoss": "Thử kết nối khẩn cấp hoặc chuyển sang đường liên lạc dự phòng"
+      }
+    }
   },
   "auth": {
     "title": "Satellite Control",

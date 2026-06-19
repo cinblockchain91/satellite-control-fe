@@ -14,7 +14,8 @@
     "commands": "Commands",
     "system": "System",
     "settings": "Settings",
-    "signOut": "Sign out"
+    "signOut": "Sign out",
+    "anomalyArena": "Anomaly Arena"
   },
   "telemetryPanel": {
     "title": "Telemetry",
@@ -153,6 +154,47 @@
     "demoBadge": "Demo",
     "autoPilotStart": "Auto Tour",
     "autoPilotStop": "Stop"
+  },
+  "anomalyArena": {
+    "title": "Anomaly Arena",
+    "subtitle": "Active Threats",
+    "demoBadge": "Demo",
+    "lowFpsWarning": "Low frame rate detected",
+    "cameraHint": "Drag to rotate · Scroll to zoom",
+    "cameraReset": "Reset view",
+    "type": {
+      "signalDrop": "Signal Drop",
+      "overheating": "Overheating",
+      "unstableOrbit": "Unstable Orbit",
+      "communicationLoss": "Communication Loss"
+    },
+    "severity": {
+      "warning": "Warning",
+      "critical": "Critical"
+    },
+    "timeline": {
+      "title": "Alert Timeline",
+      "empty": "No active anomalies"
+    },
+    "detail": {
+      "title": "Anomaly Details",
+      "noSelection": "Select a satellite to inspect",
+      "close": "Close panel",
+      "detectedLabel": "Detected",
+      "threshold": "Threshold",
+      "status": {
+        "online": "Online",
+        "warning": "Warning",
+        "degraded": "Degraded",
+        "offline": "Offline"
+      },
+      "action": {
+        "signalDrop": "Inspect antenna alignment or check for signal interference",
+        "overheating": "Reduce computational load or adjust thermal management system",
+        "unstableOrbit": "Schedule an orbital correction maneuver",
+        "communicationLoss": "Attempt emergency reconnection or switch to backup communication link"
+      }
+    }
   },
   "auth": {
     "title": "Satellite Control",
