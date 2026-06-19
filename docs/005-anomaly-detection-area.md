@@ -195,6 +195,57 @@ interface AlertEvent {
 
 **i18n:** added `anomalyArena.timeline.title` and `anomalyArena.timeline.empty` in EN + VI.
 
+### 12. Anomaly detail panel for issue #112
+
+**`AnomalyDetailPanel`** is a `"use client"` widget-layer component that shows the full context for every anomaly on the selected satellite.
+
+**Props:**
+```typescript
+interface AnomalyDetailPanelProps {
+  selectedId: string | null;      // satellite id — string, not branded
+  events: AlertEvent[];           // all timeline events; filtered internally
+  allSatellites: Satellite[];     // injected for testability; backend swap point
+  onClose: () => void;            // resets selectedId to null in the shell
+}
+```
+
+**Data derivation:**
+1. `allSatellites.find(s => s.id === selectedId)` — locate the satellite
+2. `detectAnomalies(satellite.telemetry, satellite.status)` — live detection, same call as the 3D scene
+3. `events.filter(e => e.satelliteId === selectedId)` indexed by type — supply timestamps per anomaly
+
+**Layout (within the right `<aside>`):**
+```
+<aside w-80 flex-col>
+  <AnomalyDetailPanel />    ← shrink-0; compact strip when nothing selected
+  <AlertTimeline />         ← min-h-0 flex-1; scrolls internally
+</aside>
+```
+
+No-selection state: a single compact row (`CrosshairIcon` + "Select a satellite to inspect") so the timeline below is unaffected.
+
+Selected state: `max-h-[55vh] overflow-y-auto` section with:
+- Header: "Anomaly Details" title + close button (`XIcon`) that calls `onClose`
+- Satellite row: status dot (Tailwind bg-* class keyed to `STATUS_DOT_CLASS`) + name + translated status label
+- One `<li>` per detected anomaly, each showing:
+  - Type-identity colour dot (`ANOMALY_VISUAL_RULES[type].color`) + type label + `SeverityBadge`
+  - Detection time (`<time dateTime suppressHydrationWarning>`) from the corresponding `AlertEvent`
+  - Metric/value/threshold line (`data-testid="anomaly-detail-metric"`)
+  - Suggested action box (`LightbulbIcon` + `data-testid="anomaly-detail-action"`)
+
+**Suggested actions** — one i18n key per anomaly type (`anomalyArena.detail.action.*`):
+
+| Type | EN action |
+|---|---|
+| `signalDrop` | Inspect antenna alignment or check for signal interference |
+| `overheating` | Reduce computational load or adjust thermal management system |
+| `unstableOrbit` | Schedule an orbital correction maneuver |
+| `communicationLoss` | Attempt emergency reconnection or switch to backup communication link |
+
+**Shell change:** `<aside>` widened from `w-72` to `w-80`; `AnomalyDetailPanel` inserted above `AlertTimeline` in the vertical flex column.
+
+**9 component tests** cover: no-selection state (null and non-matching id), satellite name, single/multi-card count, `onClose` call, `<time dateTime>` attribute, metric text content, and suggested action i18n key.
+
 ## Deferred items
 
 | # | Item | Status |
@@ -203,7 +254,7 @@ interface AlertEvent {
 | 2 | 3D satellite + orbit highlighting | ✅ Done — Issue #109 |
 | 3 | Severity level UI (badges, chips) | ✅ Done — Issue #110 |
 | 4 | Alert timeline / event stream | ✅ Done — Issue #111 |
-| 5 | Anomaly detail panel | Issue #112 |
+| 5 | Anomaly detail panel | ✅ Done — Issue #112 |
 | 6 | Mock anomaly events (includes unstableOrbit satellite) | Issue #113 |
 | 7 | Animation constants (pulse speed, glow radius) | Issue #114 |
 | 8 | Filtering and focus mode | Issue #115 |

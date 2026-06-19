@@ -9,6 +9,7 @@ import { MOCK_SATELLITES } from "@/widgets/mission-control-scene";
 import {
   AnomalyArenaScene,
   AlertTimeline,
+  AnomalyDetailPanel,
   buildAlertEvents,
 } from "@/widgets/anomaly-arena";
 import type { AnomalyArenaSceneHandle, AlertEvent } from "@/widgets/anomaly-arena";
@@ -87,11 +88,17 @@ export function AnomalyArenaShell() {
         )}
       </div>
 
-      {/* Alert timeline — right panel, hidden on small screens */}
+      {/* Right panel: detail + timeline, hidden on small screens */}
       <aside
         data-testid="alert-timeline-panel"
-        className="hidden w-72 shrink-0 border-l border-border md:flex md:flex-col"
+        className="hidden w-80 shrink-0 border-l border-border md:flex md:flex-col"
       >
+        <AnomalyDetailPanel
+          selectedId={selectedId}
+          events={events}
+          allSatellites={MOCK_SATELLITES}
+          onClose={() => setSelectedId(null)}
+        />
         <AlertTimeline
           events={events}
           selectedId={selectedId}

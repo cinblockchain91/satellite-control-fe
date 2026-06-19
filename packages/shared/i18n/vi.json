@@ -175,6 +175,25 @@
     "timeline": {
       "title": "Lịch sử cảnh báo",
       "empty": "Không có bất thường nào"
+    },
+    "detail": {
+      "title": "Chi tiết bất thường",
+      "noSelection": "Chọn vệ tinh để kiểm tra",
+      "close": "Đóng bảng",
+      "detectedLabel": "Phát hiện lúc",
+      "threshold": "Ngưỡng",
+      "status": {
+        "online": "Trực tuyến",
+        "warning": "Cảnh báo",
+        "degraded": "Suy giảm",
+        "offline": "Ngoại tuyến"
+      },
+      "action": {
+        "signalDrop": "Kiểm tra căn chỉnh ăng-ten hoặc nhiễu tín hiệu",
+        "overheating": "Giảm tải tính toán hoặc điều chỉnh hệ thống quản lý nhiệt",
+        "unstableOrbit": "Lên kế hoạch hiệu chỉnh quỹ đạo",
+        "communicationLoss": "Thử kết nối khẩn cấp hoặc chuyển sang đường liên lạc dự phòng"
+      }
     }
   },
   "auth": {
