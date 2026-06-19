@@ -21,7 +21,7 @@ export function DashboardShell() {
   const tNav = useTranslations("nav");
   const { account } = useAuthStore();
 
-  const firstName = account?.fullName?.split(" ")[0] ?? "Commander";
+  const firstName = account?.fullName?.split(" ").at(0) ?? "Commander";
 
   const total = MOCK_SATELLITES.length;
   const anomalous = MOCK_SATELLITES.filter(
@@ -66,31 +66,33 @@ export function DashboardShell() {
       </section>
 
       {/* Mission modules */}
-      <section>
-        <h2 className="mb-4 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-          {t("modules")}
-        </h2>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          {enabledModules.map(({ key, url, icon: Icon }) => (
-            <Link
-              key={key}
-              href={url}
-              className="group rounded-xl border border-border bg-card p-6 shadow-sm transition-colors hover:border-primary/50 hover:bg-accent"
-            >
-              <div className="flex items-start justify-between">
-                <div className="rounded-lg bg-sidebar-primary/10 p-2">
-                  <Icon className="h-5 w-5 text-sidebar-primary" />
+      {enabledModules.length > 0 && (
+        <section>
+          <h2 className="mb-4 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+            {t("modules")}
+          </h2>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {enabledModules.map(({ key, url, icon: Icon }) => (
+              <Link
+                key={key}
+                href={url}
+                className="group rounded-xl border border-border bg-card p-6 shadow-sm transition-colors hover:border-primary/50 hover:bg-accent"
+              >
+                <div className="flex items-start justify-between">
+                  <div className="rounded-lg bg-sidebar-primary/10 p-2">
+                    <Icon className="h-5 w-5 text-sidebar-primary" />
+                  </div>
+                  <ArrowRight className="h-4 w-4 text-muted-foreground transition-transform group-hover:translate-x-1" />
                 </div>
-                <ArrowRight className="h-4 w-4 text-muted-foreground transition-transform group-hover:translate-x-1" />
-              </div>
-              <h3 className="mt-4 font-semibold">{tNav(key as "digitalTwin")}</h3>
-              <p className="mt-1 text-sm text-muted-foreground">
-                {t(`${key}.description` as "digitalTwin.description")}
-              </p>
-            </Link>
-          ))}
-        </div>
-      </section>
+                <h3 className="mt-4 font-semibold">{tNav(key as "digitalTwin")}</h3>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  {t(`${key}.description` as "digitalTwin.description")}
+                </p>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
     </main>
   );
 }

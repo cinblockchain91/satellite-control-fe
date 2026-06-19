@@ -15,7 +15,9 @@
     "system": "System",
     "settings": "Settings",
     "signOut": "Sign out",
-    "anomalyArena": "Anomaly Arena"
+    "anomalyArena": "Anomaly Arena",
+    "profile": "Profile",
+    "theme": "Toggle theme"
   },
   "telemetryPanel": {
     "title": "Telemetry",
@@ -194,6 +196,21 @@
         "unstableOrbit": "Schedule an orbital correction maneuver",
         "communicationLoss": "Attempt emergency reconnection or switch to backup communication link"
       }
+    }
+  },
+  "profile": {
+    "title": "Profile",
+    "fullName": "Display name",
+    "email": "Email",
+    "username": "Username",
+    "memberSince": "Member since",
+    "edit": "Edit name",
+    "save": "Save",
+    "cancel": "Cancel",
+    "role": {
+      "admin": "Admin",
+      "engineer": "Engineer",
+      "viewer": "Viewer"
     }
   },
   "dashboard": {

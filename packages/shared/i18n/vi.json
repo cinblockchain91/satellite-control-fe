@@ -15,7 +15,9 @@
     "system": "Hệ thống",
     "settings": "Cài đặt",
     "signOut": "Đăng xuất",
-    "anomalyArena": "Vùng bất thường"
+    "anomalyArena": "Vùng bất thường",
+    "profile": "Hồ sơ",
+    "theme": "Đổi giao diện"
   },
   "telemetryPanel": {
     "title": "Đo từ xa",
@@ -194,6 +196,21 @@
         "unstableOrbit": "Lên kế hoạch hiệu chỉnh quỹ đạo",
         "communicationLoss": "Thử kết nối khẩn cấp hoặc chuyển sang đường liên lạc dự phòng"
       }
+    }
+  },
+  "profile": {
+    "title": "Hồ sơ",
+    "fullName": "Tên hiển thị",
+    "email": "Email",
+    "username": "Tên đăng nhập",
+    "memberSince": "Thành viên từ",
+    "edit": "Chỉnh sửa tên",
+    "save": "Lưu",
+    "cancel": "Hủy",
+    "role": {
+      "admin": "Quản trị viên",
+      "engineer": "Kỹ sư",
+      "viewer": "Người xem"
     }
   },
   "dashboard": {
