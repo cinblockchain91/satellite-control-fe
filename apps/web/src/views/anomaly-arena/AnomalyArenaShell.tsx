@@ -1,18 +1,31 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { RotateCcwIcon } from "lucide-react";
 import { SceneCanvasLazy } from "@/shared/3d";
 import { Button } from "@/shared/components/ui/button";
-import { AnomalyArenaScene } from "@/widgets/anomaly-arena";
-import type { AnomalyArenaSceneHandle } from "@/widgets/anomaly-arena";
+import { MOCK_SATELLITES } from "@/widgets/mission-control-scene";
+import {
+  AnomalyArenaScene,
+  AlertTimeline,
+  buildAlertEvents,
+} from "@/widgets/anomaly-arena";
+import type { AnomalyArenaSceneHandle, AlertEvent } from "@/widgets/anomaly-arena";
 
 export function AnomalyArenaShell() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [isLowFps, setIsLowFps] = useState(false);
   const sceneRef = useRef<AnomalyArenaSceneHandle>(null);
   const t = useTranslations("anomalyArena");
+
+  // Populated after hydration so Date.now() never runs on the server.
+  // Eliminates SSR/client timestamp mismatch and locale-formatting divergence.
+  // Backend swap point: replace setEvents with a useQuery / SWR call when /api/anomalies is ready.
+  const [events, setEvents] = useState<AlertEvent[]>([]);
+  useEffect(() => {
+    setEvents(buildAlertEvents(MOCK_SATELLITES, Date.now()));
+  }, []);
 
   function handleReset() {
     sceneRef.current?.resetView();
@@ -73,6 +86,18 @@ export function AnomalyArenaShell() {
           </div>
         )}
       </div>
+
+      {/* Alert timeline — right panel, hidden on small screens */}
+      <aside
+        data-testid="alert-timeline-panel"
+        className="hidden w-72 shrink-0 border-l border-border md:flex md:flex-col"
+      >
+        <AlertTimeline
+          events={events}
+          selectedId={selectedId}
+          onSelect={setSelectedId}
+        />
+      </aside>
     </main>
   );
 }

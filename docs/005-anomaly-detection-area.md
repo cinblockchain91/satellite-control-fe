@@ -168,6 +168,33 @@ Icons carry `aria-hidden="true"` — the translated text label is the accessible
 
 **Consistency:** `SeverityBadge` is the single rendering path for severity in all 2D surfaces (detail panel #112, timeline #111, filter chips #115). 3D surfaces continue to use type-identity colors (`ANOMALY_VISUAL_RULES`) so operators know *what* is wrong; 2D surfaces use severity colors so operators know *how urgent* it is.
 
+### 11. Alert timeline for issue #111
+
+**`AlertEvent` type** (`widgets/anomaly-arena/alert-events.ts`) — a flat, non-branded model:
+
+```typescript
+interface AlertEvent {
+  id: string;          // "${satelliteId}-${type}" — stable React key
+  satelliteId: string; // non-branded so the timeline has no SatelliteId dependency
+  satelliteName: string;
+  type: AnomalyType;
+  severity: AnomalySeverity;
+  detectedAt: Date;
+}
+```
+
+**`buildAlertEvents(satellites, now)`** — pure function, injected `now: number` for testability. Derives events from `detectAnomalies()`, assigns mock relative timestamps (3 min per satellite × anomaly index), and sorts: critical first, then most-recent within same severity. 10 unit tests cover empty fleet, single/multi-anomaly, id uniqueness, sort order, and timestamp correctness.
+
+**`AlertTimeline`** — `"use client"` widget-layer component. Owns a `<section>` with header (`<h2>` + event count) and scrollable `<ol>` of event rows. Each row is a `<button>` with `aria-pressed` for the selection state and a `<time dateTime={...}>` for machine-readable timestamps. Uses `SeverityBadge` and `t("type.*")` for consistent labelling. Empty state shows `timeline.empty`. `MAX_VISIBLE_EVENTS = 50` limits render; no virtual scroll needed at mock scale.
+
+**Layout change in `AnomalyArenaShell`:** Added a `<aside>` (`w-72`, `hidden md:flex`) beside the scene canvas. Hidden on small screens (scene needs the space); appears from `md:` breakpoint. `events` computed once via `useMemo(() => buildAlertEvents(MOCK_SATELLITES, Date.now()), [])` — frozen at mount, appropriate for static mock data.
+
+**Clicking a timeline row selects the satellite** — `onSelect(event.satelliteId)` feeds into the same `selectedId` state as the 3D scene, so the corresponding satellite highlights immediately.
+
+**Backend swap point:** replace the `useMemo` body with a `useQuery` call to `/api/anomalies` when the event stream is ready. `AlertTimeline` and `AlertEvent` are unchanged.
+
+**i18n:** added `anomalyArena.timeline.title` and `anomalyArena.timeline.empty` in EN + VI.
+
 ## Deferred items
 
 | # | Item | Status |
@@ -175,7 +202,7 @@ Icons carry `aria-hidden="true"` — the translated text label is the accessible
 | 1 | Anomaly arena scene / mode toggle | ✅ Done — Issue #108 |
 | 2 | 3D satellite + orbit highlighting | ✅ Done — Issue #109 |
 | 3 | Severity level UI (badges, chips) | ✅ Done — Issue #110 |
-| 4 | Alert timeline / event stream | Issue #111 |
+| 4 | Alert timeline / event stream | ✅ Done — Issue #111 |
 | 5 | Anomaly detail panel | Issue #112 |
 | 6 | Mock anomaly events (includes unstableOrbit satellite) | Issue #113 |
 | 7 | Animation constants (pulse speed, glow radius) | Issue #114 |
