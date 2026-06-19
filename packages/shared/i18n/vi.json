@@ -171,6 +171,10 @@
     "severity": {
       "warning": "Cảnh báo",
       "critical": "Nghiêm trọng"
+    },
+    "timeline": {
+      "title": "Lịch sử cảnh báo",
+      "empty": "Không có bất thường nào"
     }
   },
   "auth": {

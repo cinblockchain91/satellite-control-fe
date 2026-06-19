@@ -171,6 +171,10 @@
     "severity": {
       "warning": "Warning",
       "critical": "Critical"
+    },
+    "timeline": {
+      "title": "Alert Timeline",
+      "empty": "No active anomalies"
     }
   },
   "auth": {
