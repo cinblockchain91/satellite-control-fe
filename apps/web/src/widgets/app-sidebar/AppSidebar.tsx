@@ -31,6 +31,7 @@ import {
   Globe,
   Monitor,
   Zap,
+  AlertTriangle,
 } from "lucide-react";
 import { env } from "@/shared/config/env";
 
@@ -64,6 +65,9 @@ export function AppSidebar() {
       : []),
     ...(env.featureCommandCenter
       ? [{ title: t("commandCenter"), url: "/command-center", icon: Monitor }]
+      : []),
+    ...(env.featureAnomalyArena
+      ? [{ title: t("anomalyArena"), url: "/anomaly-arena", icon: AlertTriangle }]
       : []),
   ];
 

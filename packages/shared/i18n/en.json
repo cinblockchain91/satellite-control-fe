@@ -14,7 +14,8 @@
     "commands": "Commands",
     "system": "System",
     "settings": "Settings",
-    "signOut": "Sign out"
+    "signOut": "Sign out",
+    "anomalyArena": "Anomaly Arena"
   },
   "telemetryPanel": {
     "title": "Telemetry",
@@ -155,6 +156,12 @@
     "autoPilotStop": "Stop"
   },
   "anomalyArena": {
+    "title": "Anomaly Arena",
+    "subtitle": "Active Threats",
+    "demoBadge": "Demo",
+    "lowFpsWarning": "Low frame rate detected",
+    "cameraHint": "Drag to rotate · Scroll to zoom",
+    "cameraReset": "Reset view",
     "type": {
       "signalDrop": "Signal Drop",
       "overheating": "Overheating",
