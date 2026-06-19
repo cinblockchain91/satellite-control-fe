@@ -1,4 +1,7 @@
 import { defineConfig, devices } from "@playwright/test";
+import path from "path";
+
+const AUTH_FILE = path.join(__dirname, "playwright/.auth/user.json");
 
 export default defineConfig({
   testDir: "./e2e-test",
@@ -12,9 +15,21 @@ export default defineConfig({
     trace: "on-first-retry",
   },
   projects: [
+    // Runs once; logs in and saves cookies to AUTH_FILE.
+    {
+      name: "setup",
+      testMatch: /auth\.setup\.ts/,
+    },
+    // All other tests inherit AUTH_FILE cookies (authenticated by default).
+    // Tests that need an unauthenticated context override via:
+    //   test.use({ storageState: { cookies: [], origins: [] } })
     {
       name: "chromium",
-      use: { ...devices["Desktop Chrome"] },
+      use: {
+        ...devices["Desktop Chrome"],
+        storageState: AUTH_FILE,
+      },
+      dependencies: ["setup"],
     },
   ],
   webServer: {

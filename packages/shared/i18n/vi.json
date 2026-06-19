@@ -14,7 +14,8 @@
     "commands": "Lệnh",
     "system": "Hệ thống",
     "settings": "Cài đặt",
-    "signOut": "Đăng xuất"
+    "signOut": "Đăng xuất",
+    "anomalyArena": "Vùng bất thường"
   },
   "telemetryPanel": {
     "title": "Đo từ xa",
@@ -155,6 +156,12 @@
     "autoPilotStop": "Dừng"
   },
   "anomalyArena": {
+    "title": "Vùng phát hiện bất thường",
+    "subtitle": "Mối đe dọa đang hoạt động",
+    "demoBadge": "Demo",
+    "lowFpsWarning": "Tốc độ khung hình thấp",
+    "cameraHint": "Kéo để xoay · Cuộn để thu phóng",
+    "cameraReset": "Đặt lại góc nhìn",
     "type": {
       "signalDrop": "Mất tín hiệu",
       "overheating": "Quá nhiệt",

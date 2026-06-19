@@ -113,11 +113,37 @@ New top-level namespace added to `packages/shared/i18n/en.json` and `vi.json`:
 - When a real backend arrives: if it returns named anomaly types, add a `SatelliteAnomalySchema` at the API boundary and replace `detectAnomalies()` at the call site — no changes to arena components required
 - `AnomalyDetection` has no optional properties (`exactOptionalPropertyTypes: true` compliant)
 
+### 8. Scene architecture for issue #108
+
+The arena scene follows the same shell pattern as all other 3D views:
+
+```
+Route page.tsx (Server Component, sets metadata)
+  → AnomalyArenaPage (thin wrapper, views/)
+    → AnomalyArenaShell ("use client", views/)
+      → SceneCanvasLazy (defers R3F to client bundle)
+        → AnomalyArenaScene (forwardRef R3F scene, widgets/)
+```
+
+**Feature flag:** `NEXT_PUBLIC_FEATURE_ANOMALY_ARENA=true` gates the nav item in `AppSidebar`. The route itself is always accessible when the flag is set; no server-side route guard is implemented (consistent with other feature-flagged routes).
+
+**Camera:** Initial position `[0, 4, 7]` looking at `[0, 0, 0]`. The elevated angle gives simultaneous visibility of all orbital rings and alert regions. `setLookAt` is called in `useEffect([], [])` on mount to override the `SceneCanvas` default `[0, 0, 5]`.
+
+**Scene atmosphere:** Background `#04060d` (much deeper than Mission Control's dark navy) and cool bluish-white directional light `#e8eeff` at 1.2 intensity reinforce a crisis/alert-zone feel distinct from the fleet-monitoring mood of the Digital Twin.
+
+**Arena floor ring:** Torus with `radius=4.5`, `tube=0.008`, color `#1a1a3e` at 50% opacity. Visually traces the satellite zone boundary without dominating the scene.
+
+**Satellite rendering strategy:**
+- Anomalous satellites: full opacity, emissive glow (idle 0.3 → hovered 0.5 → selected 0.9), solar panels rendered.
+- Nominal satellites: 15% opacity, no emissive, no solar panels — visually subordinate so alert focus is immediate.
+
+**`AnomalyArenaSceneHandle`:** Exposes `resetView()` so the shell's "Reset view" button can fly the camera back to `[0, 4, 7]` without the shell knowing R3F internals.
+
 ## Deferred items
 
 | # | Item | Status |
 |---|------|--------|
-| 1 | Anomaly arena scene / mode toggle | Issue #108 |
+| 1 | Anomaly arena scene / mode toggle | ✅ Done — Issue #108 |
 | 2 | 3D satellite + orbit highlighting | Issue #109 |
 | 3 | Severity level UI (badges, chips) | Issue #110 |
 | 4 | Alert timeline / event stream | Issue #111 |
