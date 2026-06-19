@@ -175,6 +175,25 @@
     "timeline": {
       "title": "Alert Timeline",
       "empty": "No active anomalies"
+    },
+    "detail": {
+      "title": "Anomaly Details",
+      "noSelection": "Select a satellite to inspect",
+      "close": "Close panel",
+      "detectedLabel": "Detected",
+      "threshold": "Threshold",
+      "status": {
+        "online": "Online",
+        "warning": "Warning",
+        "degraded": "Degraded",
+        "offline": "Offline"
+      },
+      "action": {
+        "signalDrop": "Inspect antenna alignment or check for signal interference",
+        "overheating": "Reduce computational load or adjust thermal management system",
+        "unstableOrbit": "Schedule an orbital correction maneuver",
+        "communicationLoss": "Attempt emergency reconnection or switch to backup communication link"
+      }
     }
   },
   "auth": {

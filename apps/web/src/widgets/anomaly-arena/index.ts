@@ -13,3 +13,4 @@ export { SeverityBadge } from "./SeverityBadge";
 export type { AlertEvent } from "./alert-events";
 export { buildAlertEvents } from "./alert-events";
 export { AlertTimeline } from "./AlertTimeline";
+export { AnomalyDetailPanel } from "./AnomalyDetailPanel";
