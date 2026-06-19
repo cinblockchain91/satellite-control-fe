@@ -74,9 +74,8 @@ export const AnomalyArenaScene = forwardRef<AnomalyArenaSceneHandle, AnomalyAren
           return {
             sat,
             isAnomalous: anomalies.length > 0,
-            anomalyColor: primary
-              ? ANOMALY_VISUAL_RULES[primary.type].color
-              : "#374151",
+            anomalyColor: primary ? ANOMALY_VISUAL_RULES[primary.type].color : "#374151",
+            anomalySeverity: primary?.severity ?? null,
           };
         }),
       [],
@@ -99,17 +98,18 @@ export const AnomalyArenaScene = forwardRef<AnomalyArenaSceneHandle, AnomalyAren
           <meshBasicMaterial color={ARENA_FLOOR_COLOR} transparent opacity={ARENA_FLOOR_OPACITY} />
         </mesh>
 
-        {satelliteAnomalies.map(({ sat, isAnomalous, anomalyColor }) => (
+        {satelliteAnomalies.map(({ sat, isAnomalous, anomalyColor, anomalySeverity }) => (
           <group key={sat.id}>
             <AnomalySatellite
               data={sat}
               isAnomalous={isAnomalous}
               anomalyColor={anomalyColor}
+              anomalySeverity={anomalySeverity}
               isSelected={selectedId === sat.id}
               onSelect={() => onSelect(selectedId === sat.id ? null : sat.id)}
             />
-            {isAnomalous && (
-              <AlertRegion orbit={sat.orbit} color={anomalyColor} />
+            {isAnomalous && anomalySeverity !== null && (
+              <AlertRegion orbit={sat.orbit} color={anomalyColor} severity={anomalySeverity} />
             )}
           </group>
         ))}

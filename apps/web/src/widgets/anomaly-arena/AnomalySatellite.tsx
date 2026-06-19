@@ -6,6 +6,7 @@ import { Html } from "@react-three/drei";
 import type * as THREE from "three";
 import { computeOrbitPosition } from "@satellite-control/entity-satellite";
 import type { Satellite } from "@/widgets/mission-control-scene";
+import type { AnomalySeverity } from "./anomaly-detection";
 
 const NOMINAL_COLOR = "#374151"; // gray-700 — dim stand-in for non-anomalous satellites
 const NOMINAL_OPACITY = 0.15;
@@ -26,7 +27,13 @@ const SCALE_HOVERED = 1.2;
 // Emissive glow intensity for anomalous satellites, driven by interaction state.
 const EMISSIVE_SELECTED = 0.9;
 const EMISSIVE_HOVERED = 0.5;
-const EMISSIVE_IDLE = 0.3;
+// Idle pulse oscillates between min and max — replaces the old static EMISSIVE_IDLE.
+const PULSE_EMISSIVE_MIN = 0.15;
+const PULSE_EMISSIVE_MAX = 0.45;
+
+// Pulse frequencies — hardcoded here; Issue #114 extracts these as named animation constants.
+const PULSE_FREQ_WARNING = 0.5;  // Hz — one pulse every 2 s
+const PULSE_FREQ_CRITICAL = 1.2; // Hz — one pulse every ~0.8 s
 
 // Tooltip positioning and rendering.
 const TOOLTIP_OFFSET: [number, number, number] = [0, 0.28, 0];
@@ -36,6 +43,7 @@ interface AnomalySatelliteProps {
   data: Satellite;
   isAnomalous: boolean;
   anomalyColor: string;
+  anomalySeverity: AnomalySeverity | null;
   isSelected: boolean;
   onSelect: () => void;
 }
@@ -44,6 +52,7 @@ export function AnomalySatellite({
   data,
   isAnomalous,
   anomalyColor,
+  anomalySeverity,
   isSelected,
   onSelect,
 }: AnomalySatelliteProps) {
@@ -65,7 +74,15 @@ export function AnomalySatellite({
 
     if (!bodyRef.current) return;
     if (isAnomalous) {
-      bodyRef.current.emissiveIntensity = isSelected ? EMISSIVE_SELECTED : hovered ? EMISSIVE_HOVERED : EMISSIVE_IDLE;
+      if (isSelected) {
+        bodyRef.current.emissiveIntensity = EMISSIVE_SELECTED;
+      } else if (hovered) {
+        bodyRef.current.emissiveIntensity = EMISSIVE_HOVERED;
+      } else {
+        const freq = anomalySeverity === "critical" ? PULSE_FREQ_CRITICAL : PULSE_FREQ_WARNING;
+        const t = 0.5 + 0.5 * Math.sin(state.clock.elapsedTime * freq * Math.PI * 2);
+        bodyRef.current.emissiveIntensity = PULSE_EMISSIVE_MIN + (PULSE_EMISSIVE_MAX - PULSE_EMISSIVE_MIN) * t;
+      }
     } else {
       bodyRef.current.emissiveIntensity = 0;
     }
