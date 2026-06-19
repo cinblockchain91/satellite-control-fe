@@ -246,6 +246,45 @@ Selected state: `max-h-[55vh] overflow-y-auto` section with:
 
 **9 component tests** cover: no-selection state (null and non-matching id), satellite name, single/multi-card count, `onClose` call, `<time dateTime>` attribute, metric text content, and suggested action i18n key.
 
+### 13. Mock anomaly events for issue #113
+
+**Goal:** Every anomaly type and both severity levels must be visually demonstrable without a backend. No new code was required — the 3D scene, alert timeline, and detail panel already react to whatever `detectAnomalies()` returns. The only change was the data.
+
+**MOCK_SATELLITES changes** in `widgets/mission-control-scene/satellites.data.ts`:
+
+| Satellite | Change | Resulting anomalies |
+|---|---|---|
+| SAT-Delta `sat-4` | `temperature: 48 → 65` | signalDrop warning + **overheating critical** |
+| SAT-Zeta `sat-6` | `anomalyLevel: 15 → 35`, `status: "online" → "warning"` | **unstableOrbit warning** |
+
+**Why these two satellites:**
+- SAT-Delta already had signalDrop warning (signal 34). Raising temperature above the 60°C critical threshold adds overheating critical without disturbing the existing signalDrop scenario.
+- SAT-Zeta was the only fully nominal satellite with no anomalous telemetry. `anomalyLevel: 35` (> 20, warning threshold) with signal 85 ≥ 60 and temperature 25 ≤ 45 satisfies the `unstableOrbit` proxy guard — the anomaly fires from anomalyLevel alone, not as a misclassification of signal/temperature issues.
+- Modifying the shared `MOCK_SATELLITES` ensures consistent data across all views (Digital Twin, Telemetry Tunnel, Command Center, Anomaly Arena).
+
+**Full demo coverage after changes:**
+
+| Type | Severity | Satellite |
+|---|---|---|
+| `communicationLoss` | critical | SAT-Gamma |
+| `signalDrop` | warning | SAT-Beta, SAT-Delta |
+| `signalDrop` | critical | SAT-Epsilon |
+| `overheating` | warning | (no longer present; see below) |
+| `overheating` | critical | SAT-Delta |
+| `unstableOrbit` | warning | SAT-Zeta |
+| — | nominal | SAT-Alpha (visual contrast) |
+
+Note: SAT-Delta's overheating was promoted from warning → critical when temperature was raised to 65°C. The warning tier is still covered by `signalDrop` (SAT-Beta), and the critical tier is covered by three anomaly types.
+
+**Guard tests** (`widgets/anomaly-arena/arena-coverage.test.ts`) — 9 tests that fail if MOCK_SATELLITES is later modified in a way that drops coverage:
+- 4 `it.each` tests, one per anomaly type
+- warning and critical severity each covered
+- at least one nominal satellite present
+- overheating critical specifically verified
+- unstableOrbit verified to fire from anomalyLevel (signal + temp nominal at call site)
+
+**Backend swap point:** unchanged. Replace `detectAnomalies()` call site with backend data when available.
+
 ## Deferred items
 
 | # | Item | Status |
@@ -255,7 +294,7 @@ Selected state: `max-h-[55vh] overflow-y-auto` section with:
 | 3 | Severity level UI (badges, chips) | ✅ Done — Issue #110 |
 | 4 | Alert timeline / event stream | ✅ Done — Issue #111 |
 | 5 | Anomaly detail panel | ✅ Done — Issue #112 |
-| 6 | Mock anomaly events (includes unstableOrbit satellite) | Issue #113 |
+| 6 | Mock anomaly events (includes unstableOrbit satellite) | ✅ Done — Issue #113 |
 | 7 | Animation constants (pulse speed, glow radius) | Issue #114 |
 | 8 | Filtering and focus mode | Issue #115 |
 | 9 | Demo version (scripted sequence) | Issue #116 |

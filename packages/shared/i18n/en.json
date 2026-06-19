@@ -15,7 +15,9 @@
     "system": "System",
     "settings": "Settings",
     "signOut": "Sign out",
-    "anomalyArena": "Anomaly Arena"
+    "anomalyArena": "Anomaly Arena",
+    "profile": "Profile",
+    "theme": "Toggle theme"
   },
   "telemetryPanel": {
     "title": "Telemetry",
@@ -194,6 +196,42 @@
         "unstableOrbit": "Schedule an orbital correction maneuver",
         "communicationLoss": "Attempt emergency reconnection or switch to backup communication link"
       }
+    }
+  },
+  "profile": {
+    "title": "Profile",
+    "fullName": "Display name",
+    "email": "Email",
+    "username": "Username",
+    "memberSince": "Member since",
+    "edit": "Edit name",
+    "save": "Save",
+    "cancel": "Cancel",
+    "role": {
+      "admin": "Admin",
+      "engineer": "Engineer",
+      "viewer": "Viewer"
+    }
+  },
+  "dashboard": {
+    "greeting": "Welcome back, {name}",
+    "subtitle": "Mission Control Overview",
+    "fleetOverview": "Fleet Overview",
+    "totalSatellites": "Total Satellites",
+    "anomalousCount": "Anomalous",
+    "offlineCount": "Offline",
+    "modules": "Mission Modules",
+    "digitalTwin": {
+      "description": "Visualize your entire satellite constellation in real time with a 3D interactive globe."
+    },
+    "telemetryTunnel": {
+      "description": "Monitor live telemetry streams flowing between satellites and ground stations."
+    },
+    "commandCenter": {
+      "description": "Dispatch commands to satellites and track acknowledgements in real time."
+    },
+    "anomalyArena": {
+      "description": "Detect and triage anomalies across the fleet with actionable severity insights."
     }
   },
   "auth": {

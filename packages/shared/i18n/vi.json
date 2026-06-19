@@ -15,7 +15,9 @@
     "system": "Hệ thống",
     "settings": "Cài đặt",
     "signOut": "Đăng xuất",
-    "anomalyArena": "Vùng bất thường"
+    "anomalyArena": "Vùng bất thường",
+    "profile": "Hồ sơ",
+    "theme": "Đổi giao diện"
   },
   "telemetryPanel": {
     "title": "Đo từ xa",
@@ -194,6 +196,42 @@
         "unstableOrbit": "Lên kế hoạch hiệu chỉnh quỹ đạo",
         "communicationLoss": "Thử kết nối khẩn cấp hoặc chuyển sang đường liên lạc dự phòng"
       }
+    }
+  },
+  "profile": {
+    "title": "Hồ sơ",
+    "fullName": "Tên hiển thị",
+    "email": "Email",
+    "username": "Tên đăng nhập",
+    "memberSince": "Thành viên từ",
+    "edit": "Chỉnh sửa tên",
+    "save": "Lưu",
+    "cancel": "Hủy",
+    "role": {
+      "admin": "Quản trị viên",
+      "engineer": "Kỹ sư",
+      "viewer": "Người xem"
+    }
+  },
+  "dashboard": {
+    "greeting": "Chào mừng, {name}",
+    "subtitle": "Tổng quan trung tâm điều khiển",
+    "fleetOverview": "Tổng quan đội vệ tinh",
+    "totalSatellites": "Tổng số vệ tinh",
+    "anomalousCount": "Bất thường",
+    "offlineCount": "Ngoại tuyến",
+    "modules": "Các mô-đun nhiệm vụ",
+    "digitalTwin": {
+      "description": "Trực quan hóa toàn bộ chòm sao vệ tinh theo thời gian thực với quả địa cầu 3D tương tác."
+    },
+    "telemetryTunnel": {
+      "description": "Giám sát luồng đo từ xa trực tiếp giữa các vệ tinh và trạm mặt đất."
+    },
+    "commandCenter": {
+      "description": "Gửi lệnh đến vệ tinh và theo dõi xác nhận trong thời gian thực."
+    },
+    "anomalyArena": {
+      "description": "Phát hiện và phân loại bất thường trong đội vệ tinh với thông tin mức độ nghiêm trọng."
     }
   },
   "auth": {

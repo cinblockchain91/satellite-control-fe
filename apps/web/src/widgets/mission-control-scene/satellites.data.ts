@@ -11,6 +11,14 @@ export const STATUS_COLORS: Record<SatelliteStatus, string> = {
 };
 
 // Positions are computeOrbitPosition(orbit, 0) — kept as literals for camera focus.
+//
+// Anomaly arena demo scenario coverage (Issue #113):
+//   SAT-Alpha   sat-1  nominal reference — no anomalies (visual contrast)
+//   SAT-Beta    sat-2  signalDrop warning        (signalStrength 47 < 60)
+//   SAT-Gamma   sat-3  communicationLoss critical (offline + signal 0)
+//   SAT-Delta   sat-4  signalDrop warning + overheating critical (signal 34, temp 65 > 60)
+//   SAT-Epsilon sat-5  signalDrop critical        (signalStrength 23 < 30)
+//   SAT-Zeta    sat-6  unstableOrbit warning      (anomalyLevel 35, signal/temp nominal)
 export const MOCK_SATELLITES: Satellite[] = [
   {
     id: SatelliteId("sat-1"),
@@ -37,12 +45,13 @@ export const MOCK_SATELLITES: Satellite[] = [
     telemetry: { signalStrength: 0, battery: 12, temperature: 55, altitude: 538, healthScore: 8, latency: 0, anomalyLevel: 82 },
   },
   {
+    // temperature 65 °C (> 60) → overheating critical; signal 34 (<60) → signalDrop warning
     id: SatelliteId("sat-4"),
     name: "SAT-Delta",
     position: [2.6, 0, -1.5],
     status: "degraded",
     orbit: { radius: 3.0, inclination: 30, raan: 210, speed: 0.23, initialAngle: Math.PI },
-    telemetry: { signalStrength: 34, battery: 41, temperature: 48, altitude: 560, healthScore: 35, latency: 180, anomalyLevel: 55 },
+    telemetry: { signalStrength: 34, battery: 41, temperature: 65, altitude: 560, healthScore: 35, latency: 180, anomalyLevel: 55 },
   },
   {
     id: SatelliteId("sat-5"),
@@ -53,11 +62,12 @@ export const MOCK_SATELLITES: Satellite[] = [
     telemetry: { signalStrength: 23, battery: 34, temperature: 45, altitude: 535, healthScore: 31, latency: 255, anomalyLevel: 44 },
   },
   {
+    // anomalyLevel 35 (> 20) with nominal signal (85) and temp (25) → unstableOrbit warning
     id: SatelliteId("sat-6"),
     name: "SAT-Zeta",
     position: [0.83, 0.77, 2.67],
-    status: "online",
+    status: "warning",
     orbit: { radius: 2.9, inclination: 22, raan: 150, speed: 0.25, initialAngle: (5 * Math.PI) / 4 },
-    telemetry: { signalStrength: 85, battery: 79, temperature: 25, altitude: 565, healthScore: 76, latency: 120, anomalyLevel: 15 },
+    telemetry: { signalStrength: 85, battery: 79, temperature: 25, altitude: 565, healthScore: 76, latency: 120, anomalyLevel: 35 },
   },
 ];
