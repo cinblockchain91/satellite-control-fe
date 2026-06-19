@@ -196,6 +196,27 @@
       }
     }
   },
+  "dashboard": {
+    "greeting": "Chào mừng, {name}",
+    "subtitle": "Tổng quan trung tâm điều khiển",
+    "fleetOverview": "Tổng quan đội vệ tinh",
+    "totalSatellites": "Tổng số vệ tinh",
+    "anomalousCount": "Bất thường",
+    "offlineCount": "Ngoại tuyến",
+    "modules": "Các mô-đun nhiệm vụ",
+    "digitalTwin": {
+      "description": "Trực quan hóa toàn bộ chòm sao vệ tinh theo thời gian thực với quả địa cầu 3D tương tác."
+    },
+    "telemetryTunnel": {
+      "description": "Giám sát luồng đo từ xa trực tiếp giữa các vệ tinh và trạm mặt đất."
+    },
+    "commandCenter": {
+      "description": "Gửi lệnh đến vệ tinh và theo dõi xác nhận trong thời gian thực."
+    },
+    "anomalyArena": {
+      "description": "Phát hiện và phân loại bất thường trong đội vệ tinh với thông tin mức độ nghiêm trọng."
+    }
+  },
   "auth": {
     "title": "Satellite Control",
     "subtitle": "Đăng nhập vào tài khoản",
