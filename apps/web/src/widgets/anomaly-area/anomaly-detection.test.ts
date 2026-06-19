@@ -5,7 +5,7 @@ import {
   ANOMALY_VISUAL_RULES,
   ANOMALY_SEVERITY_COLORS,
 } from "./anomaly-detection";
-import type { SatelliteTelemetry, SatelliteStatus } from "@satellite-control/entity-satellite";
+import type { SatelliteTelemetry } from "@satellite-control/entity-satellite";
 
 // ─── Fixtures ─────────────────────────────────────────────────────────────────
 
@@ -260,15 +260,16 @@ describe("detectAnomalies", () => {
       expect(result.find((a) => a.type === "overheating")?.severity).toBe("warning");
     });
 
-    it("SAT-Delta scenario: critical signal + overheating warning", () => {
-      // Based on mock data: signal 34 (critical), temp 48 (warning), anomalyLevel 55
+    it("SAT-Delta scenario: warning signal + overheating warning + unstableOrbit suppressed", () => {
+      // signal 34 is in [30, 60) → warning (not critical; critical threshold is < 30)
+      // temp 48 is in (45, 60] → overheating warning
+      // anomalyLevel 55 is high but signal is below minSignalForProxy → unstableOrbit suppressed
       const result = detectAnomalies(
         { ...nominalTelemetry, signalStrength: 34, temperature: 48, anomalyLevel: 55 },
         "degraded",
       );
-      expect(result.find((a) => a.type === "signalDrop")?.severity).toBe("critical");
+      expect(result.find((a) => a.type === "signalDrop")?.severity).toBe("warning");
       expect(result.find((a) => a.type === "overheating")?.severity).toBe("warning");
-      // anomalyLevel is high but signal is low → unstableOrbit suppressed
       expect(result.find((a) => a.type === "unstableOrbit")).toBeUndefined();
     });
   });
